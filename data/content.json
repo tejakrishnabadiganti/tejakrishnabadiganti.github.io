@@ -97,6 +97,13 @@
       "visible": true
     },
     {
+      "id": "values",
+      "nav": "",
+      "eyebrow": "How I work",
+      "title": "How I approach engineering",
+      "visible": true
+    },
+    {
       "id": "experience",
       "nav": "Experience",
       "eyebrow": "Experience",
@@ -118,10 +125,24 @@
       "visible": true
     },
     {
+      "id": "journey",
+      "nav": "",
+      "eyebrow": "Journey",
+      "title": "How my career has grown",
+      "visible": true
+    },
+    {
       "id": "awards",
       "nav": "Awards",
       "eyebrow": "Awards & Achievements",
       "title": "Recognition for impact",
+      "visible": true
+    },
+    {
+      "id": "journal",
+      "nav": "Journal",
+      "eyebrow": "Journal",
+      "title": "Notes on what I build and learn",
       "visible": true
     },
     {
@@ -150,6 +171,20 @@
       "nav": "Moments",
       "eyebrow": "Moments",
       "title": "Hackathons, teams and celebrations",
+      "visible": true
+    },
+    {
+      "id": "now",
+      "nav": "",
+      "eyebrow": "Now",
+      "title": "What I am focused on right now",
+      "visible": true
+    },
+    {
+      "id": "faq",
+      "nav": "",
+      "eyebrow": "FAQ",
+      "title": "Questions people often ask",
       "visible": true
     },
     {
@@ -201,7 +236,13 @@
     {
       "tag": "AI Engineering",
       "title": "PR Fix & Fail-to-Fix Agents",
-      "text": "AI agents that integrate multiple LLMs to automate development workflows, code analysis and issue resolution, built with the Vertex Agent Platform (VAPOR) team."
+      "text": "AI agents that integrate multiple LLMs to automate development workflows, code analysis and issue resolution, built with the Vertex Agent Platform (VAPOR) team.",
+      "role": "Designed and developed the agents",
+      "stack": [
+        "AI agents",
+        "Multiple LLMs",
+        "VAPOR"
+      ]
     },
     {
       "tag": "Full Stack",
@@ -221,12 +262,25 @@
     {
       "tag": "Migration · USAA",
       "title": "Classic to Talon (C2T)",
-      "text": "Analyzed legacy integrations, designed as-is and to-be API flows and published REST APIs with OpenAPI and Swagger 2.0."
+      "text": "Analyzed legacy integrations, designed as-is and to-be API flows and published REST APIs with OpenAPI and Swagger 2.0.",
+      "role": "Legacy integration analysis, API design and migration strategy",
+      "stack": [
+        "Java",
+        "Spring Boot",
+        "OpenAPI",
+        "Swagger 2.0"
+      ]
     },
     {
       "tag": "Security · Citi Bank",
       "title": "Service Account Migration (SAM)",
-      "text": "Migrated service accounts to CyberArk with secure Spring Boot integrations and retired deprecated accounts."
+      "text": "Migrated service accounts to CyberArk with secure Spring Boot integrations and retired deprecated accounts.",
+      "role": "Implemented the secure integrations and retired deprecated accounts",
+      "stack": [
+        "Java",
+        "Spring Boot",
+        "CyberArk"
+      ]
     }
   ],
   "skills": [
@@ -490,6 +544,131 @@
     }
   ],
   "testimonials": [],
+  "values": [
+    {
+      "title": "Plan before building",
+      "text": "I use Specification-Driven Development and Research, Plan, and Implement (RPI) with Claude to structure requirements and plan the implementation before writing code."
+    },
+    {
+      "title": "Build things others can reuse",
+      "text": "In the Center of Excellence I develop reusable skills, commands and AI agents that standardize workflows and improve developer productivity."
+    },
+    {
+      "title": "Test and measure",
+      "text": "I write unit tests with JUnit and Mockito, reaching 85%+ coverage on enterprise applications, and I contribute to the Vertex Unified Metrics Platform for consistent engineering measurement."
+    },
+    {
+      "title": "Keep security in view",
+      "text": "I migrated service accounts to CyberArk for Citi Bank and built secure microservice communication for USAA, so credentials and APIs stay protected."
+    },
+    {
+      "title": "Work across teams",
+      "text": "I collaborate with AI engineering, DevOps, CoE and platform development teams on organization-wide solutions and engineering practices."
+    },
+    {
+      "title": "Keep learning",
+      "text": "I hold certifications across AWS, Azure, Google Cloud and Anthropic, and I take part in hackathons to try new ideas."
+    }
+  ],
+  "journey": [
+    {
+      "period": "Jun 2018",
+      "title": "Started B.Tech in Electronics and Communication Engineering",
+      "text": "Studied at Aditya College of Engineering and Technology (JNTUK) and graduated in Jun 2022 with 82%."
+    },
+    {
+      "period": "May 2022",
+      "title": "Joined Wipro as a Project Engineer",
+      "text": "Started on the USAA account, building enterprise applications with Core Java, Spring Boot, Spring Cloud and microservices for banking, insurance and enterprise-security projects."
+    },
+    {
+      "period": "2022 \u2013 2025",
+      "title": "Migration and security projects",
+      "text": "Contributed to USAA's Classic to Talon migration and Citi Bank's Service Account Migration to CyberArk, with 85%+ unit test coverage."
+    },
+    {
+      "period": "Dec 2025",
+      "title": "Moved to Accenture as a Senior Software Engineer",
+      "text": "Began working with the Vertex Agent Platform (VAPOR) team on AI-powered engineering agents, and on TechScout and the Connected Tax Platform."
+    },
+    {
+      "period": "Ongoing",
+      "title": "Hackathon wins and certifications",
+      "text": "Won the Accenture Java Full Stack AI Hackathon across India and a Valkey hackathon in collaboration with Amazon, and earned AWS, Azure, Google Cloud and Claude certifications."
+    }
+  ],
+  "journal": [
+    {
+      "date": "Dec 2025",
+      "title": "Starting work on AI engineering agents",
+      "paragraphs": [
+        "I moved to Accenture and began working on the Vertex Inc. GCC project. My focus is designing AI-powered engineering agents, including the PR Fix and Fail-to-Fix agents.",
+        "These agents integrate multiple LLMs to automate development workflows, code analysis and issue resolution. I build them with the Vertex Agent Platform (VAPOR) team."
+      ],
+      "tags": [
+        "AI agents",
+        "LLM integration",
+        "VAPOR"
+      ]
+    },
+    {
+      "date": "May 2022",
+      "title": "Starting as a Project Engineer",
+      "paragraphs": [
+        "I joined Wipro on the USAA account and started building enterprise applications with Core Java, Spring Boot and Spring Cloud.",
+        "The work covered banking, insurance and enterprise-security projects, and it included microservices, REST APIs and production monitoring with OpenShift, Kibana and Elasticsearch."
+      ],
+      "tags": [
+        "Java",
+        "Spring Boot",
+        "Microservices"
+      ]
+    },
+    {
+      "date": "",
+      "title": "Winning hackathons",
+      "paragraphs": [
+        "I won first place in the Accenture Java Full Stack AI Hackathon across India, and I won a Valkey hackathon run in collaboration with Amazon.",
+        "My team was also runner-up in a Microsoft hackathon. The photos are in the Moments section."
+      ],
+      "tags": [
+        "Hackathons",
+        "Valkey",
+        "AI"
+      ]
+    }
+  ],
+  "now": {
+    "updated": "Oct 2026",
+    "items": [
+      "Building AI-powered engineering agents with the Vertex Agent Platform (VAPOR) team",
+      "Developing reusable skills, commands and agents for the Center of Excellence",
+      "Contributing to the Vertex Unified Metrics Platform and n8n deployment automation",
+      "Applying Specification-Driven Development and RPI with Claude"
+    ]
+  },
+  "faq": [
+    {
+      "question": "What do you do?",
+      "answer": "I am a Full Stack Software Engineer. I build enterprise software with Java, Spring Boot, Angular and microservices, and I develop AI-powered engineering agents."
+    },
+    {
+      "question": "Which technologies do you work with?",
+      "answer": "Java, Spring Boot, Spring Cloud, Angular, Node.js, Python, AWS, Azure, Docker, OpenShift, Kafka and Redis, plus Claude and other LLMs for AI agents."
+    },
+    {
+      "question": "What certifications do you hold?",
+      "answer": "AWS, Microsoft Azure, Google Cloud and Anthropic Claude certifications, with verified digital badges on Credly. See the Certifications section for all of them."
+    },
+    {
+      "question": "Where are you based?",
+      "answer": "Hyderabad, Telangana, India."
+    },
+    {
+      "question": "Are you open to new opportunities?",
+      "answer": "I am open to conversations about full stack, platform and AI engineering roles. Use the Get in touch button or message me on LinkedIn."
+    }
+  ],
   "moments": [
     {
       "category": "Hackathon",

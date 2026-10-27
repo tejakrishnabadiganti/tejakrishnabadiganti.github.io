@@ -3,10 +3,13 @@ const DEFAULT_SECTIONS = [
   { id: "highlights", nav: "", eyebrow: "Highlights", title: "", visible: true },
   { id: "badges", nav: "", eyebrow: "Certification badges", title: "", visible: true },
   { id: "about", nav: "About", eyebrow: "About", title: "Engineering with clarity and craft", visible: true },
+  { id: "values", nav: "", eyebrow: "How I work", title: "How I approach engineering", visible: true },
   { id: "experience", nav: "Experience", eyebrow: "Experience", title: "Where I have worked", visible: true },
   { id: "work", nav: "Work", eyebrow: "Selected work", title: "Projects and initiatives", visible: true },
   { id: "skills", nav: "Skills", eyebrow: "Skills", title: "Technical expertise", visible: true },
+  { id: "journey", nav: "", eyebrow: "Journey", title: "How my career has grown", visible: true },
   { id: "awards", nav: "Awards", eyebrow: "Awards & Achievements", title: "Recognition for impact", visible: true },
+  { id: "journal", nav: "Journal", eyebrow: "Journal", title: "Notes on what I build and learn", visible: true },
   { id: "testimonials", nav: "", eyebrow: "Recommendations", title: "Kind words from people I have worked with", visible: false },
   {
     id: "certifications",
@@ -17,6 +20,8 @@ const DEFAULT_SECTIONS = [
   },
   { id: "education", nav: "", eyebrow: "Education", title: "Academic background", visible: true },
   { id: "moments", nav: "", eyebrow: "Moments", title: "Hackathons, teams and celebrations", visible: false },
+  { id: "now", nav: "", eyebrow: "Now", title: "What I am focused on right now", visible: true },
+  { id: "faq", nav: "", eyebrow: "FAQ", title: "Questions people often ask", visible: true },
   { id: "contact", nav: "Contact", eyebrow: "Contact", title: "Let's get in touch.", visible: true },
 ];
 
@@ -61,6 +66,11 @@ export function withDefaults(content) {
 
   content.testimonials ??= [];
   content.moments ??= [];
+  content.values ??= [];
+  content.journey ??= [];
+  content.journal ??= [];
+  content.faq ??= [];
+  content.now ??= { updated: "", items: [] };
   content.profile.ctaPrimary ??= "Get in touch";
   content.profile.ctaSecondary ??= "Download resume";
   content.certifications.note ??= "Verified digital badges on";
