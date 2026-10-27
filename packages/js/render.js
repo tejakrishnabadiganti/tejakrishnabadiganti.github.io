@@ -257,12 +257,24 @@ function renderJournal({ journal }) {
   $("journal-list").replaceChildren(
     ...journal.map((entry) =>
       el(
-        "article",
+        "details",
         { class: "entry" },
-        entry.date && el("p", { class: "entry__date" }, entry.date),
-        el("h3", { class: "entry__title" }, entry.title),
-        entry.paragraphs.map((text) => el("p", { class: "entry__text" }, text)),
-        entry.tags?.length > 0 && el("ul", { class: "tags" }, entry.tags.map((tag) => el("li", {}, tag)))
+        el(
+          "summary",
+          { class: "entry__summary" },
+          el(
+            "span",
+            { class: "entry__head" },
+            entry.date && el("span", { class: "entry__date" }, entry.date),
+            el("h3", { class: "entry__title" }, entry.title)
+          )
+        ),
+        el(
+          "div",
+          { class: "entry__body" },
+          entry.paragraphs.map((text) => el("p", { class: "entry__text" }, text)),
+          entry.tags?.length > 0 && el("ul", { class: "tags" }, entry.tags.map((tag) => el("li", {}, tag)))
+        )
       )
     )
   );
