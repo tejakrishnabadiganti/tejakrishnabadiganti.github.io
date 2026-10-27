@@ -89,6 +89,10 @@ h3 {
 }
 
 .brand__mark {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  aspect-ratio: 1;
   box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px var(--gold);
   transition: transform 0.7s var(--ease-out);
 }
@@ -752,8 +756,11 @@ h3 {
 }
 
 .cert__link img {
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 7 / 5;
   margin-bottom: 0.75rem;
+  background: transparent;
+  object-fit: contain;
+  object-position: center;
 }
 
 @media (min-width: 961px) {
