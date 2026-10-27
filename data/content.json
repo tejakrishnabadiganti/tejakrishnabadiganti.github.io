@@ -282,7 +282,14 @@
     {
       "tag": "Platform",
       "title": "Connected Tax Platform",
-      "text": "Enhanced with new application features, chat-based interfaces and AI-agent capabilities."
+      "text": "A web platform that brings tax products together into one connected experience. Instead of moving between separate products, customers follow their everyday tax tasks from start to finish in one place, with a single entry page, clear navigation, dashboards, a chat assistant and AI-agent help. I added application features, chat-based interfaces and AI-agent capabilities.",
+      "role": "Built features across the user interface and AI-agent integration",
+      "stack": [
+        "Web UI",
+        "Chat interfaces",
+        "AI agents"
+      ],
+      "result": "Customers get one clear place to work, with AI help next to their tasks."
     },
     {
       "tag": "Engineering Excellence",
@@ -635,6 +642,21 @@
   "journal": [
     {
       "date": "",
+      "title": "Connected Tax Platform: one place for tax work",
+      "paragraphs": [
+        "Tax software is often split into many separate products, and users have to jump between them to finish one job. The Connected Tax Platform changes this by organising the experience around the work people actually do, from start to finish.",
+        "A good experience here starts with structure. Before every feature is ready, the team decides how things are grouped, named and found, so that a new user can see where to go next without training.",
+        "My part was building features on this platform, including chat-based interfaces and AI-agent capabilities, so users can ask for help or get answers next to the task they are doing.",
+        "The lesson for me: good products are shaped around the user's journey, not around the internal product boundaries."
+      ],
+      "tags": [
+        "Web UI",
+        "Chat interfaces",
+        "AI agents",
+        "User experience"
+      ]
+    },    {
+      "date": "",
       "title": "VAPOR: one safe place to build AI agents",
       "paragraphs": [
         "An AI agent is more than a language model. It is the model plus planning, memory, tools and safety rules around it. Building all of that for every new agent takes a lot of time, and it is easy to get wrong.",
@@ -731,6 +753,10 @@
     ]
   },
   "faq": [
+    {
+      "question": "What is the Connected Tax Platform?",
+      "answer": "It is a web platform that brings tax products together into one connected experience, so customers can follow their tax tasks from start to finish in one place instead of moving between separate products. I built features on it, including chat-based interfaces and AI-agent capabilities."
+    },
     {
       "question": "What is VAPOR?",
       "answer": "VAPOR is the Vertex Agent Platform, an internal platform where teams build, run and manage AI agents in one place. It gives every agent the same runtime, approved models and tools, safety guardrails and monitoring, so teams can focus on their own use case."
