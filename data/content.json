@@ -235,14 +235,30 @@
   "work": [
     {
       "tag": "AI Engineering",
-      "title": "PR Fix & Fail-to-Fix Agents",
-      "text": "AI agents that integrate multiple LLMs to automate development workflows, code analysis and issue resolution, built with the Vertex Agent Platform (VAPOR) team.",
-      "role": "Designed and developed the agents",
+      "title": "PR Fix Agent",
+      "text": "An automated code reviewer for pull requests. When a developer opens or updates a pull request, the agent reviews the changes, looks for bugs, security risks and quality problems, and posts clear feedback with suggested fixes and examples directly on the pull request. It works like a reviewer who is always available.",
+      "role": "Designed and developed the agent",
       "stack": [
         "AI agents",
         "Multiple LLMs",
-        "VAPOR"
-      ]
+        "Code review automation",
+        "Security checks"
+      ],
+      "result": "Developers get feedback on bugs and security issues before a human review starts."
+    },
+    {
+      "tag": "AI Engineering",
+      "title": "Fail-to-Fix Agent",
+      "text": "When an automated test run fails, this agent reads the test results, finds what failed and suggests fixes. It uses earlier fix attempts as context, so suggestions for similar failures can build on what worked before, and it posts them on the pull request as a clear review comment.",
+      "role": "Designed and developed the agent",
+      "stack": [
+        "AI agents",
+        "LLMs",
+        "GitHub Actions",
+        "Python",
+        "Test automation"
+      ],
+      "result": "Gives developers a starting point for fixing failed tests right where they already work."
     },
     {
       "tag": "Full Stack",
@@ -315,7 +331,10 @@
         "Cursor",
         "Rovo",
         "Specification-Driven Development (SDD)",
-        "Research, Plan, Implement (RPI)"
+        "Research, Plan, Implement (RPI)",
+        "Prompt Engineering",
+        "Code Review Automation",
+        "CI/CD Failure Analysis"
       ]
     },
     {
@@ -599,6 +618,38 @@
   ],
   "journal": [
     {
+      "date": "",
+      "title": "PR Fix Agent: a code reviewer that is always available",
+      "paragraphs": [
+        "In many teams a pull request waits for a human reviewer before it can move forward. The PR Fix Agent gives the developer feedback first. When a pull request is opened or updated, it reviews the changes, looks for bugs, security problems and quality issues, and posts its findings on the pull request.",
+        "It does more than point out problems. It suggests specific fixes with examples and explains why each change is recommended, so developers learn while they fix.",
+        "The benefits are easy to see. Developers get feedback before human review, teams get consistent reviews across everyone's code, and managers get a steady way to improve code quality and catch security issues earlier.",
+        "Building it meant combining large language models with the pull request workflow and designing instructions (prompts) that give clear, useful and safe feedback. Like any product, it keeps improving through user feedback and usage data."
+      ],
+      "tags": [
+        "AI agents",
+        "Code review",
+        "LLMs",
+        "Security"
+      ]
+    },
+    {
+      "date": "",
+      "title": "Fail-to-Fix: from a failed build to a suggested fix",
+      "paragraphs": [
+        "When an automated test run fails, a developer usually has to open long reports and logs to work out what broke. Fail-to-Fix does that first step automatically.",
+        "It reads the failed test results, finds which tests failed and why, and asks an AI model to suggest fixes. Earlier fix attempts are included as context, so suggestions for similar failures can build on what worked before.",
+        "The suggestions are posted on the pull request as a clear review comment, with inline code suggestions where possible, so the fix starts where the developer is already working.",
+        "It runs as a reusable step in the team's build pipeline, so any project can switch it on without building its own."
+      ],
+      "tags": [
+        "AI agents",
+        "CI/CD",
+        "Test automation",
+        "GitHub Actions"
+      ]
+    },
+    {
       "date": "Dec 2025",
       "title": "Starting work on AI engineering agents",
       "paragraphs": [
@@ -649,6 +700,9 @@
   },
   "faq": [
     {
+      "question": "What are the PR Fix and Fail-to-Fix agents?",
+      "answer": "They are AI assistants for software teams. The PR Fix Agent reviews a pull request like an expert reviewer would, finds bugs and security issues and suggests fixes. The Fail-to-Fix Agent looks at failed automated tests, works out what went wrong and suggests a fix on the pull request. Both save developers time and help catch problems earlier."
+    },    {
       "question": "What do you do?",
       "answer": "I am a Full Stack Software Engineer. I build enterprise software with Java, Spring Boot, Angular and microservices, and I develop AI-powered engineering agents."
     },
