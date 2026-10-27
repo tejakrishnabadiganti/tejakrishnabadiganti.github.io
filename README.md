@@ -1,6 +1,6 @@
 # Tejakrishna Badiganti | Portfolio
 
-Personal portfolio of **Tejakrishna Badiganti**, Full Stack Software Engineer (Java, Spring Boot, microservices, React.js, AWS, Azure and AI agent engineering).
+Personal portfolio of **Tejakrishna Badiganti**, Full Stack Software Engineer (Java, Spring Boot, microservices, Angular, AWS, Azure and AI agent engineering).
 
 **Live site:** https://tejakrishnabadiganti.github.io/
 

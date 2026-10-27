@@ -1,7 +1,7 @@
 {
   "site": {
     "title": "Tejakrishna Badiganti | Full Stack Software Engineer",
-    "description": "Tejakrishna Badiganti - Full Stack Software Engineer specializing in Java, Spring Boot, microservices, React.js, AWS, Azure and AI agent engineering.",
+    "description": "Tejakrishna Badiganti - Full Stack Software Engineer specializing in Java, Spring Boot, microservices, Angular, AWS, Azure and AI agent engineering.",
     "repo": "tejakrishnabadiganti/tejakrishnabadiganti.github.io",
     "branch": "main"
   },
@@ -24,7 +24,7 @@
     "role": "Full Stack Software Engineer",
     "headline": "Building scalable enterprise software and",
     "headlineEmphasis": "AI-powered engineering agents.",
-    "lead": "4.6+ years delivering solutions across fintech, banking and tax compliance for USAA and Vertex Inc., with deep experience in Java, Spring Boot, React.js, microservices, AWS and Azure.",
+    "lead": "4.6+ years delivering solutions across fintech, banking and tax compliance for USAA and Vertex Inc., with deep experience in Java, Spring Boot, Angular, microservices, AWS and Azure.",
     "photo": "packages/images/profile/tejakrishna-badiganti-profile.jpg",
     "photoAlt": "Portrait of Tejakrishna Badiganti",
     "resume": "packages/documents/Tejakrishna_Badiganti_Resume.pdf",
@@ -162,7 +162,7 @@
   ],
   "about": {
     "paragraphs": [
-      "I am a Full Stack Software Engineer delivering scalable enterprise solutions across fintech, banking and tax compliance for clients including USAA and Vertex Inc. I bring end-to-end SDLC expertise in Java, Spring Boot, React.js, microservices, AWS and Azure, combined with hands-on experience developing AI agents and integrating multiple LLMs.",
+      "I am a Full Stack Software Engineer delivering scalable enterprise solutions across fintech, banking and tax compliance for clients including USAA and Vertex Inc. I bring end-to-end SDLC expertise in Java, Spring Boot, Angular, microservices, AWS and Azure, combined with hands-on experience developing AI agents and integrating multiple LLMs.",
       "I use Claude, Specification-Driven Development (SDD) and Research, Plan, and Implement (RPI) methodologies to accelerate delivery. I have contributed to DevOps, Center of Excellence (CoE) and Vertex Agent Platform (VAPOR) initiatives spanning engineering improvements, enterprise metrics and application delivery, with recognition for innovation, internal platform development and multiple hackathon wins."
     ]
   },
@@ -242,7 +242,7 @@
         "Spring Cloud",
         "Hibernate",
         "JAX-RS",
-        "React.js 18",
+        "Angular",
         "Node.js 18",
         "Dependency Injection"
       ]
