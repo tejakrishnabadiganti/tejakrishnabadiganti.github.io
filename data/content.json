@@ -277,7 +277,16 @@
     {
       "tag": "Full Stack",
       "title": "TechScout",
-      "text": "End-to-end application built with React.js and Node.js, covering frontend, backend services, API integration and delivery."
+      "text": "A self-service web application where employees request new technologies and follow the request until it is approved or rejected. Each request moves through clear steps such as submission, review, evaluation and decision, with the right people involved at each step. It replaces scattered ticket tracking with one simple, visible workflow. I worked on the frontend, backend services, API integration and delivery.",
+      "role": "Full stack developer: frontend, backend services and delivery",
+      "stack": [
+        "React.js",
+        "Node.js",
+        "REST APIs",
+        "Workflow",
+        "CI/CD"
+      ],
+      "result": "Everyone can see where a request stands, and reviewers get one clear place to work."
     },
     {
       "tag": "Platform",
@@ -642,6 +651,21 @@
   "journal": [
     {
       "date": "",
+      "title": "TechScout: making technology requests simple",
+      "paragraphs": [
+        "When a team wants to start using a new tool or technology, it usually needs a review first, to check that it is safe, useful and allowed. Doing this with scattered tickets and emails makes it hard to see where a request is, and who is waiting for whom.",
+        "TechScout puts the whole process in one web application. A person submits a request, the right reviewers pick it up, the technology is evaluated, and a decision is recorded. Every request has a clear status, and each step has rules about who can move it forward.",
+        "I built it end to end: the screens people use, the backend services behind them, the connections between the two, and the pipeline that delivers new versions. Later work focused on improving the existing features, making pages load faster and gathering user feedback.",
+        "What I learned: a workflow looks simple on the screen, but the rules behind each status change are where most of the care is needed."
+      ],
+      "tags": [
+        "React.js",
+        "Node.js",
+        "Workflow",
+        "Full stack"
+      ]
+    },    {
+      "date": "",
       "title": "Connected Tax Platform: one place for tax work",
       "paragraphs": [
         "Tax software is often split into many separate products, and users have to jump between them to finish one job. The Connected Tax Platform changes this by organising the experience around the work people actually do, from start to finish.",
@@ -753,6 +777,10 @@
     ]
   },
   "faq": [
+    {
+      "question": "What is TechScout?",
+      "answer": "TechScout is an internal web application where employees request new technologies and follow each request through review, evaluation and decision. It gives everyone one clear place to see the status. I built it as a full stack developer with React.js and Node.js."
+    },
     {
       "question": "What is the Connected Tax Platform?",
       "answer": "It is a web platform that brings tax products together into one connected experience, so customers can follow their tax tasks from start to finish in one place instead of moving between separate products. I built features on it, including chat-based interfaces and AI-agent capabilities."
