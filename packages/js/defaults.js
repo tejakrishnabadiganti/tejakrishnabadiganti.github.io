@@ -7,9 +7,7 @@ const DEFAULT_SECTIONS = [
   { id: "experience", nav: "Experience", eyebrow: "Experience", title: "Where I have worked", visible: true },
   { id: "work", nav: "Work", eyebrow: "Selected work", title: "Projects and initiatives", visible: true },
   { id: "skills", nav: "Skills", eyebrow: "Skills", title: "Technical expertise", visible: true },
-  { id: "journey", nav: "", eyebrow: "Journey", title: "How my career has grown", visible: true },
   { id: "awards", nav: "Awards", eyebrow: "Awards & Achievements", title: "Recognition for impact", visible: true },
-  { id: "journal", nav: "Journal", eyebrow: "Journal", title: "Notes on what I build and learn", visible: true },
   { id: "testimonials", nav: "", eyebrow: "Recommendations", title: "Kind words from people I have worked with", visible: false },
   {
     id: "certifications",
@@ -65,8 +63,6 @@ export function withDefaults(content) {
   content.testimonials ??= [];
   content.moments ??= [];
   content.values ??= [];
-  content.journey ??= [];
-  content.journal ??= [];
   content.profile.ctaPrimary ??= "Get in touch";
   content.profile.ctaSecondary ??= "Download resume";
   content.certifications.note ??= "Verified digital badges on";

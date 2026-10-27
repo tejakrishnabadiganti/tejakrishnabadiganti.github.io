@@ -30,9 +30,7 @@ export function renderPage(content) {
   renderExperience(content);
   renderWork(content);
   renderSkills(content);
-  renderJourney(content);
   renderAwards(content);
-  renderJournal(content);
   renderMoments(content);
   renderTestimonials(content);
   renderCertifications(content);
@@ -221,25 +219,6 @@ function renderSkills({ skills }) {
   );
 }
 
-function renderJourney({ journey }) {
-  $("journey-list").replaceChildren(
-    ...journey.map((step) =>
-      el(
-        "li",
-        { class: "timeline__item" },
-        el("div", { class: "timeline__meta" }, el("p", { class: "timeline__date" }, step.period)),
-        el(
-          "article",
-          { class: "timeline__body" },
-          el("h3", { class: "timeline__role" }, step.title),
-          el("p", { class: "journey__text" }, step.text)
-        )
-      )
-    )
-  );
-  $("journey").hidden ||= journey.length === 0;
-}
-
 function renderAwards({ awards }) {
   $("awards-list").replaceChildren(
     ...awards.map((award) =>
@@ -251,34 +230,6 @@ function renderAwards({ awards }) {
       )
     )
   );
-}
-
-function renderJournal({ journal }) {
-  $("journal-list").replaceChildren(
-    ...journal.map((entry) =>
-      el(
-        "details",
-        { class: "entry" },
-        el(
-          "summary",
-          { class: "entry__summary" },
-          el(
-            "span",
-            { class: "entry__head" },
-            entry.date && el("span", { class: "entry__date" }, entry.date),
-            el("h3", { class: "entry__title" }, entry.title)
-          )
-        ),
-        el(
-          "div",
-          { class: "entry__body" },
-          entry.paragraphs.map((text) => el("p", { class: "entry__text" }, text)),
-          entry.tags?.length > 0 && el("ul", { class: "tags" }, entry.tags.map((tag) => el("li", {}, tag)))
-        )
-      )
-    )
-  );
-  $("journal").hidden ||= journal.length === 0;
 }
 
 function renderTestimonials({ testimonials }) {

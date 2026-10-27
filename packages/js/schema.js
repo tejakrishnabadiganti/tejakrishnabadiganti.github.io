@@ -234,22 +234,6 @@ export const SECTIONS = [
     ],
   },
   {
-    id: "journey",
-    label: "Career journey",
-    sectionId: "journey",
-    kind: "list",
-    path: "journey",
-    itemName: "milestone",
-    hint: "Key steps in your career, oldest first. This section stays hidden while it is empty.",
-    itemLabel: (item) => [item.period, item.title].filter(Boolean).join(" — "),
-    blank: () => ({ period: "", title: "", text: "" }),
-    fields: [
-      { key: "period", label: "When (e.g. May 2022)", type: "text" },
-      { key: "title", label: "Milestone", type: "text" },
-      { key: "text", label: "What happened", type: "textarea", rows: 3 },
-    ],
-  },
-  {
     id: "awards",
     label: "Awards",
     sectionId: "awards",
@@ -261,23 +245,6 @@ export const SECTIONS = [
     fields: [
       { key: "title", label: "Award", type: "text" },
       { key: "text", label: "Description", type: "textarea", rows: 3 },
-    ],
-  },
-  {
-    id: "journal",
-    label: "Journal",
-    sectionId: "journal",
-    kind: "list",
-    path: "journal",
-    itemName: "entry",
-    hint: "Your open diary: what you built, learned or got wrong, in your own words. Newest first. This section stays hidden while it is empty.",
-    itemLabel: (item) => [item.date, item.title].filter(Boolean).join(" — "),
-    blank: () => ({ date: "", title: "", paragraphs: [], tags: [] }),
-    fields: [
-      { key: "date", label: "Date (e.g. Oct 2026)", type: "text" },
-      { key: "title", label: "Title", type: "text" },
-      { key: "paragraphs", label: "Entry", type: "paragraphs", rows: 8, help: "Separate paragraphs with a blank line." },
-      { key: "tags", label: "Topics (optional)", type: "lines", rows: 3, help: "One per line." },
     ],
   },
   {

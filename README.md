@@ -21,9 +21,7 @@ There is a hidden admin editor (see [Editing the site](#editing-the-site)) that 
 | Experience | Roles with achievements |
 | Selected Work | Key projects and initiatives, each with an optional role, technologies and impact line |
 | Skills | Grouped technical skills |
-| Career journey | Dated milestones from education to today |
 | Awards | Hackathon wins and performance recognition |
-| Journal | Your open diary: dated entries with topics, newest first |
 | Moments | Photo gallery of hackathons, teams and award moments, with filter buttons. Hidden until you add photos and tick Show |
 | Certifications | Certificate images with matching digital badges, grouped by area |
 | Education | Academic background |

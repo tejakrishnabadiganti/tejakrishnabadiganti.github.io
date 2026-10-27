@@ -125,24 +125,10 @@
       "visible": true
     },
     {
-      "id": "journey",
-      "nav": "",
-      "eyebrow": "Journey",
-      "title": "How my career has grown",
-      "visible": true
-    },
-    {
       "id": "awards",
       "nav": "Awards",
       "eyebrow": "Awards & Achievements",
       "title": "Recognition for impact",
-      "visible": true
-    },
-    {
-      "id": "journal",
-      "nav": "Journal",
-      "eyebrow": "Journal",
-      "title": "Notes on what I build and learn",
       "visible": true
     },
     {
@@ -347,7 +333,6 @@
       "items": [
         "AI Agent Development",
         "LLM Integration",
-        "Multi-LLM Integration",
         "GPT Models",
         "Agentic Workflows",
         "AI-Powered Automation",
@@ -423,7 +408,6 @@
       "title": "APIs, Testing & Practices",
       "items": [
         "RESTful APIs",
-        "API Integration",
         "API Documentation",
         "API Security",
         "JWT",
@@ -614,170 +598,6 @@
     {
       "title": "Keep learning",
       "text": "I hold certifications across AWS, Azure, Google Cloud and Anthropic, and I take part in hackathons to try new ideas."
-    }
-  ],
-  "journey": [
-    {
-      "period": "Jun 2018",
-      "title": "Started B.Tech in Electronics and Communication Engineering",
-      "text": "Studied at Aditya College of Engineering and Technology (JNTUK) and graduated in Jun 2022 with 82%."
-    },
-    {
-      "period": "May 2022",
-      "title": "Joined Wipro as a Project Engineer",
-      "text": "Started on the USAA account, building enterprise applications with Core Java, Spring Boot, Spring Cloud and microservices for banking, insurance and enterprise-security projects."
-    },
-    {
-      "period": "2022 – 2025",
-      "title": "Migration and security projects",
-      "text": "Contributed to USAA's Classic to Talon migration and Citi Bank's Service Account Migration to CyberArk, with 85%+ unit test coverage."
-    },
-    {
-      "period": "Dec 2025",
-      "title": "Moved to Accenture as a Senior Software Engineer",
-      "text": "Began working with the Vertex Agent Platform (VAPOR) team on AI-powered engineering agents, and on TechScout and the Connected Tax Platform."
-    },
-    {
-      "period": "Ongoing",
-      "title": "Hackathon wins and certifications",
-      "text": "Won the Accenture Java Full Stack AI Hackathon across India and a Valkey hackathon in collaboration with Amazon, and earned AWS, Azure, Google Cloud and Claude certifications."
-    }
-  ],
-  "journal": [
-    {
-      "date": "",
-      "title": "PR Fix Agent: a code reviewer that is always available",
-      "paragraphs": [
-        "In many teams a pull request waits for a human reviewer before it can move forward. The PR Fix Agent gives the developer feedback first. When a pull request is opened or updated, it reviews the changes, looks for bugs, security problems and quality issues, and posts its findings on the pull request.",
-        "It does more than point out problems. It suggests specific fixes with examples and explains why each change is recommended, so developers learn while they fix.",
-        "The benefits are easy to see. Developers get feedback before human review, teams get consistent reviews across everyone's code, and managers get a steady way to improve code quality and catch security issues earlier.",
-        "Building it meant combining large language models with the pull request workflow and designing instructions (prompts) that give clear, useful and safe feedback. Like any product, it keeps improving through user feedback and usage data."
-      ],
-      "tags": [
-        "AI agents",
-        "Code review",
-        "LLMs",
-        "Security"
-      ]
-    },
-    {
-      "date": "",
-      "title": "Fail-to-Fix: from a failed build to a suggested fix",
-      "paragraphs": [
-        "When an automated test run fails, a developer usually has to open long reports and logs to work out what broke. Fail-to-Fix does that first step automatically.",
-        "It reads the failed test results, finds which tests failed and why, and asks an AI model to suggest fixes. Earlier fix attempts are included as context, so suggestions for similar failures can build on what worked before.",
-        "The suggestions are posted on the pull request as a clear review comment, with inline code suggestions where possible, so the fix starts where the developer is already working.",
-        "It runs as a reusable step in the team's build pipeline, so any project can switch it on without building its own."
-      ],
-      "tags": [
-        "AI agents",
-        "CI/CD",
-        "Test automation",
-        "GitHub Actions"
-      ]
-    },
-    {
-      "date": "",
-      "title": "VAPOR: one safe place to build AI agents",
-      "paragraphs": [
-        "An AI agent is more than a language model. It is the model plus planning, memory, tools and safety rules around it. Building all of that for every new agent takes a lot of time, and it is easy to get wrong.",
-        "VAPOR is the internal platform that provides this once, for everyone. Teams describe the agent they want, connect their own data, and the platform supplies the runtime, a catalog of approved models and tools, and monitoring of every run.",
-        "It also checks agents before release. A readiness check looks at simple questions, such as whether the tools are limited to what the agent needs and whether risky actions need a human to approve them. The same setup always gives the same result, so there is no guesswork.",
-        "I work with the platform team to build agents on it. The main lesson is that good AI products need trust and clear rules as much as clever models."
-      ],
-      "tags": [
-        "AI agents",
-        "MCP",
-        "Governance",
-        "Observability"
-      ]
-    },
-    {
-      "date": "",
-      "title": "TechScout: making technology requests simple",
-      "paragraphs": [
-        "When a team wants to start using a new tool or technology, it usually needs a review first, to check that it is safe, useful and allowed. Doing this with scattered tickets and emails makes it hard to see where a request is, and who is waiting for whom.",
-        "TechScout puts the whole process in one web application. A person submits a request, the right reviewers pick it up, the technology is evaluated, and a decision is recorded. Every request has a clear status, and each step has rules about who can move it forward.",
-        "I built it end to end: the screens people use, the backend services behind them, the connections between the two, and the pipeline that delivers new versions. Later work focused on improving the existing features, making pages load faster and gathering user feedback.",
-        "What I learned: a workflow looks simple on the screen, but the rules behind each status change are where most of the care is needed."
-      ],
-      "tags": [
-        "React.js",
-        "Node.js",
-        "Workflow",
-        "Full stack"
-      ]
-    },
-    {
-      "date": "",
-      "title": "Connected Tax Platform: one place for tax work",
-      "paragraphs": [
-        "Tax software is often split into many separate products, and users have to jump between them to finish one job. The Connected Tax Platform changes this by organising the experience around the work people actually do, from start to finish.",
-        "A good experience here starts with structure. Before every feature is ready, the team decides how things are grouped, named and found, so that a new user can see where to go next without training.",
-        "My part was building features on this platform, including chat-based interfaces and AI-agent capabilities, so users can ask for help or get answers next to the task they are doing.",
-        "The lesson for me: good products are shaped around the user's journey, not around the internal product boundaries."
-      ],
-      "tags": [
-        "Web UI",
-        "Chat interfaces",
-        "AI agents",
-        "User experience"
-      ]
-    },
-    {
-      "date": "",
-      "title": "Unified Metrics: one set of numbers for everyone",
-      "paragraphs": [
-        "When every team measures its work in its own way, it is hard to compare results or trust a report. One team's \"daily users\" or \"test status\" may mean something different from another's.",
-        "The Unified Metrics Platform fixes this with shared definitions. Products send their measurements in a common format, the platform combines them, and dashboards show the results. Typical topics are product usage, how fast changes reach customers, how well tests are passing, and how healthy services are.",
-        "A good design goal is to make it easy for a team to join. Common measurements can be collected automatically, so teams do not have to write extra code before they see useful numbers.",
-        "I contributed to the platform, and I supported DevOps and deployment automation around it. What stays with me is that a metric is only useful when people agree on what it means."
-      ],
-      "tags": [
-        "Metrics",
-        "Telemetry",
-        "DevOps",
-        "Dashboards"
-      ]
-    },
-    {
-      "date": "Dec 2025",
-      "title": "Starting work on AI engineering agents",
-      "paragraphs": [
-        "I moved to Accenture and began working on the Vertex Inc. GCC project. My focus is designing AI-powered engineering agents, including the PR Fix and Fail-to-Fix agents.",
-        "These agents integrate multiple LLMs to automate development workflows, code analysis and issue resolution. I build them with the Vertex Agent Platform (VAPOR) team."
-      ],
-      "tags": [
-        "AI agents",
-        "LLM integration",
-        "VAPOR"
-      ]
-    },
-    {
-      "date": "May 2022",
-      "title": "Starting as a Project Engineer",
-      "paragraphs": [
-        "I joined Wipro on the USAA account and started building enterprise applications with Core Java, Spring Boot and Spring Cloud.",
-        "The work covered banking, insurance and enterprise-security projects, and it included microservices, REST APIs and production monitoring with OpenShift, Kibana and Elasticsearch."
-      ],
-      "tags": [
-        "Java",
-        "Spring Boot",
-        "Microservices"
-      ]
-    },
-    {
-      "date": "",
-      "title": "Winning hackathons",
-      "paragraphs": [
-        "I won first place in the Accenture Java Full Stack AI Hackathon across India, and I won a Valkey hackathon run in collaboration with Amazon.",
-        "My team was also runner-up in a Microsoft hackathon. The photos are in the Moments section."
-      ],
-      "tags": [
-        "Hackathons",
-        "Valkey",
-        "AI"
-      ]
     }
   ],
   "moments": [
