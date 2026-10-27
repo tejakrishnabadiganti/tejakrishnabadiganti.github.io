@@ -261,6 +261,20 @@
       "result": "Gives developers a starting point for fixing failed tests right where they already work."
     },
     {
+      "tag": "AI Platform",
+      "title": "Vertex Agent Platform (VAPOR)",
+      "text": "An internal platform where teams build, run and manage AI agents in one place. It provides the agent runtime, an approved catalog of models and tools, safety guardrails, a readiness check before release, and monitoring of every run. Teams bring their own use case and data, and the platform handles the rest.",
+      "role": "Built AI agents together with the platform team",
+      "stack": [
+        "AI agents",
+        "MCP",
+        "LLMs",
+        "Governance",
+        "Observability"
+      ],
+      "result": "Teams can move from an idea to a working, governed agent without building all the infrastructure themselves."
+    },
+    {
       "tag": "Full Stack",
       "title": "TechScout",
       "text": "End-to-end application built with React.js and Node.js, covering frontend, backend services, API integration and delivery."
@@ -333,6 +347,8 @@
         "Specification-Driven Development (SDD)",
         "Research, Plan, Implement (RPI)",
         "Prompt Engineering",
+        "MCP (Model Context Protocol)",
+        "AI Agent Governance",
         "Code Review Automation",
         "CI/CD Failure Analysis"
       ]
@@ -619,6 +635,22 @@
   "journal": [
     {
       "date": "",
+      "title": "VAPOR: one safe place to build AI agents",
+      "paragraphs": [
+        "An AI agent is more than a language model. It is the model plus planning, memory, tools and safety rules around it. Building all of that for every new agent takes a lot of time, and it is easy to get wrong.",
+        "VAPOR is the internal platform that provides this once, for everyone. Teams describe the agent they want, connect their own data, and the platform supplies the runtime, a catalog of approved models and tools, and monitoring of every run.",
+        "It also checks agents before release. A readiness check looks at simple questions, such as whether the tools are limited to what the agent needs and whether risky actions need a human to approve them. The same setup always gives the same result, so there is no guesswork.",
+        "I work with the platform team to build agents on it. The main lesson is that good AI products need trust and clear rules as much as clever models."
+      ],
+      "tags": [
+        "AI agents",
+        "MCP",
+        "Governance",
+        "Observability"
+      ]
+    },
+    {
+      "date": "",
       "title": "PR Fix Agent: a code reviewer that is always available",
       "paragraphs": [
         "In many teams a pull request waits for a human reviewer before it can move forward. The PR Fix Agent gives the developer feedback first. When a pull request is opened or updated, it reviews the changes, looks for bugs, security problems and quality issues, and posts its findings on the pull request.",
@@ -700,9 +732,18 @@
   },
   "faq": [
     {
+      "question": "What is VAPOR?",
+      "answer": "VAPOR is the Vertex Agent Platform, an internal platform where teams build, run and manage AI agents in one place. It gives every agent the same runtime, approved models and tools, safety guardrails and monitoring, so teams can focus on their own use case."
+    },
+    {
+      "question": "What is an AI agent?",
+      "answer": "An AI agent is software that uses a language model to work towards a goal. Besides the model, it plans its steps, remembers context and uses tools, such as searching data or calling an API, all within safety rules."
+    },
+    {
       "question": "What are the PR Fix and Fail-to-Fix agents?",
       "answer": "They are AI assistants for software teams. The PR Fix Agent reviews a pull request like an expert reviewer would, finds bugs and security issues and suggests fixes. The Fail-to-Fix Agent looks at failed automated tests, works out what went wrong and suggests a fix on the pull request. Both save developers time and help catch problems earlier."
-    },    {
+    },
+    {
       "question": "What do you do?",
       "answer": "I am a Full Stack Software Engineer. I build enterprise software with Java, Spring Boot, Angular and microservices, and I develop AI-powered engineering agents."
     },
