@@ -30,9 +30,9 @@ h3 {
 }
 
 .hero__title {
-  font-size: clamp(2.1rem, 4.4vw, 3.4rem);
+  font-size: clamp(2.3rem, 5vw, 3.75rem);
   font-weight: 600;
-  line-height: 1.15;
+  line-height: 1.12;
   letter-spacing: -0.015em;
 }
 
@@ -97,15 +97,19 @@ h3 {
   transform: perspective(300px) rotateY(360deg);
 }
 
+.brand__name {
+  white-space: nowrap;
+}
+
 .nav__list {
   align-items: center;
-  gap: 1.9rem;
+  gap: 1.1rem;
 }
 
 .nav__link {
   font-size: 0.74rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -589,7 +593,7 @@ h3 {
 
 /*==================== ALWAYS-VISIBLE NAV BAR ====================*/
 /* Below desktop width the links move to their own scrollable row instead of a hidden menu. */
-@media (max-width: 1100px) {
+@media (max-width: 1180px) {
   :root {
     --header-height: 108px;
   }
