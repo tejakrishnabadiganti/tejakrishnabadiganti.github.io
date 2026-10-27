@@ -61,6 +61,7 @@ export function withDefaults(content) {
   }
 
   content.testimonials ??= [];
+  content.skillInfo ??= [];
   content.moments ??= [];
   content.values ??= [];
   content.profile.ctaPrimary ??= "Get in touch";

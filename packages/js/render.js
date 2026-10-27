@@ -206,14 +206,20 @@ function renderWork({ work }) {
   );
 }
 
-function renderSkills({ skills }) {
+function renderSkills({ skills, skillInfo }) {
+  const explained = new Set(skillInfo.map((info) => info.name));
+  const tag = (item) =>
+    explained.has(item)
+      ? el("li", {}, el("button", { class: "tag-button", type: "button", "data-skill": item, "aria-haspopup": "dialog" }, item))
+      : el("li", {}, item);
+
   $("skills-grid").replaceChildren(
     ...skills.map((group) =>
       el(
         "section",
         { class: "skills__group" },
         el("h3", { class: "skills__title" }, group.title),
-        el("ul", { class: "tags" }, group.items.map((item) => el("li", {}, item)))
+        el("ul", { class: "tags" }, group.items.map(tag))
       )
     )
   );

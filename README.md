@@ -20,7 +20,7 @@ There is a hidden admin editor (see [Editing the site](#editing-the-site)) that 
 | How I work | Short principles about how you approach engineering, each with an example |
 | Experience | Roles with achievements |
 | Selected Work | Key projects and initiatives, each with an optional role, technologies and impact line |
-| Skills | Grouped technical skills |
+| Skills | Grouped technical skills. Clicking a skill opens a popup with a plain explanation, an everyday analogy and links to official docs and blogs (edit them under Skill explanations in the admin) |
 | Awards | Hackathon wins and performance recognition |
 | Moments | Photo gallery of hackathons, teams and award moments, with filter buttons. Hidden until you add photos and tick Show |
 | Certifications | Certificate images with matching digital badges, grouped by area |

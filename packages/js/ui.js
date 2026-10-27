@@ -1,3 +1,6 @@
+import { el, safeUrl } from "./dom.js";
+import { getContent } from "./site.js";
+
 const root = document.documentElement;
 const SESSION_KEY = "portfolio-admin";
 
@@ -105,6 +108,56 @@ function initCertificatePopup() {
   });
 }
 
+// A link line is written as "Label | https://address"; only web links are shown.
+function parseLink(line) {
+  const [first, ...rest] = line.split("|");
+  const address = (rest.length > 0 ? rest.join("|") : first).trim();
+  const label = rest.length > 0 ? first.trim() : "";
+  if (!/^https:\/\//i.test(address)) return null;
+  return { href: safeUrl(address), label: label || new URL(address).hostname };
+}
+
+function initSkillPopup() {
+  const dialog = document.getElementById("skill-dialog");
+  const title = document.getElementById("skill-dialog-title");
+  const what = document.getElementById("skill-what");
+  const analogy = document.getElementById("skill-analogy");
+  const analogyBlock = document.getElementById("skill-analogy-block");
+  const links = document.getElementById("skill-links");
+  const linksBlock = document.getElementById("skill-links-block");
+
+  function open(name) {
+    const info = getContent()?.skillInfo.find((item) => item.name === name);
+    if (!info) return;
+
+    title.textContent = info.name;
+    what.textContent = info.what;
+    analogy.textContent = info.analogy ?? "";
+    analogyBlock.hidden = !info.analogy;
+
+    const items = (info.links ?? []).map(parseLink).filter(Boolean);
+    links.replaceChildren(
+      ...items.map((link) =>
+        el("li", {}, el("a", { href: link.href, target: "_blank", rel: "noopener noreferrer" }, link.label))
+      )
+    );
+    linksBlock.hidden = items.length === 0;
+
+    dialog.showModal();
+  }
+
+  // Skill tags are rebuilt when content changes, so listen on the document.
+  document.addEventListener("click", (event) => {
+    const tag = event.target.closest(".tag-button");
+    if (tag) open(tag.dataset.skill);
+  });
+
+  document.getElementById("skill-close").addEventListener("click", () => dialog.close());
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+}
+
 // The editor is hidden: it is only loaded after a secret trigger, never for ordinary visitors.
 function initAdminAccess() {
   const loginButton = document.getElementById("admin-login");
@@ -153,5 +206,6 @@ export function initUi() {
   initHeaderShadow();
   initActiveLink();
   initCertificatePopup();
+  initSkillPopup();
   initAdminAccess();
 }

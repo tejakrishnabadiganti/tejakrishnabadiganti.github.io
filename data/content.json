@@ -619,5 +619,776 @@
       "caption": "Runner-up team",
       "photo": "packages/images/moments/hackathon-microsoft-runners-up.jpg"
     }
+  ],
+  "skillInfo": [
+    {
+      "name": "Java 8/11/17",
+      "what": "Java is a widely used programming language for business software. Versions 8, 11 and 17 are long-term releases that companies stay on for years because they are stable and supported.",
+      "analogy": "Think of the versions as editions of a trusted company handbook: the rules stay the same, but each edition adds clearer chapters and removes outdated pages.",
+      "links": [
+        "Java documentation | https://docs.oracle.com/en/java/javase/17/",
+        "Learn Java (dev.java) | https://dev.java/learn/"
+      ]
+    },
+    {
+      "name": "Python",
+      "what": "Python is a beginner-friendly language that reads almost like English. It is popular for automation, data work, scripting and AI.",
+      "analogy": "It is like a Swiss army knife on an office desk: not the fastest tool for every job, but handy for almost everything.",
+      "links": [
+        "Official tutorial | https://docs.python.org/3/tutorial/",
+        "Real Python tutorials | https://realpython.com/"
+      ]
+    },
+    {
+      "name": "TypeScript",
+      "what": "TypeScript is JavaScript with types added. You describe what kind of data each piece of code expects, and mistakes are caught before the app runs.",
+      "analogy": "It is like a form with labelled boxes. You cannot write a phone number in the date box, so errors are noticed early.",
+      "links": [
+        "TypeScript documentation | https://www.typescriptlang.org/docs/",
+        "TypeScript in 5 minutes | https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html"
+      ]
+    },
+    {
+      "name": "JavaScript",
+      "what": "JavaScript is the language that makes web pages interactive. It runs in every browser, and also on servers.",
+      "analogy": "If a web page is a building, HTML is the walls, CSS is the paint, and JavaScript is the electricity that makes lights, doors and lifts work.",
+      "links": [
+        "MDN JavaScript guide | https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+        "The Modern JavaScript Tutorial | https://javascript.info/"
+      ]
+    },
+    {
+      "name": "Spring Boot",
+      "what": "Spring Boot is a Java framework that sets up a ready-to-run application with sensible defaults, so developers write business logic instead of configuration.",
+      "analogy": "It is like moving into a furnished office: desks, power and internet are already there, so you can start working on day one.",
+      "links": [
+        "Spring Boot project | https://spring.io/projects/spring-boot",
+        "Spring Boot tutorials (Baeldung) | https://www.baeldung.com/spring-boot"
+      ]
+    },
+    {
+      "name": "Spring Data JPA",
+      "what": "Spring Data JPA lets a Java application save and read database records without writing most of the database code by hand.",
+      "analogy": "It is like a filing assistant. You say 'get me all invoices for this customer' and the assistant knows which cabinet to open.",
+      "links": [
+        "Spring Data JPA | https://spring.io/projects/spring-data-jpa",
+        "Spring Data JPA guide (Baeldung) | https://www.baeldung.com/the-persistence-layer-with-spring-data-jpa"
+      ]
+    },
+    {
+      "name": "Spring Cloud",
+      "what": "Spring Cloud is a set of tools for building applications made of many small services, such as configuration, service lookup and routing.",
+      "analogy": "It is like the facilities team for a large campus: it keeps the directory, the signage and the shared rules in one place so every building works together.",
+      "links": [
+        "Spring Cloud project | https://spring.io/projects/spring-cloud"
+      ]
+    },
+    {
+      "name": "Hibernate",
+      "what": "Hibernate is a Java library that maps objects in code to tables in a database, so developers work with objects instead of raw database commands.",
+      "analogy": "It is like a translator between two languages. You speak Java, the database speaks SQL, and Hibernate converts in both directions.",
+      "links": [
+        "Hibernate ORM documentation | https://hibernate.org/orm/documentation/",
+        "Hibernate guides (Baeldung) | https://www.baeldung.com/hibernate-5-spring"
+      ]
+    },
+    {
+      "name": "JAX-RS",
+      "what": "JAX-RS is the standard Java way to build web services that other programs can call over the internet using simple web addresses.",
+      "analogy": "It is like a restaurant menu with numbered dishes. Any customer who knows the menu can place an order without talking to the chef.",
+      "links": [
+        "Jakarta RESTful Web Services | https://jakarta.ee/specifications/restful-ws/",
+        "JAX-RS overview (Baeldung) | https://www.baeldung.com/jax-rs-spec-and-implementations"
+      ]
+    },
+    {
+      "name": "Angular",
+      "what": "Angular is a framework from Google for building large, well-organised web applications with reusable screen components.",
+      "analogy": "It is like building with ready-made furniture modules: each part has a clear shape and place, so a big office layout stays tidy.",
+      "links": [
+        "Angular documentation | https://angular.dev",
+        "Angular tutorials | https://angular.dev/tutorials"
+      ]
+    },
+    {
+      "name": "Node.js 18",
+      "what": "Node.js lets JavaScript run on a server instead of only in a browser. Version 18 was a long-term release used for APIs and tools.",
+      "analogy": "It is like teaching a front-desk receptionist to also run the back office, using the same language they already know.",
+      "links": [
+        "Learn Node.js | https://nodejs.org/en/learn",
+        "Node.js 18 API reference | https://nodejs.org/docs/latest-v18.x/api/"
+      ]
+    },
+    {
+      "name": "Dependency Injection",
+      "what": "Dependency injection means a piece of code is handed what it needs instead of creating it itself. This makes code easier to change and test.",
+      "analogy": "It is like a chef who is given ingredients by the kitchen team instead of shopping personally. Swap the ingredients and the recipe still works.",
+      "links": [
+        "Inversion of Control and Dependency Injection (Martin Fowler) | https://martinfowler.com/articles/injection.html"
+      ]
+    },
+    {
+      "name": "AI Agent Development",
+      "what": "An AI agent is software that uses a language model to pursue a goal. It plans steps, uses tools such as search or APIs, and checks its own results.",
+      "analogy": "It is like a capable assistant who does not only answer questions but books the meeting room, sends the invite and tells you when it is done.",
+      "links": [
+        "Building effective agents (Anthropic) | https://www.anthropic.com/engineering/building-effective-agents",
+        "LLM Powered Autonomous Agents (Lilian Weng) | https://lilianweng.github.io/posts/2023-06-23-agent/"
+      ]
+    },
+    {
+      "name": "LLM Integration",
+      "what": "LLM integration means connecting a large language model to a real product, sending it the right information and using its answers safely.",
+      "analogy": "It is like hiring an expert consultant by phone. You must brief them clearly, and you decide what to do with their advice.",
+      "links": [
+        "Anthropic API overview | https://docs.anthropic.com/en/api/overview",
+        "OpenAI platform docs | https://platform.openai.com/docs/overview"
+      ]
+    },
+    {
+      "name": "GPT Models",
+      "what": "GPT models are large language models from OpenAI that read and write text, code and more. They power many chat and automation tools.",
+      "analogy": "They are like a very well-read colleague who has skimmed a huge library and can draft, summarise and explain quickly, though you still check the details.",
+      "links": [
+        "OpenAI models | https://platform.openai.com/docs/models"
+      ]
+    },
+    {
+      "name": "Agentic Workflows",
+      "what": "An agentic workflow splits a larger job into steps where an AI decides what to do next, calls tools and can review its own work.",
+      "analogy": "It is like a project manager who breaks a task into steps, assigns each one and checks the result before moving on.",
+      "links": [
+        "Building effective agents (Anthropic) | https://www.anthropic.com/engineering/building-effective-agents",
+        "LLM Powered Autonomous Agents (Lilian Weng) | https://lilianweng.github.io/posts/2023-06-23-agent/"
+      ]
+    },
+    {
+      "name": "AI-Powered Automation",
+      "what": "AI-powered automation uses AI to handle routine work such as sorting requests, drafting replies or moving data between tools.",
+      "analogy": "It is like a mailroom that reads each letter, decides which desk it belongs to and delivers it, without someone sorting by hand.",
+      "links": [
+        "n8n documentation | https://docs.n8n.io/",
+        "Building effective agents (Anthropic) | https://www.anthropic.com/engineering/building-effective-agents"
+      ]
+    },
+    {
+      "name": "Claude",
+      "what": "Claude is an AI assistant made by Anthropic. It can write, analyse and reason about text and code, and can be connected to tools.",
+      "analogy": "It is like a patient senior colleague you can ask to read a long document or review code and explain what they found.",
+      "links": [
+        "Claude documentation | https://docs.anthropic.com/en/home",
+        "About Claude | https://www.anthropic.com/claude"
+      ]
+    },
+    {
+      "name": "GitHub Copilot",
+      "what": "GitHub Copilot is an AI pair programmer inside the code editor. It suggests code, explains code and can help review changes.",
+      "analogy": "It is like a second pair of hands at the keyboard that finishes your sentence, while you stay the author.",
+      "links": [
+        "GitHub Copilot docs | https://docs.github.com/en/copilot",
+        "GitHub Copilot on the GitHub blog | https://github.blog/ai-and-ml/github-copilot/"
+      ]
+    },
+    {
+      "name": "Cursor",
+      "what": "Cursor is a code editor built around AI. You can ask it to explain, change or write code across a whole project.",
+      "analogy": "It is like a word processor where you can say 'tidy up this whole report' and it edits many pages for you to approve.",
+      "links": [
+        "Cursor documentation | https://docs.cursor.com/",
+        "Cursor | https://cursor.com/"
+      ]
+    },
+    {
+      "name": "Rovo",
+      "what": "Rovo is Atlassian's AI assistant that searches and answers across tools like Jira and Confluence.",
+      "analogy": "It is like a company librarian who knows every shelf and can answer 'where did we decide this?' in seconds.",
+      "links": [
+        "Rovo by Atlassian | https://www.atlassian.com/software/rovo",
+        "Rovo support documentation | https://support.atlassian.com/rovo/"
+      ]
+    },
+    {
+      "name": "Specification-Driven Development (SDD)",
+      "what": "In specification-driven development you write down clearly what should be built before any code, and use that written spec to guide people and AI.",
+      "analogy": "It is like an architect's blueprint. Builders, inspectors and clients all work from the same drawing instead of guessing.",
+      "links": [
+        "Spec Kit (GitHub) | https://github.com/github/spec-kit",
+        "Claude Code best practices | https://www.anthropic.com/engineering/claude-code-best-practices"
+      ]
+    },
+    {
+      "name": "Research, Plan, Implement (RPI)",
+      "what": "RPI is a working method with three steps: first study the existing code, then write a plan, and only then build, with a review at each step.",
+      "analogy": "It is like planning a trip. You check the map, write the route, and only then start driving.",
+      "links": [
+        "Claude Code best practices | https://www.anthropic.com/engineering/claude-code-best-practices",
+        "12-Factor Agents | https://github.com/humanlayer/12-factor-agents"
+      ]
+    },
+    {
+      "name": "Prompt Engineering",
+      "what": "Prompt engineering is the skill of writing clear instructions and examples for an AI so it gives useful, reliable answers.",
+      "analogy": "It is like briefing a new team member. The clearer the brief, the better the first draft.",
+      "links": [
+        "Prompt engineering overview (Anthropic) | https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview",
+        "Prompt Engineering Guide | https://www.promptingguide.ai/"
+      ]
+    },
+    {
+      "name": "MCP (Model Context Protocol)",
+      "what": "MCP is an open standard that lets AI assistants connect to tools and data sources in one consistent way.",
+      "analogy": "It is like a universal plug. Any device with the right plug works in any socket, so you do not need a new adapter for every pair.",
+      "links": [
+        "Model Context Protocol | https://modelcontextprotocol.io/",
+        "Introducing MCP (Anthropic) | https://www.anthropic.com/news/model-context-protocol"
+      ]
+    },
+    {
+      "name": "AI Agent Governance",
+      "what": "AI agent governance means setting rules, approvals, limits and monitoring so AI agents act safely and can be audited.",
+      "analogy": "It is like staff policies and sign-off limits. A new employee can do a lot, but large payments still need a manager's approval.",
+      "links": [
+        "AI Risk Management Framework (NIST) | https://www.nist.gov/itl/ai-risk-management-framework",
+        "OWASP Top 10 for LLM applications | https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+      ]
+    },
+    {
+      "name": "Code Review Automation",
+      "what": "Code review automation uses tools or AI to check code changes for bugs, security issues and style, before a human reviewer looks.",
+      "analogy": "It is like a spell-checker for code. It catches the obvious slips so the human editor can focus on the story.",
+      "links": [
+        "Copilot code review (GitHub Docs) | https://docs.github.com/en/copilot/using-github-copilot/code-review/using-copilot-code-review",
+        "Code review guide (Google) | https://google.github.io/eng-practices/review/"
+      ]
+    },
+    {
+      "name": "CI/CD Failure Analysis",
+      "what": "When an automated build or test fails, failure analysis finds why and what to fix. Doing it automatically saves developers from reading long logs.",
+      "analogy": "It is like a car's diagnostic port. Instead of listening for strange noises, you read the exact fault code.",
+      "links": [
+        "Troubleshooting workflows (GitHub Docs) | https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows",
+        "Continuous Integration (Martin Fowler) | https://martinfowler.com/articles/continuousIntegration.html"
+      ]
+    },
+    {
+      "name": "Microservices",
+      "what": "Microservices split one large application into many small services, each doing one job and able to be changed and released on its own.",
+      "analogy": "It is like a food court instead of one big restaurant. Each stall specialises, and one stall closing does not shut the whole place.",
+      "links": [
+        "Microservices (Martin Fowler) | https://martinfowler.com/articles/microservices.html",
+        "microservices.io patterns | https://microservices.io/"
+      ]
+    },
+    {
+      "name": "API Gateway",
+      "what": "An API gateway is a single front door for many services. It routes requests, checks identity and applies limits.",
+      "analogy": "It is like the reception desk of a large building. Visitors check in once and are sent to the right floor.",
+      "links": [
+        "API Gateway pattern | https://microservices.io/patterns/apigateway.html",
+        "Amazon API Gateway | https://aws.amazon.com/api-gateway/"
+      ]
+    },
+    {
+      "name": "Service Discovery",
+      "what": "Service discovery lets services find each other by name, even when their addresses change.",
+      "analogy": "It is like a company phone directory. You look up 'Payments team' and get the current number instead of memorising it.",
+      "links": [
+        "Client-side discovery pattern | https://microservices.io/patterns/client-side-discovery.html",
+        "Service registration and discovery (Spring guide) | https://spring.io/guides/gs/service-registration-and-discovery/"
+      ]
+    },
+    {
+      "name": "Circuit Breaker (Resilience4j)",
+      "what": "A circuit breaker stops calling a service that keeps failing, so the failure does not spread. Resilience4j is a Java library for it.",
+      "analogy": "It is like the fuse in an electrical panel. When something overloads, it cuts the circuit so the rest of the house stays safe.",
+      "links": [
+        "Resilience4j CircuitBreaker | https://resilience4j.readme.io/docs/circuitbreaker",
+        "Circuit Breaker (Martin Fowler) | https://martinfowler.com/bliki/CircuitBreaker.html"
+      ]
+    },
+    {
+      "name": "Event-Driven Architecture",
+      "what": "In an event-driven design, parts of a system announce that something happened, and other parts react, instead of calling each other directly.",
+      "analogy": "It is like a notice board in an office. When a new order is pinned, whoever needs to react can pick it up on their own.",
+      "links": [
+        "Event-driven architecture (Martin Fowler) | https://martinfowler.com/articles/201701-event-driven.html",
+        "What is event-driven architecture (AWS) | https://aws.amazon.com/event-driven-architecture/"
+      ]
+    },
+    {
+      "name": "Distributed Systems",
+      "what": "A distributed system is a group of computers that work together as one. It must cope with slow networks, failures and keeping data consistent.",
+      "analogy": "It is like a team working across several offices. They have to agree on facts even when phone lines drop.",
+      "links": [
+        "Amazon Builders' Library | https://aws.amazon.com/builders-library/",
+        "Distributed systems articles (Werner Vogels) | https://www.allthingsdistributed.com/"
+      ]
+    },
+    {
+      "name": "Resiliency Patterns",
+      "what": "Resiliency patterns are proven techniques such as retries, timeouts and fallbacks that keep a system working when parts fail.",
+      "analogy": "They are like having a spare tyre, a backup generator and an alternate route. Trouble slows you down but does not stop you.",
+      "links": [
+        "Resiliency patterns (Microsoft Learn) | https://learn.microsoft.com/en-us/azure/architecture/patterns/category/resiliency",
+        "Timeouts, retries and backoff with jitter (AWS) | https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/"
+      ]
+    },
+    {
+      "name": "Design Patterns",
+      "what": "Design patterns are named, reusable solutions to common software design problems, so teams share a vocabulary.",
+      "analogy": "They are like standard floor plans for a kitchen. You adapt them, but you do not invent the layout from scratch each time.",
+      "links": [
+        "Design patterns catalogue | https://refactoring.guru/design-patterns"
+      ]
+    },
+    {
+      "name": "Object-Oriented Design",
+      "what": "Object-oriented design organises code into objects that hold their own data and behaviour, which models real-world things.",
+      "analogy": "It is like a company with departments. Each one owns its work and talks to others through clear requests.",
+      "links": [
+        "Object-oriented concepts (Oracle tutorial) | https://docs.oracle.com/javase/tutorial/java/concepts/",
+        "Object-oriented programming in Java (Baeldung) | https://www.baeldung.com/java-oop"
+      ]
+    },
+    {
+      "name": "SOLID Principles",
+      "what": "SOLID is a set of five guidelines for writing code that is easy to understand, extend and test.",
+      "analogy": "It is like good office organisation rules: one person per role, easy to add new roles and no hidden dependencies.",
+      "links": [
+        "SOLID principles (Baeldung) | https://www.baeldung.com/solid-principles",
+        "SOLID overview (Wikipedia) | https://en.wikipedia.org/wiki/SOLID"
+      ]
+    },
+    {
+      "name": "System Design",
+      "what": "System design is planning how the parts of a large software system fit together so it is fast, reliable and can grow.",
+      "analogy": "It is like city planning. You decide roads, power and water before the buildings go up, because changing them later is costly.",
+      "links": [
+        "System Design Primer | https://github.com/donnemartin/system-design-primer",
+        "AWS architecture center | https://aws.amazon.com/architecture/"
+      ]
+    },
+    {
+      "name": "MySQL",
+      "what": "MySQL is a popular open-source relational database that stores data in tables and answers questions written in SQL.",
+      "analogy": "It is like a very large, well-organised spreadsheet system where tables link to each other and can be searched in a moment.",
+      "links": [
+        "MySQL documentation | https://dev.mysql.com/doc/",
+        "MySQL tutorial | https://www.mysqltutorial.org/"
+      ]
+    },
+    {
+      "name": "PostgreSQL",
+      "what": "PostgreSQL is a powerful open-source relational database known for reliability and rich features.",
+      "analogy": "It is like a well-run records office: strict about rules, very reliable, and able to handle complicated questions.",
+      "links": [
+        "PostgreSQL documentation | https://www.postgresql.org/docs/",
+        "PostgreSQL tutorial | https://www.postgresqltutorial.com/"
+      ]
+    },
+    {
+      "name": "SQL Server",
+      "what": "SQL Server is Microsoft's relational database, widely used in business systems and reporting.",
+      "analogy": "It is like the finance department's trusted ledger system, built to work well with the other Microsoft tools around it.",
+      "links": [
+        "SQL Server documentation | https://learn.microsoft.com/en-us/sql/sql-server/"
+      ]
+    },
+    {
+      "name": "DynamoDB",
+      "what": "DynamoDB is Amazon's managed NoSQL database. It stores items by key and is designed to stay fast at very large scale.",
+      "analogy": "It is like a huge set of lockers where you find an item instantly by its number, without searching row by row.",
+      "links": [
+        "DynamoDB developer guide | https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html",
+        "Amazon DynamoDB | https://aws.amazon.com/dynamodb/"
+      ]
+    },
+    {
+      "name": "SQL Query Optimization",
+      "what": "SQL query optimization means changing queries and indexes so the database returns answers faster and uses fewer resources.",
+      "analogy": "It is like adding an index to a thick book. Finding a topic takes seconds instead of reading every page.",
+      "links": [
+        "Use The Index, Luke | https://use-the-index-luke.com/",
+        "PostgreSQL performance tips | https://www.postgresql.org/docs/current/performance-tips.html"
+      ]
+    },
+    {
+      "name": "Apache Kafka",
+      "what": "Kafka is a platform that moves streams of events between systems reliably and in order, at high volume.",
+      "analogy": "It is like a conveyor belt in a sorting centre. Items keep arriving in order and each team picks up what it needs at its own pace.",
+      "links": [
+        "Kafka documentation | https://kafka.apache.org/documentation/",
+        "Confluent developer site | https://developer.confluent.io/"
+      ]
+    },
+    {
+      "name": "Redis",
+      "what": "Redis is an in-memory data store used as a very fast cache, session store and message broker.",
+      "analogy": "It is like keeping the most used files on your desk instead of in the archive room. You get them instantly.",
+      "links": [
+        "Redis documentation | https://redis.io/docs/latest/",
+        "Redis learning hub | https://redis.io/learn"
+      ]
+    },
+    {
+      "name": "Valkey",
+      "what": "Valkey is an open-source, Redis-compatible in-memory data store, supported by the Linux Foundation and major cloud providers.",
+      "analogy": "It is like the same desk-drawer filing system, now run by a community so nobody owns the key.",
+      "links": [
+        "Valkey | https://valkey.io/",
+        "Valkey topics | https://valkey.io/topics/"
+      ]
+    },
+    {
+      "name": "AWS",
+      "what": "Amazon Web Services is a cloud platform where you rent computing, storage and many other services instead of buying hardware.",
+      "analogy": "It is like renting office space and utilities by the month instead of building your own building.",
+      "links": [
+        "AWS documentation | https://docs.aws.amazon.com/",
+        "AWS getting started | https://aws.amazon.com/getting-started/"
+      ]
+    },
+    {
+      "name": "EC2",
+      "what": "EC2 provides virtual servers in the cloud that you can start, size and stop on demand.",
+      "analogy": "It is like renting a computer by the hour. You pick the size, use it and hand it back.",
+      "links": [
+        "EC2 documentation | https://docs.aws.amazon.com/ec2/",
+        "Amazon EC2 | https://aws.amazon.com/ec2/"
+      ]
+    },
+    {
+      "name": "ECS",
+      "what": "ECS is AWS's service for running and managing containers, which are packaged applications.",
+      "analogy": "It is like a shipping port manager that decides which container goes on which dock and replaces any that break.",
+      "links": [
+        "ECS documentation | https://docs.aws.amazon.com/ecs/",
+        "Amazon ECS | https://aws.amazon.com/ecs/"
+      ]
+    },
+    {
+      "name": "Lambda",
+      "what": "AWS Lambda runs small pieces of code only when something triggers them, without you managing servers.",
+      "analogy": "It is like a taxi instead of owning a car. You pay only for the ride, and there is no parking to think about.",
+      "links": [
+        "Lambda documentation | https://docs.aws.amazon.com/lambda/",
+        "AWS Lambda | https://aws.amazon.com/lambda/"
+      ]
+    },
+    {
+      "name": "Fargate",
+      "what": "Fargate runs containers on AWS without you managing the servers underneath.",
+      "analogy": "It is like a serviced office. You bring your team and work, and the building provider handles the rest.",
+      "links": [
+        "What is AWS Fargate | https://docs.aws.amazon.com/AmazonECS/latest/userguide/what-is-fargate.html",
+        "AWS Fargate | https://aws.amazon.com/fargate/"
+      ]
+    },
+    {
+      "name": "S3",
+      "what": "Amazon S3 is cloud storage for files of any size, with very high durability.",
+      "analogy": "It is like a huge, secure warehouse with labelled boxes. You can store anything and fetch it by its label.",
+      "links": [
+        "S3 documentation | https://docs.aws.amazon.com/s3/",
+        "Amazon S3 | https://aws.amazon.com/s3/"
+      ]
+    },
+    {
+      "name": "RDS",
+      "what": "Amazon RDS runs relational databases in the cloud and handles backups, patching and failover for you.",
+      "analogy": "It is like having a database caretaker who does the maintenance and nightly backups so you can just use the data.",
+      "links": [
+        "RDS documentation | https://docs.aws.amazon.com/rds/",
+        "Amazon RDS | https://aws.amazon.com/rds/"
+      ]
+    },
+    {
+      "name": "IAM",
+      "what": "AWS IAM controls who can do what in your cloud account, using users, roles and permissions.",
+      "analogy": "It is like badge access in an office. Each person's badge opens only the doors they need.",
+      "links": [
+        "IAM documentation | https://docs.aws.amazon.com/iam/",
+        "AWS IAM | https://aws.amazon.com/iam/"
+      ]
+    },
+    {
+      "name": "CloudWatch",
+      "what": "CloudWatch collects logs and metrics from AWS resources and can raise alarms when something looks wrong.",
+      "analogy": "It is like the dashboard and warning lights in a car. You see speed and fuel, and a light comes on when something needs attention.",
+      "links": [
+        "CloudWatch documentation | https://docs.aws.amazon.com/cloudwatch/",
+        "Amazon CloudWatch | https://aws.amazon.com/cloudwatch/"
+      ]
+    },
+    {
+      "name": "SQS",
+      "what": "Amazon SQS is a message queue. One part of a system drops messages in, and another picks them up when ready.",
+      "analogy": "It is like an inbox tray. The sender leaves a note and the receiver handles it when they have time.",
+      "links": [
+        "SQS documentation | https://docs.aws.amazon.com/sqs/",
+        "Amazon SQS | https://aws.amazon.com/sqs/"
+      ]
+    },
+    {
+      "name": "SNS",
+      "what": "Amazon SNS sends one message to many subscribers at once, such as emails, queues or other services.",
+      "analogy": "It is like a company-wide announcement. One message reaches everyone who signed up for that channel.",
+      "links": [
+        "SNS documentation | https://docs.aws.amazon.com/sns/",
+        "Amazon SNS | https://aws.amazon.com/sns/"
+      ]
+    },
+    {
+      "name": "Microsoft Azure",
+      "what": "Azure is Microsoft's cloud platform for hosting applications, storing data and running AI services.",
+      "analogy": "It is like renting managed office space from a provider that is already connected to the tools your company uses.",
+      "links": [
+        "Azure documentation | https://learn.microsoft.com/en-us/azure/",
+        "Microsoft Azure | https://azure.microsoft.com/"
+      ]
+    },
+    {
+      "name": "Docker",
+      "what": "Docker packages an application with everything it needs into a container, so it runs the same on any machine.",
+      "analogy": "It is like a lunchbox. Everything for the meal is packed inside, and it works the same wherever you open it.",
+      "links": [
+        "Docker get started | https://docs.docker.com/get-started/",
+        "Docker documentation | https://docs.docker.com/"
+      ]
+    },
+    {
+      "name": "OpenShift",
+      "what": "OpenShift is Red Hat's platform for running and managing containerised applications at company scale, built on Kubernetes.",
+      "analogy": "It is like a managed business park. Many tenants share the site with security, utilities and rules provided.",
+      "links": [
+        "OpenShift documentation | https://docs.redhat.com/en/documentation/openshift_container_platform",
+        "What is OpenShift | https://www.redhat.com/en/technologies/cloud-computing/openshift"
+      ]
+    },
+    {
+      "name": "Git",
+      "what": "Git tracks every change to files, so many people can work on the same project and go back to any earlier version.",
+      "analogy": "It is like Track Changes for a whole project, with a full history and the ability to merge everyone's edits.",
+      "links": [
+        "Git documentation | https://git-scm.com/doc",
+        "Git tutorials (Atlassian) | https://www.atlassian.com/git/tutorials"
+      ]
+    },
+    {
+      "name": "GitHub Actions",
+      "what": "GitHub Actions runs automated steps, such as build, test and deploy, whenever code changes.",
+      "analogy": "It is like an assembly line that starts by itself each time a new part arrives, and flags any defect.",
+      "links": [
+        "GitHub Actions documentation | https://docs.github.com/en/actions",
+        "Understanding GitHub Actions | https://docs.github.com/en/actions/about-github-actions/understanding-github-actions"
+      ]
+    },
+    {
+      "name": "GitLab",
+      "what": "GitLab is a platform for storing code, reviewing changes and running automated pipelines in one place.",
+      "analogy": "It is like a single workshop that has the storage room, the review desk and the assembly line under one roof.",
+      "links": [
+        "GitLab documentation | https://docs.gitlab.com/",
+        "GitLab CI/CD | https://docs.gitlab.com/ee/ci/"
+      ]
+    },
+    {
+      "name": "Maven",
+      "what": "Maven is a Java build tool. It downloads libraries, compiles code, runs tests and packages the result from one project file.",
+      "analogy": "It is like a recipe card that lists the ingredients to fetch and the steps to cook, so anyone can make the same dish.",
+      "links": [
+        "Maven getting started | https://maven.apache.org/guides/getting-started/",
+        "Maven guide (Baeldung) | https://www.baeldung.com/maven"
+      ]
+    },
+    {
+      "name": "Gradle",
+      "what": "Gradle is a flexible build tool for Java and other languages. It builds, tests and packages projects quickly.",
+      "analogy": "It is like a more customisable recipe system that remembers what it already cooked and skips repeated steps.",
+      "links": [
+        "Gradle user guide | https://docs.gradle.org/current/userguide/userguide.html",
+        "Gradle guides | https://gradle.org/guides/"
+      ]
+    },
+    {
+      "name": "Elasticsearch",
+      "what": "Elasticsearch is a search and analytics engine. It stores large amounts of text and logs and finds results in moments.",
+      "analogy": "It is like the index at the back of a very big book. You jump straight to the pages you need.",
+      "links": [
+        "Elasticsearch reference | https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html",
+        "Elasticsearch overview | https://www.elastic.co/elasticsearch"
+      ]
+    },
+    {
+      "name": "Kibana",
+      "what": "Kibana is the window onto Elasticsearch. It lets you search logs and build charts and dashboards.",
+      "analogy": "It is like a control-room screen that turns piles of log lines into charts you can read at a glance.",
+      "links": [
+        "Kibana guide | https://www.elastic.co/guide/en/kibana/current/index.html",
+        "Kibana overview | https://www.elastic.co/kibana"
+      ]
+    },
+    {
+      "name": "RESTful APIs",
+      "what": "A REST API lets programs talk over the web using simple, predictable addresses and actions like get, create, update and delete.",
+      "analogy": "It is like a library desk with clear request forms. You ask for a book by its code, and always get a standard response.",
+      "links": [
+        "REST API tutorial | https://restfulapi.net/",
+        "REST (MDN glossary) | https://developer.mozilla.org/en-US/docs/Glossary/REST"
+      ]
+    },
+    {
+      "name": "API Documentation",
+      "what": "API documentation explains how to use an API: what you can ask, what to send and what you get back.",
+      "analogy": "It is like the instruction manual for a device. Without it, people have to guess which button does what.",
+      "links": [
+        "Documenting APIs with Swagger | https://swagger.io/resources/articles/documenting-apis-with-swagger/",
+        "Technical writing courses (Google) | https://developers.google.com/tech-writing"
+      ]
+    },
+    {
+      "name": "API Security",
+      "what": "API security protects the doors that programs use to reach your data, using identity checks, limits and input validation.",
+      "analogy": "It is like checking ID at the door, limiting visitors per hour and never letting strangers into the back office.",
+      "links": [
+        "OWASP API Security Project | https://owasp.org/API-Security/",
+        "REST security cheat sheet (OWASP) | https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html"
+      ]
+    },
+    {
+      "name": "JWT",
+      "what": "A JSON Web Token is a small signed note that proves who you are, so a service can trust a request without asking again.",
+      "analogy": "It is like a wristband at an event. Once you have been checked at the gate, staff just look at the band.",
+      "links": [
+        "Introduction to JWT | https://jwt.io/introduction",
+        "JWT specification (RFC 7519) | https://datatracker.ietf.org/doc/html/rfc7519"
+      ]
+    },
+    {
+      "name": "OpenAPI",
+      "what": "OpenAPI is a standard file format for describing an API so people and tools can understand and use it automatically.",
+      "analogy": "It is like a floor plan that everyone can read. Tools can generate docs and test clients from it.",
+      "links": [
+        "OpenAPI specification | https://spec.openapis.org/oas/latest.html",
+        "Learn OpenAPI | https://learn.openapis.org/"
+      ]
+    },
+    {
+      "name": "Swagger",
+      "what": "Swagger is a set of tools built on OpenAPI that turn an API description into interactive documentation you can try in the browser.",
+      "analogy": "It is like a demo showroom. Visitors can read about a product and try it right there.",
+      "links": [
+        "Swagger documentation | https://swagger.io/docs/",
+        "Swagger UI | https://swagger.io/tools/swagger-ui/"
+      ]
+    },
+    {
+      "name": "JUnit",
+      "what": "JUnit is the standard framework for writing automated tests for Java code.",
+      "analogy": "It is like a checklist the code must pass every time it changes, run automatically in seconds.",
+      "links": [
+        "JUnit 5 user guide | https://junit.org/junit5/docs/current/user-guide/",
+        "JUnit 5 tutorial (Baeldung) | https://www.baeldung.com/junit-5"
+      ]
+    },
+    {
+      "name": "Mockito",
+      "what": "Mockito creates stand-in objects for tests, so you can test one piece of code without the real database or services.",
+      "analogy": "It is like using a crash-test dummy. You test the car's response without risking a real person.",
+      "links": [
+        "Mockito | https://site.mockito.org/",
+        "Mockito tutorials (Baeldung) | https://www.baeldung.com/mockito-series"
+      ]
+    },
+    {
+      "name": "Postman",
+      "what": "Postman is a tool for trying out and testing APIs by sending requests and viewing responses.",
+      "analogy": "It is like a test call centre. You dial the service and see exactly what it answers.",
+      "links": [
+        "Postman documentation | https://learning.postman.com/docs/",
+        "Postman | https://www.postman.com/"
+      ]
+    },
+    {
+      "name": "Playwright",
+      "what": "Playwright automates real browsers to test web applications, clicking and typing like a user.",
+      "analogy": "It is like a tireless tester who opens the site every night and checks that every button still works.",
+      "links": [
+        "Playwright introduction | https://playwright.dev/docs/intro",
+        "Playwright | https://playwright.dev/"
+      ]
+    },
+    {
+      "name": "Unit Testing",
+      "what": "Unit tests check small pieces of code on their own, quickly, so mistakes are found as soon as they appear.",
+      "analogy": "It is like testing each ingredient before cooking. A problem is easy to spot when you check one thing at a time.",
+      "links": [
+        "Unit test (Martin Fowler) | https://martinfowler.com/bliki/UnitTest.html",
+        "The practical test pyramid | https://martinfowler.com/articles/practical-test-pyramid.html"
+      ]
+    },
+    {
+      "name": "Integration Testing",
+      "what": "Integration tests check that several parts work together, such as the app and its database.",
+      "analogy": "It is like a rehearsal with the whole band. Each musician may be fine alone, but you check they play together.",
+      "links": [
+        "Integration test (Martin Fowler) | https://martinfowler.com/bliki/IntegrationTest.html",
+        "Testcontainers | https://testcontainers.com/"
+      ]
+    },
+    {
+      "name": "Test Automation",
+      "what": "Test automation runs checks by machine on every change, so quality does not depend on remembering to test by hand.",
+      "analogy": "It is like a security camera that watches all the time, instead of a guard who only walks past now and then.",
+      "links": [
+        "The practical test pyramid | https://martinfowler.com/articles/practical-test-pyramid.html",
+        "Playwright | https://playwright.dev/"
+      ]
+    },
+    {
+      "name": "Multithreading",
+      "what": "Multithreading lets a program do several things at once, such as handling many users, while taking care they do not interfere.",
+      "analogy": "It is like several cashiers serving a queue. It is faster, but they must not take the same item from the same shelf at once.",
+      "links": [
+        "Concurrency (Oracle tutorial) | https://docs.oracle.com/javase/tutorial/essential/concurrency/",
+        "Java concurrency (Baeldung) | https://www.baeldung.com/java-concurrency"
+      ]
+    },
+    {
+      "name": "Connection Pooling (HikariCP)",
+      "what": "A connection pool keeps a set of database connections ready for reuse, which is much faster than opening a new one each time. HikariCP is a popular Java pool.",
+      "analogy": "It is like a pool of company cars. Staff borrow one and return it, instead of buying a new car for every trip.",
+      "links": [
+        "HikariCP | https://github.com/brettwooldridge/HikariCP",
+        "About pool sizing | https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing"
+      ]
+    },
+    {
+      "name": "Idempotent Processing",
+      "what": "An idempotent operation gives the same result no matter how many times you repeat it, so retries never create duplicates.",
+      "analogy": "It is like pressing the lift button twice. The lift still comes once.",
+      "links": [
+        "Designing robust and predictable APIs with idempotency (Stripe) | https://stripe.com/blog/idempotency",
+        "Making retries safe with idempotent APIs (AWS) | https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/"
+      ]
+    },
+    {
+      "name": "Code Reviews",
+      "what": "In a code review a teammate reads your change before it is merged, to catch problems and share knowledge.",
+      "analogy": "It is like an editor reading a draft before publishing. A fresh pair of eyes finds what the author misses.",
+      "links": [
+        "Code review developer guide (Google) | https://google.github.io/eng-practices/review/",
+        "Best practices for peer code review | https://smartbear.com/learn/code-review/best-practices-for-peer-code-review/"
+      ]
+    },
+    {
+      "name": "Agile/Scrum",
+      "what": "Agile is a way of working in short cycles with frequent feedback. Scrum is a common framework, with sprints and regular reviews.",
+      "analogy": "It is like cooking and tasting as you go instead of serving the whole menu at the end.",
+      "links": [
+        "The Scrum Guide | https://scrumguides.org/",
+        "Agile Manifesto | https://agilemanifesto.org/"
+      ]
+    }
   ]
 }
