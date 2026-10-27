@@ -653,18 +653,50 @@
   "journal": [
     {
       "date": "",
-      "title": "Unified Metrics: one set of numbers for everyone",
+      "title": "PR Fix Agent: a code reviewer that is always available",
       "paragraphs": [
-        "When every team measures its work in its own way, it is hard to compare results or trust a report. One team's \"daily users\" or \"test status\" may mean something different from another's.",
-        "The Unified Metrics Platform fixes this with shared definitions. Products send their measurements in a common format, the platform combines them, and dashboards show the results. Typical topics are product usage, how fast changes reach customers, how well tests are passing, and how healthy services are.",
-        "A good design goal is to make it easy for a team to join. Common measurements can be collected automatically, so teams do not have to write extra code before they see useful numbers.",
-        "I contributed to the platform, and I supported DevOps and deployment automation around it. What stays with me is that a metric is only useful when people agree on what it means."
+        "In many teams a pull request waits for a human reviewer before it can move forward. The PR Fix Agent gives the developer feedback first. When a pull request is opened or updated, it reviews the changes, looks for bugs, security problems and quality issues, and posts its findings on the pull request.",
+        "It does more than point out problems. It suggests specific fixes with examples and explains why each change is recommended, so developers learn while they fix.",
+        "The benefits are easy to see. Developers get feedback before human review, teams get consistent reviews across everyone's code, and managers get a steady way to improve code quality and catch security issues earlier.",
+        "Building it meant combining large language models with the pull request workflow and designing instructions (prompts) that give clear, useful and safe feedback. Like any product, it keeps improving through user feedback and usage data."
       ],
       "tags": [
-        "Metrics",
-        "Telemetry",
-        "DevOps",
-        "Dashboards"
+        "AI agents",
+        "Code review",
+        "LLMs",
+        "Security"
+      ]
+    },
+    {
+      "date": "",
+      "title": "Fail-to-Fix: from a failed build to a suggested fix",
+      "paragraphs": [
+        "When an automated test run fails, a developer usually has to open long reports and logs to work out what broke. Fail-to-Fix does that first step automatically.",
+        "It reads the failed test results, finds which tests failed and why, and asks an AI model to suggest fixes. Earlier fix attempts are included as context, so suggestions for similar failures can build on what worked before.",
+        "The suggestions are posted on the pull request as a clear review comment, with inline code suggestions where possible, so the fix starts where the developer is already working.",
+        "It runs as a reusable step in the team's build pipeline, so any project can switch it on without building its own."
+      ],
+      "tags": [
+        "AI agents",
+        "CI/CD",
+        "Test automation",
+        "GitHub Actions"
+      ]
+    },
+    {
+      "date": "",
+      "title": "VAPOR: one safe place to build AI agents",
+      "paragraphs": [
+        "An AI agent is more than a language model. It is the model plus planning, memory, tools and safety rules around it. Building all of that for every new agent takes a lot of time, and it is easy to get wrong.",
+        "VAPOR is the internal platform that provides this once, for everyone. Teams describe the agent they want, connect their own data, and the platform supplies the runtime, a catalog of approved models and tools, and monitoring of every run.",
+        "It also checks agents before release. A readiness check looks at simple questions, such as whether the tools are limited to what the agent needs and whether risky actions need a human to approve them. The same setup always gives the same result, so there is no guesswork.",
+        "I work with the platform team to build agents on it. The main lesson is that good AI products need trust and clear rules as much as clever models."
+      ],
+      "tags": [
+        "AI agents",
+        "MCP",
+        "Governance",
+        "Observability"
       ]
     },
     {
@@ -701,50 +733,18 @@
     },
     {
       "date": "",
-      "title": "VAPOR: one safe place to build AI agents",
+      "title": "Unified Metrics: one set of numbers for everyone",
       "paragraphs": [
-        "An AI agent is more than a language model. It is the model plus planning, memory, tools and safety rules around it. Building all of that for every new agent takes a lot of time, and it is easy to get wrong.",
-        "VAPOR is the internal platform that provides this once, for everyone. Teams describe the agent they want, connect their own data, and the platform supplies the runtime, a catalog of approved models and tools, and monitoring of every run.",
-        "It also checks agents before release. A readiness check looks at simple questions, such as whether the tools are limited to what the agent needs and whether risky actions need a human to approve them. The same setup always gives the same result, so there is no guesswork.",
-        "I work with the platform team to build agents on it. The main lesson is that good AI products need trust and clear rules as much as clever models."
+        "When every team measures its work in its own way, it is hard to compare results or trust a report. One team's \"daily users\" or \"test status\" may mean something different from another's.",
+        "The Unified Metrics Platform fixes this with shared definitions. Products send their measurements in a common format, the platform combines them, and dashboards show the results. Typical topics are product usage, how fast changes reach customers, how well tests are passing, and how healthy services are.",
+        "A good design goal is to make it easy for a team to join. Common measurements can be collected automatically, so teams do not have to write extra code before they see useful numbers.",
+        "I contributed to the platform, and I supported DevOps and deployment automation around it. What stays with me is that a metric is only useful when people agree on what it means."
       ],
       "tags": [
-        "AI agents",
-        "MCP",
-        "Governance",
-        "Observability"
-      ]
-    },
-    {
-      "date": "",
-      "title": "PR Fix Agent: a code reviewer that is always available",
-      "paragraphs": [
-        "In many teams a pull request waits for a human reviewer before it can move forward. The PR Fix Agent gives the developer feedback first. When a pull request is opened or updated, it reviews the changes, looks for bugs, security problems and quality issues, and posts its findings on the pull request.",
-        "It does more than point out problems. It suggests specific fixes with examples and explains why each change is recommended, so developers learn while they fix.",
-        "The benefits are easy to see. Developers get feedback before human review, teams get consistent reviews across everyone's code, and managers get a steady way to improve code quality and catch security issues earlier.",
-        "Building it meant combining large language models with the pull request workflow and designing instructions (prompts) that give clear, useful and safe feedback. Like any product, it keeps improving through user feedback and usage data."
-      ],
-      "tags": [
-        "AI agents",
-        "Code review",
-        "LLMs",
-        "Security"
-      ]
-    },
-    {
-      "date": "",
-      "title": "Fail-to-Fix: from a failed build to a suggested fix",
-      "paragraphs": [
-        "When an automated test run fails, a developer usually has to open long reports and logs to work out what broke. Fail-to-Fix does that first step automatically.",
-        "It reads the failed test results, finds which tests failed and why, and asks an AI model to suggest fixes. Earlier fix attempts are included as context, so suggestions for similar failures can build on what worked before.",
-        "The suggestions are posted on the pull request as a clear review comment, with inline code suggestions where possible, so the fix starts where the developer is already working.",
-        "It runs as a reusable step in the team's build pipeline, so any project can switch it on without building its own."
-      ],
-      "tags": [
-        "AI agents",
-        "CI/CD",
-        "Test automation",
-        "GitHub Actions"
+        "Metrics",
+        "Telemetry",
+        "DevOps",
+        "Dashboards"
       ]
     },
     {
