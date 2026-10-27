@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tejakrishnabadiganti.github.io/sitemap.xml

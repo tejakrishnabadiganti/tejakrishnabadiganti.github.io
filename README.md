@@ -2,7 +2,7 @@
 
 Personal portfolio of **Tejakrishna Badiganti**, Full Stack Software Engineer (Java, Spring Boot, microservices, React.js, AWS, Azure and AI agent engineering).
 
-**Live site:** https://tejakrishnabadiganti.github.io/teja.github.io/
+**Live site:** https://tejakrishnabadiganti.github.io/
 
 ## How it works
 
@@ -44,7 +44,7 @@ The editor is hidden from visitors and is not even downloaded for them.
 1. **Open the login** with any one of these:
    - press `Ctrl + Shift + L` (`Cmd + Shift + L` on Mac)
    - click the copyright line at the bottom of the page 5 times
-   - add `#admin` to the address (`.../teja.github.io/#admin`)
+   - add `#admin` to the address (`https://tejakrishnabadiganti.github.io/#admin`)
 2. **Sign in.** The username and password are not case-sensitive.
 3. **Edit.** Pick a section from the drop-down. Everything below is editable and the page behind the editor updates as you type:
    - page title and search description
@@ -112,7 +112,7 @@ Names, emails and IP addresses of ordinary visitors are not collected and cannot
 
 ## Search, sharing and extras
 
-- **Link previews and search:** `index.html` carries a static title, description, social preview tags (the portrait is the preview image), a canonical link and structured data about you, because search engines and LinkedIn do not run JavaScript. If your name, title or links change, update that block too. `sitemap.xml` lists the page; submit `.../teja.github.io/sitemap.xml` in Google Search Console after the first publish.
+- **Link previews and search:** `index.html` carries a static title, description, social preview tags (the portrait is the preview image), a canonical link and structured data about you, because search engines and LinkedIn do not run JavaScript. If your name, title or links change, update that block too. `sitemap.xml` lists the page; submit `https://tejakrishnabadiganti.github.io/sitemap.xml` in Google Search Console after the first publish.
 - **Favicon:** `packages/images/favicon.svg` (your initials).
 - **Availability badge:** Profile, photo & resume has an *Availability badge* field. Leave it empty to hide the green "Open to new opportunities" badge.
 - **Book a call:** Contact & social links has a *Book a call link* (Calendly or Google Calendar). The button only appears when it is filled in.

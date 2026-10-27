@@ -27,7 +27,7 @@ const CONFIG = {
     "I build cloud-native web applications and AI-powered tools on Azure, AWS and Google Cloud, " +
     "and I enjoy turning complicated problems into simple, reliable software.",
   links: [
-    { label: "Portfolio", url: "https://tejakrishnabadiganti.github.io/teja.github.io/" },
+    { label: "Portfolio", url: "https://tejakrishnabadiganti.github.io/" },
     { label: "LinkedIn", url: "https://www.linkedin.com/in/tejakrishna-badiganti-88924419b/" },
     { label: "GitHub", url: "https://github.com/tejakrishnabadiganti" },
   ],
