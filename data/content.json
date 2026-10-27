@@ -303,7 +303,16 @@
     {
       "tag": "Engineering Excellence",
       "title": "Vertex Unified Metrics Platform",
-      "text": "Contributed to centralized, consistent engineering measurement, alongside DevOps and n8n deployment automation."
+      "text": "A shared way to measure how products and engineering are doing. Instead of every team counting things in its own way, the platform collects measurements such as product usage, delivery speed, testing status and service health in one place, using common definitions, and shows them in dashboards that leaders and teams can both read. I contributed to it, along with DevOps work and deployment automation.",
+      "role": "Contributed to the platform, and to DevOps and deployment automation",
+      "stack": [
+        "Metrics",
+        "Telemetry",
+        "Dashboards",
+        "DevOps",
+        "n8n automation"
+      ],
+      "result": "Teams and leaders look at the same numbers, defined in the same way."
     },
     {
       "tag": "Migration · USAA",
@@ -651,6 +660,21 @@
   "journal": [
     {
       "date": "",
+      "title": "Unified Metrics: one set of numbers for everyone",
+      "paragraphs": [
+        "When every team measures its work in its own way, it is hard to compare results or trust a report. One team's \"daily users\" or \"test status\" may mean something different from another's.",
+        "The Unified Metrics Platform fixes this with shared definitions. Products send their measurements in a common format, the platform combines them, and dashboards show the results. Typical topics are product usage, how fast changes reach customers, how well tests are passing, and how healthy services are.",
+        "A good design goal is to make it easy for a team to join. Common measurements can be collected automatically, so teams do not have to write extra code before they see useful numbers.",
+        "I contributed to the platform, and I supported DevOps and deployment automation around it. What stays with me is that a metric is only useful when people agree on what it means."
+      ],
+      "tags": [
+        "Metrics",
+        "Telemetry",
+        "DevOps",
+        "Dashboards"
+      ]
+    },    {
+      "date": "",
       "title": "TechScout: making technology requests simple",
       "paragraphs": [
         "When a team wants to start using a new tool or technology, it usually needs a review first, to check that it is safe, useful and allowed. Doing this with scattered tickets and emails makes it hard to see where a request is, and who is waiting for whom.",
@@ -777,6 +801,10 @@
     ]
   },
   "faq": [
+    {
+      "question": "What is the Unified Metrics Platform?",
+      "answer": "It is a shared platform for measuring how products and engineering teams are doing. It collects measurements in a common format, with common definitions, and shows them in dashboards, so everyone looks at the same numbers. I contributed to it."
+    },
     {
       "question": "What is TechScout?",
       "answer": "TechScout is an internal web application where employees request new technologies and follow each request through review, evaluation and decision. It gives everyone one clear place to see the status. I built it as a full stack developer with React.js and Node.js."
