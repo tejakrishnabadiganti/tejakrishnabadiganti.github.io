@@ -27,7 +27,6 @@ There is a hidden admin editor (see [Editing the site](#editing-the-site)) that 
 | Moments | Photo gallery of hackathons, teams and award moments, with filter buttons. Hidden until you add photos and tick Show |
 | Certifications | Certificate images with matching digital badges, grouped by area |
 | Education | Academic background |
-| Now | What you are focused on right now, with a last-updated date |
 | Contact | Email, phone, LinkedIn and GitHub |
 
 ## Features

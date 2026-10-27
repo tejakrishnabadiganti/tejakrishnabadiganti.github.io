@@ -37,7 +37,6 @@ export function renderPage(content) {
   renderTestimonials(content);
   renderCertifications(content);
   renderEducation(content);
-  renderNow(content);
   renderContact(content);
 }
 
@@ -348,12 +347,6 @@ function renderEducation({ education }) {
       )
     )
   );
-}
-
-function renderNow({ now }) {
-  $("now-updated").textContent = now.updated ? `Updated ${now.updated}` : "";
-  $("now-list").replaceChildren(...now.items.map((text) => el("li", {}, text)));
-  $("now").hidden ||= now.items.length === 0;
 }
 
 function renderContact({ contact }) {

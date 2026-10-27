@@ -1001,7 +1001,7 @@ h3 {
   color: var(--muted);
 }
 
-/*==================== HOW I WORK, JOURNAL AND NOW ====================*/
+/*==================== HOW I WORK AND JOURNAL ====================*/
 .values {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -1100,29 +1100,6 @@ h3 {
 
 .entry .tags {
   margin-top: 1rem;
-}
-
-.now {
-  max-width: 720px;
-  margin-inline: auto;
-  padding: 1.5rem 1.75rem;
-  border: 1px solid var(--line);
-  border-top: 3px solid var(--gold);
-  border-radius: var(--radius);
-  background: var(--surface);
-}
-
-.now__updated {
-  margin: 0 0 1rem;
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.now__updated:empty {
-  display: none;
 }
 
 /*==================== AVAILABILITY BADGE & BOOKING ====================*/

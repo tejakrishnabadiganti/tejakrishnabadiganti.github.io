@@ -174,13 +174,6 @@
       "visible": true
     },
     {
-      "id": "now",
-      "nav": "",
-      "eyebrow": "Now",
-      "title": "What I am focused on right now",
-      "visible": true
-    },
-    {
       "id": "contact",
       "nav": "Contact",
       "eyebrow": "Contact",
@@ -787,15 +780,6 @@
       ]
     }
   ],
-  "now": {
-    "updated": "Oct 2026",
-    "items": [
-      "Building AI-powered engineering agents with the Vertex Agent Platform (VAPOR) team",
-      "Developing reusable skills, commands and agents for the Center of Excellence",
-      "Contributing to the Vertex Unified Metrics Platform and n8n deployment automation",
-      "Applying Specification-Driven Development and RPI with Claude"
-    ]
-  },
   "moments": [
     {
       "category": "Hackathon",

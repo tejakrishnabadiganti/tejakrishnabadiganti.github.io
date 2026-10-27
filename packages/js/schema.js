@@ -392,17 +392,6 @@ export const SECTIONS = [
     ],
   },
   {
-    id: "now",
-    label: "Now",
-    sectionId: "now",
-    kind: "object",
-    path: "now",
-    fields: [
-      { key: "updated", label: "Last updated (e.g. Oct 2026)", type: "text" },
-      { key: "items", label: "What I am focused on", type: "lines", rows: 6, help: "One item per line. This section stays hidden while it is empty." },
-    ],
-  },
-  {
     id: "theme",
     label: "Theme & colors",
     kind: "object",
