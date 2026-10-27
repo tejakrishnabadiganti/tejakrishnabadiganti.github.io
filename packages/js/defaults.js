@@ -21,7 +21,6 @@ const DEFAULT_SECTIONS = [
   { id: "education", nav: "", eyebrow: "Education", title: "Academic background", visible: true },
   { id: "moments", nav: "", eyebrow: "Moments", title: "Hackathons, teams and celebrations", visible: false },
   { id: "now", nav: "", eyebrow: "Now", title: "What I am focused on right now", visible: true },
-  { id: "faq", nav: "", eyebrow: "FAQ", title: "Questions people often ask", visible: true },
   { id: "contact", nav: "Contact", eyebrow: "Contact", title: "Let's get in touch.", visible: true },
 ];
 
@@ -69,7 +68,6 @@ export function withDefaults(content) {
   content.values ??= [];
   content.journey ??= [];
   content.journal ??= [];
-  content.faq ??= [];
   content.now ??= { updated: "", items: [] };
   content.profile.ctaPrimary ??= "Get in touch";
   content.profile.ctaSecondary ??= "Download resume";

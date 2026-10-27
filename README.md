@@ -28,7 +28,6 @@ There is a hidden admin editor (see [Editing the site](#editing-the-site)) that 
 | Certifications | Certificate images with matching digital badges, grouped by area |
 | Education | Academic background |
 | Now | What you are focused on right now, with a last-updated date |
-| FAQ | Questions visitors often ask, with expandable answers |
 | Contact | Email, phone, LinkedIn and GitHub |
 
 ## Features

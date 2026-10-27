@@ -38,7 +38,6 @@ export function renderPage(content) {
   renderCertifications(content);
   renderEducation(content);
   renderNow(content);
-  renderFaq(content);
   renderContact(content);
 }
 
@@ -355,20 +354,6 @@ function renderNow({ now }) {
   $("now-updated").textContent = now.updated ? `Updated ${now.updated}` : "";
   $("now-list").replaceChildren(...now.items.map((text) => el("li", {}, text)));
   $("now").hidden ||= now.items.length === 0;
-}
-
-function renderFaq({ faq }) {
-  $("faq-list").replaceChildren(
-    ...faq.map((item) =>
-      el(
-        "details",
-        { class: "faq__item" },
-        el("summary", { class: "faq__question" }, item.question),
-        el("p", { class: "faq__answer" }, item.answer)
-      )
-    )
-  );
-  $("faq").hidden ||= faq.length === 0;
 }
 
 function renderContact({ contact }) {

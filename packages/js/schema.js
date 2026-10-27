@@ -403,21 +403,6 @@ export const SECTIONS = [
     ],
   },
   {
-    id: "faq",
-    label: "Questions & answers",
-    sectionId: "faq",
-    kind: "list",
-    path: "faq",
-    itemName: "question",
-    hint: "Questions visitors often ask. This section stays hidden while it is empty.",
-    itemLabel: (item) => item.question,
-    blank: () => ({ question: "", answer: "" }),
-    fields: [
-      { key: "question", label: "Question", type: "text" },
-      { key: "answer", label: "Answer", type: "textarea", rows: 4 },
-    ],
-  },
-  {
     id: "theme",
     label: "Theme & colors",
     kind: "object",
