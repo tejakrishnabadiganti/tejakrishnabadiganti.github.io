@@ -31,11 +31,12 @@ There is a hidden admin editor (see [Editing the site](#editing-the-site)) that 
 
 - Responsive layout from mobile to desktop, with an always-visible menu bar (scrolls sideways on narrow screens) and a back-to-top button
 - Light and dark themes (follows the system setting, remembered between visits)
+- Ten ready-made themes you choose in the editor, each with light/dark support where it makes sense, and a customizer for colors, fonts and layout
 - Classic look: serif headings, gold ornaments, double-line frames, scroll progress bar
 - 3D effects: tilting framed portrait, tilting cards, 3D reveal on scroll, scrolling badge strip (switched off for touch devices and reduced-motion visitors)
 - Accessible: skip link, keyboard focus styles, semantic landmarks, reduced-motion support
 - Certificates open in a popup with Download, Verify (Credly) and Close
-- Hidden admin editor for every section, theme colors, photo, resume and certifications
+- Hidden admin editor for every section, themes and colors, photo, resume and certifications
 - No build step and no JavaScript libraries
 
 ## Editing the site
@@ -54,12 +55,26 @@ The editor is hidden from visitors and is not even downloaded for them.
    - profile, photo, resume, and the two top buttons' text
    - contact details and social links
    - highlights, about, experience, projects, skills, awards, certifications (including the Credly note), education
-   - theme colors (including text colors), heading and body fonts, and default light/dark mode
+   - **Themes & colors**: see [Themes](#themes) below
 
    Still changed in code only: the visual design and layout, small interface labels (skip link, "Back to top", popup buttons, theme toggle), and adding a brand-new kind of section.
 4. **Publish.** Choose "Review & publish", paste your GitHub token and press "Publish to GitHub". New images and the PDF are uploaded first, then `data/content.json` is saved. The live site updates in about 1-2 minutes.
 
 Uploaded images are resized automatically (photo to 960px, certificates to 1400px as JPEG, badges to 256px) and named by the convention below. Nothing is saved until you publish, and the editor warns you before you leave with unpublished changes.
+
+### Themes
+
+Open the editor and pick **Themes & colors** ("Choose Your Experience"). A theme changes how the site looks, never what it says.
+
+- **Preview** opens the real site in a frame with desktop, tablet and mobile sizes, a light/dark switch where the theme has both, and a theme picker. Nothing on the live site changes.
+- **Apply Theme** makes it the site's theme. Like every other edit, it goes live when you publish.
+- **Customize** edits a copy of the theme: six colors (with hex values and contrast checks), heading and body fonts, heading size, body text size, line height, content width, card style, corner radius, spacing and light/dark behavior. Changes show on the page straight away and are kept only with **Apply changes**. **Cancel** discards them and **Reset to theme defaults** restores the original settings of that theme.
+- **Reset to original look** removes the theme and returns to the site's built-in design.
+- **Font style** (heading and body font) sits above the theme cards and works with any theme or with none.
+
+The saved theme lives in `theme` inside `content.json`. An unknown or invalid value falls back to the original look. Themes with one mode (for example Cyber Neon, dark only) hide the light/dark button. A visitor's own light/dark choice is remembered for themes that have both modes.
+
+The ten themes are defined in `packages/js/themes.js`. To check them, run `node --test tests/themes.test.mjs` (every palette must reach 4.5:1 contrast for text and buttons).
 
 ### GitHub token
 
@@ -143,6 +158,8 @@ Names, emails and IP addresses of ordinary visitors are not collected and cannot
 │   ├── css/
 │   │   ├── styles.css          # Design tokens, layout, light/dark themes, editor styles
 │   │   ├── classic.css         # Classic ornaments, 3D effects and background shading (loaded after styles.css)
+│   │   ├── modern.css          # Modern skin and 3D motion; reads the theme variables (loaded last)
+│   │   ├── admin-themes.css    # Styles for the editor's Themes tab (loaded on demand)
 │   │   └── fonts.css           # Self-hosted Inter and Playfair Display
 │   ├── js/
 │   │   ├── main.js             # Entry point
@@ -151,7 +168,9 @@ Names, emails and IP addresses of ordinary visitors are not collected and cannot
 │   │   ├── render.js           # Builds each section from the content
 │   │   ├── hero-roles.js       # Rotates the job title above the headline
 │   │   ├── moments.js          # Photo gallery with group filters
-│   │   ├── theme.js            # Applies the theme colors
+│   │   ├── themes.js           # The ten themes, theme model, validation and contrast math
+│   │   ├── theme.js            # Turns a theme into CSS and applies it
+│   │   ├── theme-preview.js    # Lets the editor's preview frame receive a theme
 │   │   ├── reveal.js           # Scroll-reveal animation
 │   │   ├── motion.js           # Scroll progress bar and pointer-driven 3D tilt
 │   │   ├── contact-form.js     # "Get in touch" popup form and sending
@@ -160,6 +179,7 @@ Names, emails and IP addresses of ordinary visitors are not collected and cannot
 │   │   ├── dom.js, store.js    # Safe DOM helpers and unpublished-file store
 │   │   ├── admin.js            # Editor (loaded only after the hidden trigger)
 │   │   ├── admin-visitors.js   # Editor "Visitors" tab (visit totals)
+│   │   ├── admin-themes.js     # Editor "Themes & colors" tab (gallery, preview, customizer)
 │   │   ├── schema.js           # What each editor section can edit
 │   │   ├── auth.js             # Login check (hash comparison)
 │   │   ├── admin-config.js     # Login hash
@@ -172,6 +192,8 @@ Names, emails and IP addresses of ordinary visitors are not collected and cannot
 │       ├── profile/            # Hero profile photo
 │       ├── certificates/       # Certificate images
 │       └── badges/             # Digital badge images
+└── tests/
+    └── themes.test.mjs         # Checks the themes (run with node --test)
 ```
 
 Everything in the repository is used by the site. Keep old files, drafts and personal documents outside this public repository.

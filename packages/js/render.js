@@ -61,13 +61,17 @@ function renderSections({ sections }) {
     node.classList.toggle("is-disabled", !enabled);
 
     const eyebrow = node.querySelector("[data-eyebrow]");
-    if (!eyebrow) continue; // highlights and badge strip have no heading, menu entry or background
-    eyebrow.textContent = section.eyebrow;
-    node.querySelector("[data-title]").textContent = section.title;
+    if (eyebrow) {
+      eyebrow.textContent = section.eyebrow;
+      node.querySelector("[data-title]").textContent = section.title;
+    }
 
     if (!enabled) continue;
-    node.classList.toggle("section--alt", alternate);
-    alternate = !alternate;
+    if (eyebrow) {
+      // highlights, the badge strip and the hero have no heading, so they stay out of the alternating backgrounds
+      node.classList.toggle("section--alt", alternate);
+      alternate = !alternate;
+    }
     if (section.nav) menu.push(section);
   }
 

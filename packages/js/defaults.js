@@ -1,5 +1,8 @@
+import { normalizeTheme } from "./themes.js";
+
 // Fills in anything missing, so data saved by an older editor session never breaks the page.
 const DEFAULT_SECTIONS = [
+  { id: "top", nav: "Home", eyebrow: "Home", title: "", visible: true },
   { id: "highlights", nav: "", eyebrow: "Highlights", title: "", visible: true },
   { id: "badges", nav: "", eyebrow: "Certification badges", title: "", visible: true },
   { id: "about", nav: "About", eyebrow: "About", title: "Engineering with clarity and craft", visible: true },
@@ -21,20 +24,6 @@ const DEFAULT_SECTIONS = [
   { id: "contact", nav: "Contact", eyebrow: "Contact", title: "Let's get in touch.", visible: true },
 ];
 
-const DEFAULT_THEME = {
-  default: "system",
-  accent: "#0b78d0",
-  accentDark: "#38bdf8",
-  gold: "#0369a1",
-  goldDark: "#7dd3fc",
-  ink: "#0a1b2e",
-  inkDark: "#f4f8fd",
-  muted: "#465a70",
-  mutedDark: "#a3b3c6",
-  fontHeading: "Playfair Display",
-  fontBody: "Inter",
-};
-
 const DEFAULT_CONTACT_FORM = {
   formEndpoint: "",
   bookingUrl: "",
@@ -49,7 +38,7 @@ const DEFAULT_CONTACT_FORM = {
 };
 
 export function withDefaults(content) {
-  content.theme = { ...DEFAULT_THEME, ...content.theme };
+  content.theme = normalizeTheme(content.theme);
   content.contact = { ...DEFAULT_CONTACT_FORM, ...content.contact };
   content.sections ??= structuredClone(DEFAULT_SECTIONS);
   for (const [index, section] of DEFAULT_SECTIONS.entries()) {

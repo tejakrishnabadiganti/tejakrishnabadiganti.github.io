@@ -1,5 +1,6 @@
 import { el, safeUrl } from "./dom.js";
 import { getContent } from "./site.js";
+import { isPreview } from "./theme-preview.js";
 
 const root = document.documentElement;
 const SESSION_KEY = "portfolio-admin";
@@ -15,7 +16,7 @@ function initTheme() {
   toggle.addEventListener("click", () => {
     const next = root.dataset.theme === "dark" ? "light" : "dark";
     root.dataset.theme = next;
-    localStorage.setItem("theme", next);
+    if (!isPreview()) localStorage.setItem("theme", next);
     syncLabel();
   });
   syncLabel();
@@ -160,6 +161,7 @@ function initSkillPopup() {
 
 // The editor is hidden: it is only loaded after a secret trigger, never for ordinary visitors.
 function initAdminAccess() {
+  if (isPreview()) return;
   const loginButton = document.getElementById("admin-login");
   const open = async () => {
     loginButton.hidden = false;

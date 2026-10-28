@@ -2,7 +2,8 @@
    To go back to the classic look, remove the <link> to this file in index.html. */
 
 html:root {
-  --font-serif: var(--font-sans);
+  --font-heading: var(--font-sans);
+  --font-serif: var(--font-heading);
   --radius: 20px;
   --m-grad: linear-gradient(135deg, #38bdf8 0%, #6366f1 100%);
   --m-grad-text: linear-gradient(100deg, #38bdf8 0%, #818cf8 55%, #c084fc 100%);
@@ -42,8 +43,8 @@ html[data-theme="dark"] {
 }
 
 body {
-  font-size: 1rem;
-  line-height: 1.7;
+  font-size: var(--body-size, 1rem);
+  line-height: var(--body-leading, 1.7);
   letter-spacing: -0.005em;
 }
 
@@ -51,7 +52,11 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: var(--font-sans);
+  font-family: var(--font-heading);
+}
+
+html[data-mode-locked] #theme-toggle {
+  display: none;
 }
 
 /*==================== HEADER ====================*/
@@ -73,7 +78,7 @@ h4 {
 .brand__mark {
   border: 0;
   background: var(--m-grad);
-  color: #fff;
+  color: var(--on-accent, #fff);
   font-family: var(--font-sans);
   font-size: 0.9rem;
   font-weight: 700;
@@ -117,7 +122,7 @@ h4 {
   margin-left: 0.4rem;
   border: 0;
   background: var(--m-grad);
-  color: #fff;
+  color: var(--on-accent, #fff);
   font-weight: 600;
   box-shadow: 0 10px 24px -10px var(--m-ring);
 }
@@ -125,7 +130,7 @@ h4 {
 .nav__link--cta:hover,
 .nav__link--cta.is-active {
   background: var(--m-grad);
-  color: #fff;
+  color: var(--on-accent, #fff);
   filter: brightness(1.08);
 }
 
@@ -143,12 +148,12 @@ h4 {
 
 .button--primary {
   background: var(--m-grad);
-  color: #fff;
+  color: var(--on-accent, #fff);
   box-shadow: 0 14px 30px -12px var(--m-ring);
 }
 
 .button--primary:hover {
-  color: #fff;
+  color: var(--on-accent, #fff);
   filter: brightness(1.08);
   box-shadow: 0 18px 36px -12px var(--m-ring);
 }
@@ -181,7 +186,7 @@ html[data-theme] .hero .button--ghost {
 
 .hero__title {
   margin: 1.1rem 0 1.4rem;
-  font-size: clamp(2.3rem, 4.7vw, 3.6rem);
+  font-size: calc(clamp(2.3rem, 4.7vw, 3.6rem) * var(--heading-scale, 1));
   font-weight: 750;
   line-height: 1.06;
   letter-spacing: -0.04em;
@@ -222,7 +227,7 @@ html[data-theme] .hero .button--ghost {
   inset: -3px;
   border: 0;
   border-radius: 31px;
-  background: conic-gradient(from var(--spin, 0deg), #38bdf8, #6366f1, #c084fc, #38bdf8);
+  background: conic-gradient(from var(--spin, 0deg), var(--grad-a, #38bdf8), var(--grad-b, #6366f1), var(--grad-c, #c084fc), var(--grad-a, #38bdf8));
   transform: translateZ(-2px);
 }
 
@@ -231,7 +236,7 @@ html[data-theme] .hero .button--ghost {
   position: absolute;
   inset: -8%;
   border-radius: 44px;
-  background: conic-gradient(from var(--spin, 0deg), #38bdf8, #6366f1, #c084fc, #38bdf8);
+  background: conic-gradient(from var(--spin, 0deg), var(--grad-a, #38bdf8), var(--grad-b, #6366f1), var(--grad-c, #c084fc), var(--grad-a, #38bdf8));
   opacity: 0.4;
   filter: blur(48px);
 }
@@ -259,10 +264,10 @@ html[data-theme] .hero .button--ghost {
 .stat,
 .stat + .stat {
   padding: 1.6rem 1.25rem;
-  border: 1px solid var(--line);
+  border: var(--card-border, 1px solid var(--line));
   border-radius: var(--radius);
   background: var(--surface);
-  box-shadow: var(--shadow);
+  box-shadow: var(--card-shadow, var(--shadow));
 }
 
 .stat__value {
@@ -271,7 +276,7 @@ html[data-theme] .hero .button--ghost {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  font-family: var(--font-sans);
+  font-family: var(--font-heading);
   font-size: 2.6rem;
   font-weight: 750;
   letter-spacing: -0.04em;
@@ -293,7 +298,7 @@ html[data-theme] .hero .button--ghost {
 
 /*==================== SECTIONS ====================*/
 .section {
-  padding: clamp(4rem, 9vw, 7rem) 0;
+  padding: calc(clamp(4rem, 9vw, 7rem) * var(--density, 1)) 0;
 }
 
 .section--alt {
@@ -327,7 +332,7 @@ main > .section::before {
 .section__title,
 html[data-theme] .section__title {
   color: var(--ink);
-  font-size: clamp(2rem, 4.4vw, 3.1rem);
+  font-size: calc(clamp(2rem, 4.4vw, 3.1rem) * var(--heading-scale, 1));
   font-weight: 750;
   line-height: 1.1;
   letter-spacing: -0.035em;
@@ -361,10 +366,10 @@ html[data-theme] .section__title {
 .cert__link,
 .quote,
 .moment {
-  border: 1px solid var(--line);
+  border: var(--card-border, 1px solid var(--line));
   border-radius: var(--radius);
   background: var(--surface);
-  box-shadow: none;
+  box-shadow: var(--card-shadow, none);
   transition: transform 0.3s var(--ease-out), border-color 0.3s, box-shadow 0.3s;
 }
 
@@ -374,7 +379,7 @@ html[data-theme] .section__title {
 .card:nth-child(n),
 .award:nth-child(n),
 .skills__group:nth-child(n) {
-  border-top: 1px solid var(--line);
+  border-top: var(--card-border, 1px solid var(--line));
 }
 
 .timeline__item::after,
@@ -402,7 +407,7 @@ html[data-theme] .section__title {
 
 .value {
   padding: 1.5rem;
-  border-left: 1px solid var(--line);
+  border-left: var(--card-border, 1px solid var(--line));
 }
 
 .value__title::before,
@@ -424,7 +429,7 @@ html[data-theme] .section__title {
 .education__title,
 .timeline__role,
 .moment__caption strong {
-  font-family: var(--font-sans);
+  font-family: var(--font-heading);
   font-weight: 650;
   letter-spacing: -0.02em;
 }
@@ -531,7 +536,7 @@ html[data-theme] .section__title {
 }
 
 .cert__name {
-  font-family: var(--font-sans);
+  font-family: var(--font-heading);
   font-weight: 650;
   letter-spacing: -0.015em;
 }
@@ -540,9 +545,9 @@ html[data-theme] .section__title {
 html[data-theme] #contact .contact__inner {
   border: 0;
   border-radius: 32px;
-  background: linear-gradient(135deg, #4338ca 0%, #4f46e5 38%, #0ea5e9 100%);
-  box-shadow: 0 40px 80px -34px rgba(79, 70, 229, 0.7);
-  color: #fff;
+  background: var(--panel-grad, linear-gradient(135deg, #4338ca 0%, #4f46e5 38%, #0ea5e9 100%));
+  box-shadow: 0 40px 80px -34px color-mix(in srgb, var(--grad-b, #4f46e5) 70%, transparent);
+  color: var(--on-accent, #fff);
 }
 
 #contact .contact__inner::before {
@@ -555,42 +560,42 @@ html[data-theme] #contact .contact__inner {
 html[data-theme] #contact .contact__title,
 html[data-theme] #contact .contact .eyebrow,
 html[data-theme] #contact .eyebrow {
-  color: #fff;
+  color: var(--on-accent, #fff);
 }
 
 html[data-theme] #contact .contact__lead,
 html[data-theme] #contact .contact__links {
-  color: rgba(255, 255, 255, 0.82);
+  color: var(--on-accent, rgba(255, 255, 255, 0.82));
 }
 
 html[data-theme] #contact .contact__links a {
-  color: #fff;
+  color: var(--on-accent, #fff);
 }
 
 html[data-theme] #contact .button--primary {
-  background: #fff;
-  color: #3730a3;
+  background: var(--on-accent, #fff);
+  color: var(--on-accent-inv, #3730a3);
   box-shadow: 0 16px 34px -14px rgba(0, 0, 0, 0.5);
 }
 
 html[data-theme] #contact .button--primary:hover {
-  background: #fff;
-  color: #3730a3;
+  background: var(--on-accent, #fff);
+  color: var(--on-accent-inv, #3730a3);
 }
 
 html[data-theme] #contact .button--ghost {
-  border-color: rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  border-color: color-mix(in srgb, var(--on-accent, #fff) 40%, transparent);
+  background: color-mix(in srgb, var(--on-accent, #fff) 10%, transparent);
+  color: var(--on-accent, #fff);
 }
 
 html[data-theme] #contact .section__head .eyebrow,
 html[data-theme] #contact .eyebrow {
   display: inline-block;
   padding: 0.35rem 0.9rem;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid color-mix(in srgb, var(--on-accent, #fff) 30%, transparent);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
+  background: color-mix(in srgb, var(--on-accent, #fff) 12%, transparent);
 }
 
 /*==================== FOOTER ====================*/
@@ -616,7 +621,7 @@ html[data-theme] #contact .eyebrow {
 }
 
 .lightbox__title {
-  font-family: var(--font-sans);
+  font-family: var(--font-heading);
   font-weight: 650;
   letter-spacing: -0.02em;
 }
@@ -651,7 +656,7 @@ html[data-theme] #contact .eyebrow {
   right: -90px;
   width: 460px;
   height: 460px;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.6), transparent 68%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--grad-b, #6366f1) 60%, transparent), transparent 68%);
 }
 
 .hero::after {
@@ -659,7 +664,7 @@ html[data-theme] #contact .eyebrow {
   left: -130px;
   width: 420px;
   height: 420px;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.5), transparent 68%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--grad-a, #38bdf8) 50%, transparent), transparent 68%);
 }
 
 html[data-theme="light"] .hero::before,

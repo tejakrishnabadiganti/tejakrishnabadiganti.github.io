@@ -17,6 +17,7 @@ const ui = { panel: null, body: null, picker: null, status: null, fab: null };
 const state = { dirty: false, openItems: new WeakSet() };
 let fieldCounter = 0;
 let refreshTimer;
+let themesModule = null;
 
 const isSignedIn = () => sessionStorage.getItem(SESSION_KEY) === "1";
 const byPath = (object, path) => path.split(".").reduce((value, key) => value[key], object);
@@ -197,9 +198,15 @@ export function restoreSession() {
 /* ---------- Forms ---------- */
 
 async function renderTab(id) {
+  if (id !== "theme") themesModule?.discardDraft();
   if (id === "visitors") {
     const { visitorsView } = await import("./admin-visitors.js");
     ui.body.replaceChildren(visitorsView(getContent().contact.formEndpoint));
+  } else if (id === "theme") {
+    themesModule ??= await import("./admin-themes.js");
+    ui.body.replaceChildren(
+      themesModule.themesView({ content: getContent(), changed, fieldControl, rerender: () => renderTab("theme") })
+    );
   } else {
     ui.body.replaceChildren(id === "publish" ? publishView() : sectionView(SECTIONS.find((section) => section.id === id)));
   }

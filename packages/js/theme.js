@@ -1,91 +1,123 @@
-const HEX = /^#[0-9a-f]{6}$/i;
+import { BODY_FONTS, HEADING_FONTS, LOCAL_FONTS, OPTIONS, deriveTokens, normalizeTheme } from "./themes.js";
 
-// Only these families can be chosen, so a name from the editor can never inject CSS or a URL.
-export const HEADING_FONTS = {
-  "Playfair Display": "Playfair+Display:ital,wght@0,500;0,600;0,700;1,500",
-  "Cormorant Garamond": "Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500",
-  Fraunces: "Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500",
-  "Libre Baskerville": "Libre+Baskerville:ital,wght@0,400;0,700;1,400",
-  Lora: "Lora:ital,wght@0,500;0,600;0,700;1,500",
-  Merriweather: "Merriweather:ital,wght@0,400;0,700;1,400",
-};
-
-export const BODY_FONTS = {
-  Inter: "Inter:wght@400;500;600",
-  "Source Sans 3": "Source+Sans+3:wght@400;500;600",
-  Lato: "Lato:wght@400;700",
-  "Nunito Sans": "Nunito+Sans:wght@400;600;700",
-  "Open Sans": "Open+Sans:wght@400;500;600",
-};
-
-// These two are already loaded by index.html, so choosing them costs no extra request.
-const PRELOADED = { heading: "Playfair Display", body: "Inter" };
+const BOOT_KEY = "theme-boot";
+const SERIF_HEADINGS = new Set(["Playfair Display", "Cormorant Garamond", "Fraunces", "Libre Baskerville", "Lora", "Merriweather"]);
 const SERIF_FALLBACK = 'Georgia, "Times New Roman", serif';
 const SANS_FALLBACK = 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
 
-// Picks readable text for buttons that use the accent color as background.
-function contrastOn(hex) {
-  const [r, g, b] = [1, 3, 5]
-    .map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
-    .map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.35 ? "#14171f" : "#ffffff";
+function modeBlock(mode, palette) {
+  const t = deriveTokens(palette);
+  const tint = (color, percent) => `color-mix(in srgb,${color} ${percent}%,transparent)`;
+  const declarations = [
+    `--bg:${t.bg}`,
+    `--bg-alt:${t.bgAlt}`,
+    `--surface:${t.surface}`,
+    `--ink:${t.ink}`,
+    `--muted:${t.muted}`,
+    `--line:${t.line}`,
+    `--accent:${t.accent}`,
+    `--accent-contrast:${t.accentContrast}`,
+    `--gold:${t.gold}`,
+    `--on-accent:${t.onAccent}`,
+    `--on-accent-inv:${t.onAccentInverse}`,
+    `--grad-a:${t.accentFill}`,
+    `--grad-b:${t.secondaryFill}`,
+    `--grad-c:${t.blend}`,
+    `--m-grad:linear-gradient(135deg,${t.accentFill},${t.secondaryFill})`,
+    `--panel-grad:linear-gradient(135deg,${t.accentFill},${t.secondaryFill})`,
+    `--m-grad-text:linear-gradient(100deg,${t.accent},${t.gold})`,
+    `--m-ring:${tint(t.secondaryFill, 35)}`,
+    `--grad-hero:radial-gradient(900px 480px at 88% -8%,${tint(t.secondaryFill, 22)},transparent 62%),radial-gradient(700px 420px at 0% 6%,${tint(t.accentFill, 18)},transparent 60%),${t.bg}`,
+  ];
+  return `html[data-theme="${mode}"]:root{${declarations.join(";")}}`;
 }
 
-function block(selector, { accent, gold, ink, muted }) {
-  const rules = [];
-  if (HEX.test(accent)) {
-    rules.push(`--accent:${accent}`, `--accent-contrast:${contrastOn(accent)}`);
-  }
-  if (HEX.test(gold)) rules.push(`--gold:${gold}`);
-  if (HEX.test(ink)) rules.push(`--ink:${ink}`);
-  if (HEX.test(muted)) rules.push(`--muted:${muted}`);
-  return rules.length ? `${selector}{${rules.join(";")}}` : "";
+function fontStacks({ fontHeading, fontBody }) {
+  const heading = `"${fontHeading}",${SERIF_HEADINGS.has(fontHeading) ? SERIF_FALLBACK : SANS_FALLBACK}`;
+  return { heading, body: `"${fontBody}",${SANS_FALLBACK}` };
 }
 
-function fontRules({ fontHeading, fontBody }) {
-  const heading = fontHeading in HEADING_FONTS ? fontHeading : PRELOADED.heading;
-  const body = fontBody in BODY_FONTS ? fontBody : PRELOADED.body;
+function layoutBlock(theme) {
+  const fonts = fontStacks(theme);
+  const framed = theme.card === "bordered" ? "1px solid var(--line)" : "1px solid transparent";
+  const declarations = [
+    `--font-heading:${fonts.heading}`,
+    `--font-sans:${fonts.body}`,
+    `--content-width:${OPTIONS.width[theme.width]}`,
+    `--radius:${OPTIONS.radius[theme.radius]}`,
+    `--density:${OPTIONS.density[theme.density]}`,
+    `--card-border:${framed}`,
+    `--card-shadow:${theme.card === "elevated" ? "var(--shadow)" : "none"}`,
+    `--heading-scale:${OPTIONS.headingScale[theme.headingScale]}`,
+    `--body-size:${OPTIONS.bodySize[theme.bodySize]}`,
+    `--body-leading:${OPTIONS.lineHeight[theme.lineHeight]}`,
+  ];
+  return `html:root{${declarations.join(";")}}`;
+}
 
+function fontOnlyBlock({ fontHeading, fontBody }) {
+  const declarations = [];
+  if (fontHeading) declarations.push(`--font-heading:${fontStacks({ fontHeading, fontBody }).heading}`);
+  if (fontBody) declarations.push(`--font-sans:${fontStacks({ fontHeading, fontBody }).body}`);
+  return declarations.length ? `html:root{${declarations.join(";")}}` : "";
+}
+
+export function themeSnapshot(raw) {
+  const theme = normalizeTheme(raw);
+  const modes = Object.keys(theme.colors ?? {});
+  const css = theme.preset
+    ? modes.map((mode) => modeBlock(mode, theme.colors[mode])).join("") + layoutBlock(theme)
+    : fontOnlyBlock(theme);
+  return {
+    theme,
+    css,
+    locked: modes.length === 1 ? modes[0] : "",
+    preferred: theme.appearance === "default" ? modes[0] : theme.appearance,
+  };
+}
+
+function loadFonts(theme) {
   const families = [];
-  if (heading !== PRELOADED.heading) families.push(HEADING_FONTS[heading]);
-  if (body !== PRELOADED.body) families.push(BODY_FONTS[body]);
+  if (theme.fontHeading && !LOCAL_FONTS.has(theme.fontHeading)) families.push(HEADING_FONTS[theme.fontHeading]);
+  if (theme.fontBody && !LOCAL_FONTS.has(theme.fontBody)) families.push(BODY_FONTS[theme.fontBody]);
 
   let link = document.getElementById("theme-fonts");
   if (!families.length) {
     link?.remove();
-  } else {
-    const href = `https://fonts.googleapis.com/css2?${families.map((family) => `family=${family}`).join("&")}&display=swap`;
-    if (!link) {
-      link = document.createElement("link");
-      link.id = "theme-fonts";
-      link.rel = "stylesheet";
-      document.head.append(link);
-    }
-    if (link.getAttribute("href") !== href) link.setAttribute("href", href);
+    return;
   }
-
-  return `:root{--font-serif:"${heading}",${SERIF_FALLBACK};--font-sans:"${body}",${SANS_FALLBACK}}`;
+  const href = `https://fonts.googleapis.com/css2?${[...new Set(families)].map((family) => `family=${family}`).join("&")}&display=swap`;
+  if (!link) {
+    link = document.createElement("link");
+    link.id = "theme-fonts";
+    link.rel = "stylesheet";
+    document.head.append(link);
+  }
+  if (link.getAttribute("href") !== href) link.setAttribute("href", href);
 }
 
-export function applyTheme(theme) {
+const systemMode = () => (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+const isMode = (value) => value === "light" || value === "dark";
+
+export function applyTheme(raw, { ignoreSaved = false } = {}) {
+  const { theme, css, locked, preferred } = themeSnapshot(raw);
+
   let style = document.getElementById("theme-overrides");
   if (!style) {
     style = document.createElement("style");
     style.id = "theme-overrides";
     document.head.append(style);
   }
-  style.textContent =
-    block(":root", theme) +
-    block('[data-theme="dark"]', {
-      accent: theme.accentDark,
-      gold: theme.goldDark,
-      ink: theme.inkDark,
-      muted: theme.mutedDark,
-    }) +
-    fontRules(theme);
+  style.textContent = css;
+  loadFonts(theme);
 
-  // A visitor's own choice always wins over the site default.
-  if (!localStorage.getItem("theme") && ["light", "dark"].includes(theme.default)) {
-    document.documentElement.dataset.theme = theme.default;
-  }
+  const root = document.documentElement;
+  root.toggleAttribute("data-mode-locked", Boolean(locked));
+  const saved = ignoreSaved ? null : localStorage.getItem("theme");
+  root.dataset.theme = locked || (isMode(saved) ? saved : "") || (isMode(preferred) ? preferred : systemMode());
+}
+
+export function rememberTheme(raw) {
+  const { css, locked, preferred } = themeSnapshot(raw);
+  localStorage.setItem(BOOT_KEY, JSON.stringify({ css, forced: locked, pref: isMode(preferred) ? preferred : "" }));
 }

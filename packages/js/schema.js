@@ -1,7 +1,3 @@
-import { HEADING_FONTS, BODY_FONTS } from "./theme.js";
-
-const fontOptions = (fonts) => Object.keys(fonts).map((name) => ({ value: name, label: name }));
-
 export const slug = (text) =>
   String(text)
     .toLowerCase()
@@ -22,8 +18,9 @@ const certificateFileName = (item) => mergedSlug(item.issuer, item.name) || "cer
 
 const unique = (values) => [...new Set(values.filter(Boolean))];
 
-// The highlights strip and badge strip have no heading or menu entry, only a visibility switch.
-const hasHeading = (item) => item.id !== "highlights" && item.id !== "badges";
+// The highlights strip and badge strip have no heading or menu entry; the Home hero has a menu entry but no heading.
+const hasMenuEntry = (item) => item.id !== "highlights" && item.id !== "badges";
+const hasHeading = (item) => hasMenuEntry(item) && item.id !== "top";
 
 // Each section describes what the editor shows. `kind: "list"` sections edit an array.
 export const SECTIONS = [
@@ -48,7 +45,7 @@ export const SECTIONS = [
     itemLabel: (item) => `${item.eyebrow || item.id}${item.visible === false ? " (hidden from visitors)" : ""}`,
     fields: [
       { key: "visible", label: "Show on the public site", type: "checkbox" },
-      { key: "nav", label: "Menu label", type: "text", when: hasHeading },
+      { key: "nav", label: "Menu label", type: "text", when: hasMenuEntry },
       { key: "eyebrow", label: "Small heading above the title", type: "text", when: hasHeading },
       { key: "title", label: "Section title", type: "text", when: hasHeading },
     ],
@@ -388,30 +385,7 @@ export const SECTIONS = [
   },
   {
     id: "theme",
-    label: "Theme & colors",
-    kind: "object",
-    path: "theme",
-    fields: [
-      {
-        key: "default",
-        label: "Default theme for new visitors",
-        type: "select",
-        options: [
-          { value: "system", label: "Follow the visitor's device" },
-          { value: "light", label: "Light" },
-          { value: "dark", label: "Dark" },
-        ],
-      },
-      { key: "accent", label: "Accent color (light theme)", type: "color" },
-      { key: "gold", label: "Highlight color (light theme)", type: "color" },
-      { key: "ink", label: "Text color (light theme)", type: "color" },
-      { key: "muted", label: "Secondary text color (light theme)", type: "color" },
-      { key: "accentDark", label: "Accent color (dark theme)", type: "color" },
-      { key: "goldDark", label: "Highlight color (dark theme)", type: "color" },
-      { key: "inkDark", label: "Text color (dark theme)", type: "color" },
-      { key: "mutedDark", label: "Secondary text color (dark theme)", type: "color" },
-      { key: "fontHeading", label: "Heading font", type: "select", options: fontOptions(HEADING_FONTS) },
-      { key: "fontBody", label: "Body text font", type: "select", options: fontOptions(BODY_FONTS) },
-    ],
+    label: "Themes & colors",
+    kind: "themes",
   },
 ];

@@ -56,6 +56,7 @@
     <link rel="modulepreload" href="./packages/js/hero-roles.js" />
     <link rel="modulepreload" href="./packages/js/defaults.js" />
     <link rel="modulepreload" href="./packages/js/theme.js" />
+    <link rel="modulepreload" href="./packages/js/themes.js" />
     <link rel="modulepreload" href="./packages/js/reveal.js" />
     <link rel="modulepreload" href="./packages/js/dom.js" />
     <link rel="modulepreload" href="./packages/js/store.js" />
@@ -68,9 +69,21 @@
     <script>
       // Apply the saved theme before first paint to avoid a flash.
       (function () {
+        var boot = {};
+        try {
+          boot = JSON.parse(localStorage.getItem("theme-boot")) || {};
+        } catch (e) {}
         var saved = localStorage.getItem("theme");
         var dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        document.documentElement.dataset.theme = saved || (dark ? "dark" : "light");
+        var preferred = boot.pref === "light" || boot.pref === "dark" ? boot.pref : dark ? "dark" : "light";
+        document.documentElement.dataset.theme = boot.forced || saved || preferred;
+        if (boot.forced) document.documentElement.setAttribute("data-mode-locked", "");
+        if (boot.css) {
+          var style = document.createElement("style");
+          style.id = "theme-overrides";
+          style.textContent = boot.css;
+          document.head.appendChild(style);
+        }
       })();
     </script>
   </head>

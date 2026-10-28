@@ -6,17 +6,8 @@
     "branch": "main"
   },
   "theme": {
-    "default": "system",
-    "accent": "#0b78d0",
-    "accentDark": "#38bdf8",
-    "gold": "#0369a1",
-    "goldDark": "#7dd3fc",
-    "ink": "#0a1b2e",
-    "inkDark": "#f4f8fd",
-    "muted": "#465a70",
-    "mutedDark": "#a3b3c6",
-    "fontHeading": "Playfair Display",
-    "fontBody": "Inter"
+    "preset": "",
+    "appearance": "system"
   },
   "profile": {
     "name": "Tejakrishna Badiganti",
@@ -75,6 +66,13 @@
     }
   ],
   "sections": [
+    {
+      "id": "top",
+      "nav": "Home",
+      "eyebrow": "Home",
+      "title": "",
+      "visible": true
+    },
     {
       "id": "highlights",
       "nav": "",

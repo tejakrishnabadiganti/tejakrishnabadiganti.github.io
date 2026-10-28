@@ -1,0 +1,322 @@
+/* Editor-only styles for the Themes tab. Loaded on demand, never for visitors. */
+
+.theme-gallery__title {
+  margin-bottom: 0.4rem;
+  font-family: var(--font-heading, var(--font-serif));
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.theme-gallery__status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+  gap: 0.9rem;
+}
+
+.theme-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+}
+
+.theme-card[data-applied="true"] {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.theme-card__name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.98rem;
+  font-weight: 650;
+}
+
+.theme-card__badge {
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-size: 0.7rem;
+  font-weight: 650;
+}
+
+.theme-card__text {
+  font-size: 0.82rem;
+}
+
+.theme-card__meta {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.theme-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: auto;
+  padding-top: 0.4rem;
+}
+
+/* Miniature page drawn from the theme's own colors, card style and corner radius. */
+.theme-mini {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.55rem;
+  border: 1px solid var(--mini-line);
+  border-radius: var(--mini-radius);
+  background: var(--mini-bg);
+}
+
+.theme-mini__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.theme-mini__dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--mini-accent), var(--mini-secondary));
+}
+
+.theme-mini__line {
+  width: 40%;
+  height: 0.3rem;
+  border-radius: 2px;
+  background: var(--mini-ink);
+  opacity: 0.35;
+}
+
+.theme-mini__hero {
+  display: grid;
+  gap: 0.3rem;
+  justify-items: start;
+}
+
+.theme-mini__title {
+  width: 85%;
+  height: 0.5rem;
+  border-radius: 2px;
+  background: var(--mini-ink);
+}
+
+.theme-mini__title--short {
+  width: 55%;
+  background: linear-gradient(90deg, var(--mini-accent), var(--mini-secondary));
+}
+
+.theme-mini__button {
+  width: 2.4rem;
+  height: 0.9rem;
+  margin-top: 0.15rem;
+  border-radius: calc(var(--mini-radius) / 2);
+  background: linear-gradient(135deg, var(--mini-accent), var(--mini-secondary));
+}
+
+.theme-mini__cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+}
+
+.theme-mini__card {
+  height: 1.7rem;
+  border: 1px solid var(--mini-line);
+  border-radius: calc(var(--mini-radius) / 1.5);
+  background: var(--mini-surface);
+}
+
+.theme-mini[data-card="flat"] .theme-mini__card {
+  border-color: transparent;
+}
+
+.theme-mini[data-card="elevated"] .theme-mini__card {
+  border-color: transparent;
+  box-shadow: 0 4px 10px -4px rgba(0, 0, 0, 0.45);
+}
+
+.theme-group {
+  margin: 0 0 1.1rem;
+  padding: 0.8rem 0.9rem 0.1rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.theme-group legend {
+  padding: 0 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 650;
+}
+
+.theme-color {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.admin-field .theme-color input.theme-hex {
+  width: 8.5ch;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-transform: lowercase;
+}
+
+.admin-field .theme-color input.theme-hex[aria-invalid="true"] {
+  border-color: #b3261e;
+}
+
+.theme-checks {
+  display: grid;
+  gap: 0.2rem;
+  margin: 0 0 0.6rem;
+  font-size: 0.78rem;
+}
+
+.theme-checks [data-pass="false"] {
+  color: #b3261e;
+}
+
+.theme-checks [data-pass="true"] strong {
+  color: #1b7a3d;
+}
+
+.theme-customizer__actions {
+  position: sticky;
+  bottom: -1rem;
+  padding: 0.8rem 0;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+}
+
+/*==================== PREVIEW DIALOG ====================*/
+.theme-preview {
+  width: min(1400px, 96vw);
+  height: min(900px, 94vh);
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--ink);
+  overflow: hidden;
+}
+
+.theme-preview[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.theme-preview::backdrop {
+  background: rgba(10, 12, 18, 0.7);
+}
+
+.theme-preview__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 1rem;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.85rem;
+}
+
+.theme-preview__title {
+  margin-right: auto;
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.theme-preview__field {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+}
+
+.theme-preview__field select {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+}
+
+.theme-preview__group {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.theme-preview__group[hidden] {
+  display: none;
+}
+
+.theme-preview__toggle {
+  padding: 0.35rem 0.75rem;
+  border: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+
+.theme-preview__toggle[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-weight: 650;
+}
+
+.theme-preview__actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.theme-preview__stage {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  min-height: 0;
+  padding: 0.75rem;
+  background: var(--bg-alt);
+}
+
+.theme-preview__frame {
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.theme-preview__stage[data-device="tablet"] .theme-preview__frame {
+  width: min(820px, 100%);
+}
+
+.theme-preview__stage[data-device="mobile"] .theme-preview__frame {
+  width: min(390px, 100%);
+}
+
+.theme-preview__note {
+  padding: 0.5rem 1rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.78rem;
+}
