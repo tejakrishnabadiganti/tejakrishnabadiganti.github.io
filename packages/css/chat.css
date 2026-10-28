@@ -174,7 +174,10 @@
 /*---------- Header ----------*/
 
 .chat-panel.is-dragged {
-  transition: none;
+  transition: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 .chat-header {

@@ -911,7 +911,7 @@ function togglePanel() {
   if (open && mode !== "welcome") inputEl.focus();
 }
 
-// ─── Drag support (desktop only) ───
+// ─── Drag support ───
 
 let dragState = null;
 
@@ -925,10 +925,20 @@ function onDragStart(e) {
   if (window.innerWidth <= 640) return;
 
   const isTouch = e.type === "touchstart";
+  if (isTouch) e.preventDefault();
   const clientX = isTouch ? e.touches[0].clientX : e.clientX;
   const clientY = isTouch ? e.touches[0].clientY : e.clientY;
 
   const rect = panelEl.getBoundingClientRect();
+
+  panelEl.style.left = rect.left + "px";
+  panelEl.style.top = rect.top + "px";
+  panelEl.style.right = "auto";
+  panelEl.style.bottom = "auto";
+  panelEl.style.transform = "none";
+  panelEl.classList.add("is-dragged");
+  e.currentTarget.classList.add("is-dragging");
+
   dragState = {
     startX: clientX,
     startY: clientY,
@@ -936,9 +946,6 @@ function onDragStart(e) {
     panelTop: rect.top,
     moved: false,
   };
-
-  panelEl.classList.add("is-dragged");
-  e.currentTarget.classList.add("is-dragging");
 
   const moveEvent = isTouch ? "touchmove" : "mousemove";
   const endEvent = isTouch ? "touchend" : "mouseup";
@@ -957,7 +964,7 @@ function onDragMove(e) {
   const dx = clientX - dragState.startX;
   const dy = clientY - dragState.startY;
 
-  if (!dragState.moved && Math.abs(dx) < 4 && Math.abs(dy) < 4) return;
+  if (!dragState.moved && Math.abs(dx) < 3 && Math.abs(dy) < 3) return;
   dragState.moved = true;
 
   let newLeft = dragState.panelLeft + dx;
@@ -970,8 +977,6 @@ function onDragMove(e) {
 
   panelEl.style.left = newLeft + "px";
   panelEl.style.top = newTop + "px";
-  panelEl.style.right = "auto";
-  panelEl.style.bottom = "auto";
 }
 
 function onDragEnd() {
@@ -981,7 +986,7 @@ function onDragEnd() {
   panelEl.querySelector(".chat-header")?.classList.remove("is-dragging");
 
   if (!dragState.moved) {
-    panelEl.classList.remove("is-dragged");
+    resetPanelPosition();
   }
   dragState = null;
 }
@@ -991,6 +996,7 @@ function resetPanelPosition() {
   panelEl.style.top = "";
   panelEl.style.right = "";
   panelEl.style.bottom = "";
+  panelEl.style.transform = "";
   panelEl.classList.remove("is-dragged");
 }
 
