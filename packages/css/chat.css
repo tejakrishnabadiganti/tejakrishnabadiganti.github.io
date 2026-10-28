@@ -173,6 +173,10 @@
 
 /*---------- Header ----------*/
 
+.chat-panel.is-dragged {
+  transition: none;
+}
+
 .chat-header {
   display: flex;
   align-items: center;
@@ -181,6 +185,13 @@
   border-bottom: 1px solid var(--line);
   background: var(--surface);
   flex-shrink: 0;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.chat-header.is-dragging {
+  cursor: grabbing;
 }
 
 .chat-header__back {

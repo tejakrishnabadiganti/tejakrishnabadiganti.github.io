@@ -835,7 +835,91 @@ function togglePanel() {
   launcherEl.classList.toggle("is-open", open);
   launcherEl.setAttribute("aria-label", open ? "Close chat" : "Ask Teja — AI Assistant");
   if (open) dismissGreetingBubble();
+  if (!open) resetPanelPosition();
   if (open && mode !== "welcome") inputEl.focus();
+}
+
+// ─── Drag support (desktop only) ───
+
+let dragState = null;
+
+function initDrag(header) {
+  header.addEventListener("mousedown", onDragStart);
+  header.addEventListener("touchstart", onDragStart, { passive: false });
+}
+
+function onDragStart(e) {
+  if (e.target.closest("button")) return;
+  if (window.innerWidth <= 640) return;
+
+  const isTouch = e.type === "touchstart";
+  const clientX = isTouch ? e.touches[0].clientX : e.clientX;
+  const clientY = isTouch ? e.touches[0].clientY : e.clientY;
+
+  const rect = panelEl.getBoundingClientRect();
+  dragState = {
+    startX: clientX,
+    startY: clientY,
+    panelLeft: rect.left,
+    panelTop: rect.top,
+    moved: false,
+  };
+
+  panelEl.classList.add("is-dragged");
+  e.currentTarget.classList.add("is-dragging");
+
+  const moveEvent = isTouch ? "touchmove" : "mousemove";
+  const endEvent = isTouch ? "touchend" : "mouseup";
+  document.addEventListener(moveEvent, onDragMove, { passive: false });
+  document.addEventListener(endEvent, onDragEnd, { once: true });
+}
+
+function onDragMove(e) {
+  if (!dragState) return;
+  e.preventDefault();
+
+  const isTouch = e.type === "touchmove";
+  const clientX = isTouch ? e.touches[0].clientX : e.clientX;
+  const clientY = isTouch ? e.touches[0].clientY : e.clientY;
+
+  const dx = clientX - dragState.startX;
+  const dy = clientY - dragState.startY;
+
+  if (!dragState.moved && Math.abs(dx) < 4 && Math.abs(dy) < 4) return;
+  dragState.moved = true;
+
+  let newLeft = dragState.panelLeft + dx;
+  let newTop = dragState.panelTop + dy;
+
+  const pw = panelEl.offsetWidth;
+  const ph = panelEl.offsetHeight;
+  newLeft = Math.max(0, Math.min(window.innerWidth - pw, newLeft));
+  newTop = Math.max(0, Math.min(window.innerHeight - ph, newTop));
+
+  panelEl.style.left = newLeft + "px";
+  panelEl.style.top = newTop + "px";
+  panelEl.style.right = "auto";
+  panelEl.style.bottom = "auto";
+}
+
+function onDragEnd() {
+  if (!dragState) return;
+  document.removeEventListener("mousemove", onDragMove);
+  document.removeEventListener("touchmove", onDragMove);
+  panelEl.querySelector(".chat-header")?.classList.remove("is-dragging");
+
+  if (!dragState.moved) {
+    panelEl.classList.remove("is-dragged");
+  }
+  dragState = null;
+}
+
+function resetPanelPosition() {
+  panelEl.style.left = "";
+  panelEl.style.top = "";
+  panelEl.style.right = "";
+  panelEl.style.bottom = "";
+  panelEl.classList.remove("is-dragged");
 }
 
 // ─── Build UI ───
@@ -993,6 +1077,8 @@ function buildPanel(photoUrl) {
   panel.addEventListener("keydown", (e) => {
     if (e.key === "Escape") togglePanel();
   });
+
+  initDrag(header);
 
   return panel;
 }
