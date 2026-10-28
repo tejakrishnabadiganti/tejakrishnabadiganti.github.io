@@ -5,13 +5,16 @@ const SUGGESTIONS = [
   "Teach me a Java concept",
   "Explain system design with a real-world example",
   "What certifications does Teja have?",
-  "Research the latest developments in AI engineering",
+  "What tech stack does Teja work with?",
 ];
 
 const MAX_INPUT = 2000;
 const MAX_HISTORY = 20;
 const GEMINI_MODEL = "gemini-3.5-flash-lite";
 const GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta/models";
+const ENDPOINT_PREFIX = "https://script.google.com/macros/s/";
+const PHONE_PATTERN = /^\+?[0-9][0-9\s().-]{5,18}[0-9]$/;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 let apiKey = "";
 let systemPrompt = "";
@@ -19,10 +22,29 @@ let panelEl = null;
 let msgsEl = null;
 let inputEl = null;
 let sendBtn = null;
-let welcomeEl = null;
+let inputWrap = null;
 let launcherEl = null;
+let headerNameEl = null;
+let headerStatusEl = null;
+let backBtn = null;
 let history = [];
 let streaming = false;
+
+let mode = "welcome";
+let contactStep = -1;
+let contactData = {};
+let formEndpoint = "";
+let formReasons = [];
+let contactEmail = "";
+
+const CONTACT_STEPS = [
+  { key: "firstName", prompt: "What's your first name?", validate: (v) => v.trim().length > 0, error: "Please enter your first name." },
+  { key: "lastName", prompt: () => `Nice to meet you, ${esc(contactData.firstName)}! What's your last name?`, validate: (v) => v.trim().length > 0, error: "Please enter your last name." },
+  { key: "email", prompt: "What's your email address?", validate: (v) => EMAIL_PATTERN.test(v.trim()), error: "That doesn't look like a valid email. Please try again." },
+  { key: "phone", prompt: "Your phone number? (e.g. +91 98765 43210)", validate: (v) => PHONE_PATTERN.test(v.trim()), error: "Please enter a valid phone number (e.g. +91 98765 43210)." },
+  { key: "reason", prompt: "What brings you here?", type: "buttons" },
+  { key: "message", prompt: "Any message you'd like to add?", optional: true },
+];
 
 // ─── Build system prompt from content.json ───
 
@@ -282,7 +304,14 @@ function renderMarkdown(raw) {
   return html.join("");
 }
 
-// ─── DOM builders ───
+// ─── Helpers ───
+
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return "Good morning!";
+  if (h < 17) return "Good afternoon!";
+  return "Good evening!";
+}
 
 function sparkleIcon() {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -303,6 +332,52 @@ function userIcon() {
   svg.innerHTML = '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>';
   return svg;
 }
+
+function lightbulbIcon() {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("class", "icon");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("aria-hidden", "true");
+  svg.innerHTML = '<path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/>';
+  return svg;
+}
+
+function mailIcon() {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("class", "icon");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("aria-hidden", "true");
+  svg.innerHTML = '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4L12 13L2 4"/>';
+  return svg;
+}
+
+function arrowLeftIcon() {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("class", "icon");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("aria-hidden", "true");
+  svg.innerHTML = '<path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/>';
+  return svg;
+}
+
+function scrollToBottom() {
+  requestAnimationFrame(() => {
+    msgsEl.scrollTop = msgsEl.scrollHeight;
+  });
+}
+
+function handleCopyClick(e) {
+  const btn = e.target.closest("[data-copy]");
+  if (!btn) return;
+  const pre = document.getElementById(btn.dataset.copy);
+  if (!pre) return;
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    btn.textContent = "Copied!";
+    setTimeout(() => (btn.textContent = "Copy"), 1500);
+  });
+}
+
+// ─── Message helpers ───
 
 function addUserMsg(text) {
   const msg = el("div", { class: "chat-msg chat-msg--user" },
@@ -359,24 +434,275 @@ function showError(msg) {
   scrollToBottom();
 }
 
-function scrollToBottom() {
-  requestAnimationFrame(() => {
-    msgsEl.scrollTop = msgsEl.scrollHeight;
-  });
+function updateHeader(name, status) {
+  if (headerNameEl) headerNameEl.textContent = name;
+  if (headerStatusEl) headerStatusEl.textContent = status;
 }
 
-function handleCopyClick(e) {
-  const btn = e.target.closest("[data-copy]");
-  if (!btn) return;
-  const pre = document.getElementById(btn.dataset.copy);
-  if (!pre) return;
-  navigator.clipboard.writeText(pre.textContent).then(() => {
-    btn.textContent = "Copied!";
-    setTimeout(() => (btn.textContent = "Copy"), 1500);
-  });
+function showBackBtn(visible) {
+  if (backBtn) backBtn.classList.toggle("is-visible", visible);
 }
 
-// ─── Call Gemini API directly from the browser ───
+// ─── Welcome mode ───
+
+function showWelcome() {
+  mode = "welcome";
+  history = [];
+  contactStep = -1;
+  contactData = {};
+  msgsEl.innerHTML = "";
+  inputWrap.hidden = true;
+  updateHeader("Ask Teja", "AI-powered assistant");
+  showBackBtn(false);
+
+  const options = el("div", { class: "chat-options" });
+
+  const aiBtn = el("button", { class: "chat-option", type: "button" },
+    el("span", { class: "chat-option__icon" }, lightbulbIcon()),
+    el("div", { class: "chat-option__text" },
+      el("strong", {}, "Learn about Teja"),
+      el("span", {}, "Skills, projects, experience & more")
+    )
+  );
+  aiBtn.addEventListener("click", startAiMode);
+
+  const contactBtn = el("button", { class: "chat-option", type: "button" },
+    el("span", { class: "chat-option__icon" }, mailIcon()),
+    el("div", { class: "chat-option__text" },
+      el("strong", {}, "Send a message"),
+      el("span", {}, "Get in touch with Teja directly")
+    )
+  );
+  contactBtn.addEventListener("click", startContactMode);
+
+  options.append(aiBtn, contactBtn);
+
+  const welcome = el("div", { class: "chat-welcome" },
+    el("div", { class: "chat-welcome__icon" }, sparkleIcon()),
+    el("h3", { class: "chat-welcome__title" }, getGreeting()),
+    el("p", { class: "chat-welcome__text" }, "I'm Teja's AI assistant. How can I help you today?"),
+    options
+  );
+  msgsEl.append(welcome);
+}
+
+// ─── AI chat mode ───
+
+function startAiMode() {
+  mode = "ai";
+  msgsEl.innerHTML = "";
+  inputWrap.hidden = false;
+  updateHeader("Ask Teja", "AI Assistant");
+  showBackBtn(true);
+
+  const suggestions = el("div", { class: "chat-suggestions" });
+  SUGGESTIONS.forEach((text) => {
+    const btn = el("button", { class: "chat-suggestion", type: "button" }, text);
+    btn.addEventListener("click", () => {
+      inputEl.value = text;
+      handleSend();
+    });
+    suggestions.append(btn);
+  });
+
+  const intro = addBotMsg(
+    "<p>Ask me anything about Teja's experience, skills, or projects. I can also explain technical concepts!</p>"
+  );
+  intro.append(suggestions);
+
+  inputEl.placeholder = "Type a message…";
+  inputEl.focus();
+}
+
+// ─── Contact form mode ───
+
+function startContactMode() {
+  if (!formEndpoint) {
+    const fallback = contactEmail ? `mailto:${esc(contactEmail)}` : "";
+    if (fallback) {
+      addBotMsg(`<p>Contact form isn't available right now. You can email Teja at <a href="${fallback}">${esc(contactEmail)}</a>.</p>`);
+    }
+    return;
+  }
+
+  mode = "contact";
+  contactStep = 0;
+  contactData = {};
+  msgsEl.innerHTML = "";
+  inputWrap.hidden = false;
+  updateHeader("Ask Teja", "Send a message");
+  showBackBtn(true);
+
+  addBotMsg("<p>I'll help you send a message to Teja! Let's get a few details.</p>");
+  askContactStep();
+}
+
+function askContactStep() {
+  if (contactStep >= CONTACT_STEPS.length) {
+    showContactSummary();
+    return;
+  }
+
+  const step = CONTACT_STEPS[contactStep];
+  const prompt = typeof step.prompt === "function" ? step.prompt() : step.prompt;
+
+  if (step.type === "buttons") {
+    inputWrap.hidden = true;
+    const btns = el("div", { class: "chat-reason-buttons" });
+    formReasons.forEach((reason) => {
+      const btn = el("button", { class: "chat-reason-btn", type: "button" }, reason);
+      btn.addEventListener("click", () => {
+        addUserMsg(reason);
+        contactData.reason = reason;
+        if (reason.toLowerCase() === "other") {
+          contactData._waitingOther = true;
+          inputWrap.hidden = false;
+          inputEl.placeholder = "Tell us the reason…";
+          addBotMsg("<p>Please describe the reason:</p>");
+          inputEl.focus();
+        } else {
+          contactStep++;
+          inputWrap.hidden = false;
+          inputEl.placeholder = "Type your answer…";
+          askContactStep();
+        }
+      });
+      btns.append(btn);
+    });
+
+    const body = addBotMsg(`<p>${esc(prompt)}</p>`);
+    body.append(btns);
+  } else {
+    inputEl.placeholder = step.optional ? "Type a message or press Send to skip…" : "Type your answer…";
+    addBotMsg(`<p>${esc(prompt)}</p>`);
+    inputEl.focus();
+  }
+
+  scrollToBottom();
+}
+
+function handleContactInput(text) {
+  if (contactData._waitingOther) {
+    if (!text.trim()) {
+      addBotMsg("<p>Please tell us the reason for connecting.</p>");
+      return;
+    }
+    addUserMsg(text);
+    contactData.otherReason = text.trim();
+    delete contactData._waitingOther;
+    contactStep++;
+    askContactStep();
+    return;
+  }
+
+  const step = CONTACT_STEPS[contactStep];
+
+  if (step.optional && !text.trim()) {
+    addUserMsg("(skipped)");
+    contactData[step.key] = "";
+    contactStep++;
+    askContactStep();
+    return;
+  }
+
+  if (step.validate && !step.validate(text)) {
+    addBotMsg(`<p>${esc(step.error)}</p>`);
+    return;
+  }
+
+  addUserMsg(text);
+  contactData[step.key] = text.trim();
+  contactStep++;
+  askContactStep();
+}
+
+function showContactSummary() {
+  inputWrap.hidden = true;
+
+  const reason = contactData.otherReason || contactData.reason || "";
+  const msgLine = contactData.message
+    ? `<div><strong>Message:</strong> ${esc(contactData.message)}</div>`
+    : "";
+
+  const summaryHtml =
+    `<p><strong>Here's what I'll send to Teja:</strong></p>` +
+    `<div class="chat-summary">` +
+    `<div><strong>Name:</strong> ${esc(contactData.firstName)} ${esc(contactData.lastName)}</div>` +
+    `<div><strong>Email:</strong> ${esc(contactData.email)}</div>` +
+    `<div><strong>Phone:</strong> ${esc(contactData.phone)}</div>` +
+    `<div><strong>Reason:</strong> ${esc(reason)}</div>` +
+    msgLine +
+    `</div>`;
+
+  const body = addBotMsg(summaryHtml);
+
+  const sendConfirm = el("button", { class: "chat-confirm-btn chat-confirm-btn--send", type: "button" }, "Send to Teja");
+  sendConfirm.addEventListener("click", () => {
+    actions.remove();
+    submitContact();
+  });
+
+  const cancelBtn = el("button", { class: "chat-confirm-btn chat-confirm-btn--cancel", type: "button" }, "Cancel");
+  cancelBtn.addEventListener("click", () => {
+    actions.remove();
+    addBotMsg("<p>Message cancelled.</p>");
+    appendBackToMenu();
+  });
+
+  const actions = el("div", { class: "chat-confirm-actions" }, sendConfirm, cancelBtn);
+  body.append(actions);
+  scrollToBottom();
+}
+
+async function submitContact() {
+  addBotMsg(`<div class="chat-status-msg"><span class="chat-spinner"></span> Sending your message…</div>`);
+  scrollToBottom();
+
+  try {
+    const fields = {
+      firstName: contactData.firstName,
+      lastName: contactData.lastName,
+      email: contactData.email,
+      phone: contactData.phone,
+      reason: contactData.reason || "",
+      otherReason: contactData.otherReason || "",
+      message: contactData.message || "",
+      website: "",
+      page: location.href,
+    };
+
+    const res = await fetch(formEndpoint, {
+      method: "POST",
+      body: new URLSearchParams(fields),
+    });
+
+    const result = await res.json();
+    if (!result.ok) throw new Error(result.error || "Failed to send");
+
+    addBotMsg(
+      `<div class="chat-status-msg"><span class="chat-checkmark">&#10003;</span> Message sent! Teja will get back to you soon.</div>`
+    );
+  } catch {
+    addBotMsg(
+      `<p>Sorry, something went wrong sending your message. ` +
+      (contactEmail
+        ? `You can email Teja directly at <a href="mailto:${esc(contactEmail)}">${esc(contactEmail)}</a>.`
+        : `Please try again later.`) +
+      `</p>`
+    );
+  }
+
+  appendBackToMenu();
+}
+
+function appendBackToMenu() {
+  const btn = el("button", { class: "chat-confirm-btn chat-confirm-btn--cancel", type: "button", style: "margin-top:8px" }, "Back to menu");
+  btn.addEventListener("click", showWelcome);
+  msgsEl.append(btn);
+  scrollToBottom();
+}
+
+// ─── Gemini API ───
 
 function buildGeminiBody() {
   const contents = history.map((m) => ({
@@ -402,11 +728,6 @@ async function sendMessage(text, isRetry) {
     addUserMsg(text);
     history.push({ role: "user", content: text });
     if (history.length > MAX_HISTORY) history = history.slice(-MAX_HISTORY);
-  }
-
-  if (welcomeEl) {
-    welcomeEl.remove();
-    welcomeEl = null;
   }
 
   streaming = true;
@@ -484,6 +805,37 @@ async function handleStream(res) {
   if (fullText) history.push({ role: "assistant", content: fullText });
 }
 
+// ─── Input handling ───
+
+function handleSend() {
+  const text = inputEl.value.trim();
+  inputEl.value = "";
+  inputEl.style.height = "auto";
+
+  if (mode === "welcome") {
+    if (!text) return;
+    startAiMode();
+    sendMessage(text);
+  } else if (mode === "ai") {
+    if (!text || streaming) return;
+    sendMessage(text);
+  } else if (mode === "contact") {
+    handleContactInput(text);
+  }
+}
+
+function autoResize() {
+  inputEl.style.height = "auto";
+  inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + "px";
+}
+
+function togglePanel() {
+  const open = panelEl.classList.toggle("is-open");
+  launcherEl.classList.toggle("is-open", open);
+  launcherEl.setAttribute("aria-label", open ? "Close chat" : "Open chat");
+  if (open && mode === "ai") inputEl.focus();
+}
+
 // ─── Build UI ───
 
 function buildLauncher() {
@@ -503,7 +855,7 @@ function buildLauncher() {
   const btn = el("button", {
     class: "chat-launcher",
     type: "button",
-    "aria-label": "Open AI assistant",
+    "aria-label": "Open chat",
   });
   btn.append(chatSvg, closeSvg);
   btn.addEventListener("click", togglePanel);
@@ -517,16 +869,25 @@ function buildPanel(photoUrl) {
   closeSvg.setAttribute("aria-hidden", "true");
   closeSvg.innerHTML = '<path d="M6 6l12 12M18 6L6 18"/>';
 
+  backBtn = el("button", {
+    class: "chat-header__back",
+    type: "button",
+    "aria-label": "Back to menu",
+  });
+  backBtn.append(arrowLeftIcon());
+  backBtn.addEventListener("click", showWelcome);
+
   const headerImg = photoUrl
     ? el("img", { class: "chat-header__avatar", src: photoUrl, alt: "" })
     : null;
 
+  headerNameEl = el("div", { class: "chat-header__name" }, "Ask Teja");
+  headerStatusEl = el("div", { class: "chat-header__status" }, "AI-powered assistant");
+
   const header = el("div", { class: "chat-header" },
+    backBtn,
     headerImg,
-    el("div", { class: "chat-header__info" },
-      el("div", { class: "chat-header__name" }, "Teja's AI Assistant"),
-      el("div", { class: "chat-header__status" }, "Ask me anything")
-    ),
+    el("div", { class: "chat-header__info" }, headerNameEl, headerStatusEl),
     (() => {
       const btn = el("button", {
         class: "chat-header__close",
@@ -539,31 +900,12 @@ function buildPanel(photoUrl) {
     })()
   );
 
-  const suggestions = el("div", { class: "chat-suggestions" });
-  SUGGESTIONS.forEach((text) => {
-    const btn = el("button", { class: "chat-suggestion", type: "button" }, text);
-    btn.addEventListener("click", () => {
-      inputEl.value = text;
-      handleSend();
-    });
-    suggestions.append(btn);
-  });
-
-  welcomeEl = el("div", { class: "chat-welcome" },
-    el("div", { class: "chat-welcome__icon" }, sparkleIcon()),
-    el("h3", { class: "chat-welcome__title" }, "Hi! I'm Teja's AI assistant."),
-    el("p", { class: "chat-welcome__text" },
-      "Ask me about Teja's experience, skills and projects, or any technical topic."
-    ),
-    suggestions
-  );
-
   msgsEl = el("div", {
     class: "chat-messages",
     role: "log",
     "aria-live": "polite",
     "aria-label": "Chat messages",
-  }, welcomeEl);
+  });
 
   const sendSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   sendSvg.setAttribute("class", "icon");
@@ -594,14 +936,14 @@ function buildPanel(photoUrl) {
   sendBtn.append(sendSvg);
   sendBtn.addEventListener("click", handleSend);
 
-  const inputArea = el("div", { class: "chat-input" }, inputEl, sendBtn);
+  inputWrap = el("div", { class: "chat-input" }, inputEl, sendBtn);
   const footer = el("div", { class: "chat-footer" }, "Powered by Gemini · Responses may not be perfect");
 
   const panel = el("div", {
     class: "chat-panel",
     role: "dialog",
-    "aria-label": "AI Assistant",
-  }, header, msgsEl, inputArea, footer);
+    "aria-label": "Ask Teja",
+  }, header, msgsEl, inputWrap, footer);
 
   panel.addEventListener("keydown", (e) => {
     if (e.key === "Escape") togglePanel();
@@ -610,39 +952,27 @@ function buildPanel(photoUrl) {
   return panel;
 }
 
-function autoResize() {
-  inputEl.style.height = "auto";
-  inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + "px";
-}
-
-function handleSend() {
-  const text = inputEl.value.trim();
-  if (!text || streaming) return;
-  inputEl.value = "";
-  inputEl.style.height = "auto";
-  sendMessage(text);
-}
-
-function togglePanel() {
-  const open = panelEl.classList.toggle("is-open");
-  launcherEl.classList.toggle("is-open", open);
-  launcherEl.setAttribute("aria-label", open ? "Close AI assistant" : "Open AI assistant");
-  if (open) inputEl.focus();
-}
-
 // ─── Init ───
 
 export function initChat(config = {}) {
   apiKey = config.apiKey || "";
   if (!apiKey) {
-    console.warn("[chat] No API key — chat widget disabled. Set data-chat-key on <html>.");
+    console.warn("[chat] No API key — chat widget disabled.");
     return;
   }
 
   systemPrompt = buildSystemPrompt(config.content);
   const photoUrl = config.photoUrl || "";
 
+  const contact = config.content?.contact || {};
+  const ep = contact.formEndpoint?.trim() || "";
+  formEndpoint = ep.startsWith(ENDPOINT_PREFIX) ? ep : "";
+  formReasons = contact.formReasons || [];
+  contactEmail = contact.email || "";
+
   launcherEl = buildLauncher();
   panelEl = buildPanel(photoUrl);
   document.body.append(panelEl, launcherEl);
+
+  showWelcome();
 }
