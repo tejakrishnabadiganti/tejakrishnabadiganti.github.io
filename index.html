@@ -50,8 +50,9 @@
     <link rel="stylesheet" href="./packages/css/fonts.css" />
     <link rel="stylesheet" href="./packages/css/styles.css" />
     <link rel="stylesheet" href="./packages/css/classic.css" />
-    <link rel="stylesheet" href="./packages/css/modern.css" />
-    <link rel="stylesheet" href="./packages/css/chat.css" />
+    <link rel="stylesheet" href="./packages/css/modern.css" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="./packages/css/chat.css" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="./packages/css/modern.css" /><link rel="stylesheet" href="./packages/css/chat.css" /></noscript>
     <link rel="modulepreload" href="./packages/js/main.js" />
     <link rel="modulepreload" href="./packages/js/site.js" />
     <link rel="modulepreload" href="./packages/js/render.js" />
@@ -66,7 +67,7 @@
     <link rel="modulepreload" href="./packages/js/motion.js" />
     <script>
       // Start loading the content right away instead of waiting for the scripts to run.
-      window.contentRequest = fetch("data/content.json?t=" + Date.now(), { cache: "no-store" });
+      window.contentRequest = fetch("data/content.json?v=1");
     </script>
     <script>
       // Apply the saved theme before first paint to avoid a flash.

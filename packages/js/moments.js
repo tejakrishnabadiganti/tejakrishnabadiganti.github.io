@@ -23,8 +23,8 @@ function momentCard(item, index) {
       el(
         "span",
         { class: "moment__frame" },
-        el("img", { class: "moment__backdrop", src, alt: "", "aria-hidden": "true", loading: "lazy", decoding: "async" }),
-        el("img", { class: "moment__photo", src, alt: label, loading: "lazy", decoding: "async" }),
+        el("img", { class: "moment__backdrop", src, alt: "", "aria-hidden": "true", loading: "lazy", decoding: "async", width: "600", height: "400" }),
+        el("img", { class: "moment__photo", src, alt: label, loading: "lazy", decoding: "async", width: "600", height: "400" }),
         el("span", { class: "moment__zoom", "aria-hidden": "true" }, "+")
       )
     ),
