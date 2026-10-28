@@ -54,6 +54,7 @@ function doPost(e) {
     if (params.website) return reply({ ok: true }); // hidden field, only bots fill it
     if (params.type === "visit") return recordVisit(params);
     if (params.type === "chat_question") return recordChatQuestion(params);
+    if (params.type === "chat_resume") return receiveChatResume(params);
     if (params.type === "identify") return identifyVisitor(params);
     if (params.type === "event") return recordEvent(params);
 
@@ -511,6 +512,37 @@ function getChatQuestionsSheet() {
     sheet.setColumnWidth(4, 500);
   }
   return sheet;
+}
+
+function receiveChatResume(params) {
+  var resume = buildResume(params);
+  if (!resume) return reply({ ok: true });
+  var name = clean(params.userName, 100) || "Anonymous";
+  var visitorId = clean(params.visitor, 40);
+
+  MailApp.sendEmail({
+    to: ownerEmail(),
+    subject: "Resume received via chat — " + name,
+    body: "A visitor uploaded their resume through the Pandu chat agent.\n\nName: " + name + "\nVisitor ID: " + visitorId,
+    htmlBody:
+      "<h3>Resume received via Pandu chat</h3>" +
+      "<table cellpadding='6'>" +
+      "<tr><td><b>Name</b></td><td>" + escapeHtml(name) + "</td></tr>" +
+      "<tr><td><b>Visitor ID</b></td><td>" + escapeHtml(visitorId) + "</td></tr>" +
+      "<tr><td><b>File</b></td><td>" + escapeHtml(resume.getName()) + "</td></tr>" +
+      "</table><p>The resume is attached to this email.</p>",
+    attachments: [resume],
+  });
+
+  recordChatQuestion({
+    visitor: visitorId,
+    userName: name,
+    question: "[Uploaded resume: " + resume.getName() + "]",
+    page: clean(params.page, 200),
+    sessionId: clean(params.sessionId, 40),
+  });
+
+  return reply({ ok: true });
 }
 
 /* ---------- Known Visitors (links anonymous UUIDs to real people) ---------- */

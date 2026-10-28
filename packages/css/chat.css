@@ -1023,6 +1023,42 @@
 
 /*---------- Mic button ----------*/
 
+.chat-input__attach {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: color 0.15s, background 0.15s;
+  align-self: center;
+}
+
+.chat-input__attach:hover {
+  color: var(--accent);
+  background: var(--line);
+}
+
+.chat-input__attach:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.chat-input__attach .icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .chat-input__mic {
   width: 40px;
   height: 40px;

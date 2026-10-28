@@ -1083,6 +1083,62 @@ function logQuestion(question) {
   });
 }
 
+const RESUME_TYPES = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+
+async function handleFileUpload() {
+  const fileInput = document.createElement("input");
+  fileInput.type = "file";
+  fileInput.accept = ".pdf,.doc,.docx";
+  fileInput.addEventListener("change", async () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+    if (!RESUME_TYPES.includes(file.type)) {
+      addBotMsg("<p>Please upload a <strong>PDF</strong> or <strong>Word document</strong> (.pdf, .doc, .docx).</p>");
+      scrollToBottom();
+      return;
+    }
+    if (file.size > MAX_FILE_SIZE) {
+      addBotMsg("<p>That file is too large. Please upload a resume under <strong>5 MB</strong>.</p>");
+      scrollToBottom();
+      return;
+    }
+
+    addUserMsg("📎 " + esc(file.name));
+    showTyping();
+
+    try {
+      const buf = await file.arrayBuffer();
+      const bytes = new Uint8Array(buf);
+      let binary = "";
+      for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+
+      const payload = new URLSearchParams({
+        type: "chat_resume",
+        visitor: getVisitorId(),
+        userName: userName || "Anonymous",
+        resumeData: btoa(binary),
+        resumeName: file.name,
+        resumeType: file.type,
+        sessionId: sessionId,
+      });
+      await fetch(formEndpoint, { method: "POST", body: payload, mode: "no-cors", keepalive: true });
+      hideTyping();
+      addBotMsg(
+        "<p>Got it! I've sent your resume (<strong>" + esc(file.name) + "</strong>) to Teja. " +
+        "He'll review it and get back to you.</p>" +
+        "<p>Is there anything else you'd like to know?</p>"
+      );
+      saveChatHistory();
+    } catch {
+      hideTyping();
+      addBotMsg("<p>Sorry, there was a problem uploading your resume. You can also send it through the <a href='#' data-open-contact>contact form</a>.</p>");
+    }
+    scrollToBottom();
+  });
+  fileInput.click();
+}
+
 function logChatUser(name) {
   if (!name.trim()) return;
   chatBeacon({
@@ -1530,7 +1586,22 @@ function buildPanel(photoUrl) {
     micBtn.addEventListener("click", toggleVoice);
   }
 
-  const inputChildren = [inputEl];
+  const attachSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  attachSvg.setAttribute("class", "icon");
+  attachSvg.setAttribute("viewBox", "0 0 24 24");
+  attachSvg.setAttribute("aria-hidden", "true");
+  attachSvg.innerHTML = '<path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/>';
+
+  const attachBtn = el("button", {
+    class: "chat-input__attach",
+    type: "button",
+    "aria-label": "Attach resume",
+    title: "Attach resume (PDF, DOC, DOCX)",
+  });
+  attachBtn.append(attachSvg);
+  attachBtn.addEventListener("click", handleFileUpload);
+
+  const inputChildren = [attachBtn, inputEl];
   if (micBtn) inputChildren.push(micBtn);
   inputChildren.push(sendBtn);
   inputWrap = el("div", { class: "chat-input" }, ...inputChildren);
