@@ -74,6 +74,24 @@ export function initContactForm() {
     if (event.target === dialog) close();
   });
 
+  let overlay = null;
+  const showSendingOverlay = (show) => {
+    if (show && !overlay) {
+      overlay = document.createElement("div");
+      overlay.className = "contact-sending-overlay";
+      overlay.innerHTML =
+        '<div class="contact-sending-overlay__box">' +
+        '<span class="contact-sending-overlay__spinner"></span>' +
+        '<span>Sending your message…</span>' +
+        "</div>";
+      form.style.position = "relative";
+      form.append(overlay);
+    } else if (!show && overlay) {
+      overlay.remove();
+      overlay = null;
+    }
+  };
+
   const mailtoFallback = (contact, fields) => {
     const lines = [
       `Name: ${fields.firstName} ${fields.lastName}`,
@@ -118,6 +136,7 @@ export function initContactForm() {
     submit.disabled = true;
     let serverMessage = "";
     setStatus("Sending… this can take a few seconds.");
+    showSendingOverlay(true);
     try {
       const response = await fetch(endpoint, {
         method: "POST",
@@ -135,6 +154,7 @@ export function initContactForm() {
       $("contact-done").focus();
     } catch (error) {
       submit.disabled = false;
+      showSendingOverlay(false);
       setStatus(serverMessage || `Sorry, that did not go through. Please try again or email ${contact.email}.`, "error");
       console.error(error);
     }

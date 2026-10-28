@@ -1051,6 +1051,48 @@ h3 {
   gap: 0.75rem;
 }
 
+.contact-sending-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: inherit;
+  backdrop-filter: blur(2px);
+}
+
+[data-theme="dark"] .contact-sending-overlay {
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.contact-sending-overlay__box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 28px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.contact-sending-overlay__spinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: contact-spin 0.7s linear infinite;
+}
+
+@keyframes contact-spin {
+  to { transform: rotate(360deg); }
+}
+
 .contact-success p {
   color: var(--muted);
 }
