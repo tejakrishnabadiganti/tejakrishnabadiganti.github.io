@@ -19,6 +19,7 @@ const CONFIG = {
   maxVisitsPerHour: 600,
   chatQuestionsSheetName: "Chat Questions",
   maxChatQuestionsPerHour: 300,
+  knownVisitorsSheetName: "Known Visitors",
 
   // Confirmation email sent to the visitor. Set sendConfirmation to false to turn it off.
   sendConfirmation: true,
@@ -38,7 +39,7 @@ const CONFIG = {
 const LIMITS = { firstName: 80, lastName: 80, email: 120, phone: 30, reason: 80, otherReason: 120, message: 1000 };
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_PATTERN = /^\+?[0-9][0-9\s().-]{5,18}[0-9]$/;
-const HEADERS = ["Received", "First name", "Last name", "Email", "Phone", "Reason", "Message", "Page"];
+const HEADERS = ["Received", "First name", "Last name", "Email", "Phone", "Reason", "Message", "Page", "Visitor ID"];
 
 function doGet(e) {
   if (e && e.parameter && e.parameter.action === "stats") return reply({ ok: true, stats: readStats() });
@@ -51,13 +52,18 @@ function doPost(e) {
     if (params.website) return reply({ ok: true }); // hidden field, only bots fill it
     if (params.type === "visit") return recordVisit(params);
     if (params.type === "chat_question") return recordChatQuestion(params);
+    if (params.type === "identify") return identifyVisitor(params);
 
     const data = readFields(params);
     validate(data);
     enforceRateLimit(data.email);
-    saveRow(data, clean(params.page, 300));
+    const visitorId = clean(params.visitor, 40);
+    saveRow(data, clean(params.page, 300), visitorId);
     notifyOwner(data);
     sendConfirmationOnce(data);
+    if (visitorId) {
+      upsertKnownVisitor(visitorId, data.firstName + " " + data.lastName, data.email, data.phone, "contact");
+    }
     return reply({ ok: true });
   } catch (error) {
     return reply({ ok: false, error: error.message });
@@ -113,8 +119,8 @@ function getSheet() {
   return sheet;
 }
 
-function saveRow(data, page) {
-  const row = [new Date(), data.firstName, data.lastName, data.email, data.phone, data.reasonText, data.message, page];
+function saveRow(data, page, visitorId) {
+  const row = [new Date(), data.firstName, data.lastName, data.email, data.phone, data.reasonText, data.message, page, visitorId];
   getSheet().appendRow(row.map((cell) => (typeof cell === "string" ? safeCell(cell) : cell)));
 }
 
@@ -268,7 +274,11 @@ function sendConfirmationOnce(data) {
 
 /* ---------- Anonymous visit counter ---------- */
 
-const VISIT_HEADERS = ["Time", "Visitor ID", "Returning visitor", "Came from", "Device", "Timezone", "Language", "Page"];
+const VISIT_HEADERS = [
+  "Time", "Visitor ID", "Returning", "Referrer", "Device", "Browser", "OS",
+  "Screen", "Country", "City", "Region", "Timezone", "Language", "Page",
+  "UTM Source", "UTM Medium", "UTM Campaign"
+];
 const VISITOR_ID_PATTERN = /^[0-9a-f-]{36}$/i;
 
 function recordVisit(params) {
@@ -286,9 +296,18 @@ function recordVisit(params) {
     params.returning === "yes" ? "Yes" : "No",
     clean(params.referrer, 100),
     clean(params.device, 20),
+    clean(params.browser, 20),
+    clean(params.os, 20),
+    clean(params.screen, 20),
+    clean(params.country, 60),
+    clean(params.city, 60),
+    clean(params.region, 60),
     clean(params.timezone, 60),
     clean(params.language, 20),
     clean(params.page, 200),
+    clean(params.utmSource, 100),
+    clean(params.utmMedium, 100),
+    clean(params.utmCampaign, 100),
   ];
   getVisitsSheet().appendRow(row.map((cell) => (typeof cell === "string" ? safeCell(cell) : cell)));
   return reply({ ok: true });
@@ -310,11 +329,17 @@ function getVisitsSheet() {
 function createSummarySheet(spreadsheet) {
   const visits = "'" + CONFIG.visitsSheetName + "'";
   const contacts = "'" + CONFIG.sheetName + "'";
+  const chatQ = "'" + CONFIG.chatQuestionsSheetName + "'";
+  const known = "'" + CONFIG.knownVisitorsSheetName + "'";
   const summary = spreadsheet.getSheetByName(CONFIG.summarySheetName) || spreadsheet.insertSheet(CONFIG.summarySheetName);
   summary.clear();
 
-  var labels = [["Total visits"], ["Unique visitors"], ["Returning visits"], ["Visits today"], ["Visits in the last 7 days"], ["Contact form messages"]];
-  summary.getRange("A1:A6").setValues(labels);
+  var labels = [
+    ["Total visits"], ["Unique visitors"], ["Returning visits"],
+    ["Visits today"], ["Visits in the last 7 days"],
+    ["Contact form messages"], ["Chat questions"], ["Known visitors"]
+  ];
+  summary.getRange("A1:A8").setValues(labels);
 
   summary.getRange("B1").setFormula("=MAX(0,COUNTA(" + visits + "!A:A)-1)");
   summary.getRange("B2").setFormula("=IFERROR(COUNTUNIQUE(" + visits + "!B2:B),0)");
@@ -322,22 +347,44 @@ function createSummarySheet(spreadsheet) {
   summary.getRange("B4").setFormula("=COUNTIF(" + visits + "!A2:A,\">=\"&TODAY())");
   summary.getRange("B5").setFormula("=COUNTIF(" + visits + "!A2:A,\">=\"&(TODAY()-6))");
   summary.getRange("B6").setFormula("=MAX(0,COUNTA(" + contacts + "!A:A)-1)");
+  summary.getRange("B7").setFormula("=IFERROR(MAX(0,COUNTA(" + chatQ + "!A:A)-1),0)");
+  summary.getRange("B8").setFormula("=IFERROR(MAX(0,COUNTA(" + known + "!A:A)-1),0)");
 
-  summary.getRange("A8").setValue("Top places visitors came from");
-  summary.getRange("A9").setFormula(
+  summary.getRange("A10").setValue("Top referrers");
+  summary.getRange("A11").setFormula(
     "=IFERROR(QUERY(" + visits + "!D2:D,\"select D, count(D) where D <> '' group by D order by count(D) desc limit 8 label D 'Website', count(D) 'Visits'\",0),\"No data yet\")"
   );
-  summary.getRange("A1:A8").setFontWeight("bold");
+
+  summary.getRange("D10").setValue("Top countries");
+  summary.getRange("D11").setFormula(
+    "=IFERROR(QUERY(" + visits + "!I2:I,\"select I, count(I) where I <> '' group by I order by count(I) desc limit 8 label I 'Country', count(I) 'Visits'\",0),\"No data yet\")"
+  );
+
+  summary.getRange("G10").setValue("Top browsers");
+  summary.getRange("G11").setFormula(
+    "=IFERROR(QUERY(" + visits + "!F2:F,\"select F, count(F) where F <> '' group by F order by count(F) desc limit 8 label F 'Browser', count(F) 'Visits'\",0),\"No data yet\")"
+  );
+
+  summary.getRange("A1:A10").setFontWeight("bold");
+  summary.getRange("D10").setFontWeight("bold");
+  summary.getRange("G10").setFontWeight("bold");
   summary.setColumnWidth(1, 240);
+  summary.setColumnWidth(4, 200);
+  summary.setColumnWidth(7, 200);
 }
 
 // Totals only, never names, emails or visitor IDs, so the editor can show them.
+// Column indices: 0=Time, 1=VisitorID, 2=Returning, 3=Referrer, 4=Device, 5=Browser, 6=OS, 7=Screen, 8=Country, 9=City
 function summarizeVisits(rows, messages, formatDay, today) {
   const DAY_MS = 86400000;
   const perDay = {};
   const visitors = {};
   const referrers = {};
   const devices = {};
+  const browsers = {};
+  const oses = {};
+  const countries = {};
+  const cities = {};
   let returning = 0;
   rows.forEach((row) => {
     const day = formatDay(new Date(row[0]));
@@ -346,6 +393,10 @@ function summarizeVisits(rows, messages, formatDay, today) {
     if (row[2] === "Yes") returning += 1;
     if (row[3]) referrers[row[3]] = (referrers[row[3]] || 0) + 1;
     if (row[4]) devices[row[4]] = (devices[row[4]] || 0) + 1;
+    if (row[5]) browsers[row[5]] = (browsers[row[5]] || 0) + 1;
+    if (row[6]) oses[row[6]] = (oses[row[6]] || 0) + 1;
+    if (row[8]) countries[row[8]] = (countries[row[8]] || 0) + 1;
+    if (row[9]) cities[row[9]] = (cities[row[9]] || 0) + 1;
   });
 
   const daily = [];
@@ -370,6 +421,10 @@ function summarizeVisits(rows, messages, formatDay, today) {
     daily: daily,
     referrers: top(referrers),
     devices: top(devices),
+    browsers: top(browsers),
+    oses: top(oses),
+    countries: top(countries),
+    cities: top(cities),
   };
 }
 
@@ -378,19 +433,23 @@ function readStats() {
   const visits = spreadsheet.getSheetByName(CONFIG.visitsSheetName);
   const contacts = spreadsheet.getSheetByName(CONFIG.sheetName);
   const chatSheet = spreadsheet.getSheetByName(CONFIG.chatQuestionsSheetName);
+  const knownSheet = spreadsheet.getSheetByName(CONFIG.knownVisitorsSheetName);
   const rowCount = visits ? visits.getLastRow() - 1 : 0;
-  const rows = rowCount > 0 ? visits.getRange(2, 1, rowCount, 5).getValues() : [];
+  const cols = VISIT_HEADERS.length;
+  const rows = rowCount > 0 ? visits.getRange(2, 1, rowCount, cols).getValues() : [];
   const messages = contacts ? Math.max(0, contacts.getLastRow() - 1) : 0;
   const chatQuestions = chatSheet ? Math.max(0, chatSheet.getLastRow() - 1) : 0;
+  const knownVisitors = knownSheet ? Math.max(0, knownSheet.getLastRow() - 1) : 0;
   const zone = Session.getScriptTimeZone();
   const stats = summarizeVisits(rows, messages, (date) => Utilities.formatDate(date, zone, "yyyy-MM-dd"), new Date());
   stats.chatQuestions = chatQuestions;
+  stats.knownVisitors = knownVisitors;
   return stats;
 }
 
 /* ---------- Chat question logger ---------- */
 
-const CHAT_HEADERS = ["Time", "User Name", "Question", "Page"];
+const CHAT_HEADERS = ["Time", "Visitor ID", "User Name", "Question", "Page"];
 
 function recordChatQuestion(params) {
   const cache = CacheService.getScriptCache();
@@ -400,6 +459,7 @@ function recordChatQuestion(params) {
 
   const row = [
     new Date(),
+    clean(params.visitor, 40),
     clean(params.userName, 100),
     clean(params.question, 2000),
     clean(params.page, 200),
@@ -418,6 +478,55 @@ function getChatQuestionsSheet() {
     sheet.setColumnWidth(3, 500);
   }
   return sheet;
+}
+
+/* ---------- Known Visitors (links anonymous UUIDs to real people) ---------- */
+
+const KNOWN_HEADERS = ["First Seen", "Last Seen", "Visitor ID", "Name", "Email", "Phone", "Source"];
+
+function getKnownVisitorsSheet() {
+  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = spreadsheet.getSheetByName(CONFIG.knownVisitorsSheetName);
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet(CONFIG.knownVisitorsSheetName);
+    sheet.appendRow(KNOWN_HEADERS);
+    sheet.setFrozenRows(1);
+    sheet.setColumnWidth(3, 300);
+    sheet.setColumnWidth(4, 200);
+  }
+  return sheet;
+}
+
+function identifyVisitor(params) {
+  var id = clean(params.visitor, 40);
+  if (!id) return reply({ ok: true });
+  var name = clean(params.userName, 100);
+  var source = clean(params.source, 20);
+  upsertKnownVisitor(id, name, "", "", source);
+  return reply({ ok: true });
+}
+
+function upsertKnownVisitor(visitorId, name, email, phone, source) {
+  if (!visitorId) return;
+  var sheet = getKnownVisitorsSheet();
+  var data = sheet.getDataRange().getValues();
+  var now = new Date();
+
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][2] === visitorId) {
+      sheet.getRange(i + 1, 2).setValue(now);
+      if (name && !data[i][3]) sheet.getRange(i + 1, 4).setValue(safeCell(name));
+      if (email && !data[i][4]) sheet.getRange(i + 1, 5).setValue(safeCell(email));
+      if (phone && !data[i][5]) sheet.getRange(i + 1, 6).setValue(safeCell(phone));
+      if (source) {
+        var existing = data[i][6] ? data[i][6] + ", " + source : source;
+        sheet.getRange(i + 1, 7).setValue(safeCell(existing));
+      }
+      return;
+    }
+  }
+
+  sheet.appendRow([now, now, visitorId, safeCell(name), safeCell(email), safeCell(phone), safeCell(source)]);
 }
 
 function reply(payload) {

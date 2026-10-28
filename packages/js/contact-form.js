@@ -1,4 +1,5 @@
 import { getContent } from "./site.js";
+import { getVisitorId } from "./visit-counter.js";
 
 const ENDPOINT_PREFIX = "https://script.google.com/macros/s/";
 const PHONE_PATTERN = /^\+?[0-9][0-9\s().-]{5,18}[0-9]$/;
@@ -140,7 +141,7 @@ export function initContactForm() {
     try {
       const response = await fetch(endpoint, {
         method: "POST",
-        body: new URLSearchParams({ ...fields, page: location.href }),
+        body: new URLSearchParams({ ...fields, page: location.href, visitor: getVisitorId() }),
       });
       const result = await response.json();
       if (!result.ok) {

@@ -1,4 +1,5 @@
 import { el, safeUrl } from "./dom.js";
+import { getVisitorId } from "./visit-counter.js";
 
 const SUGGESTIONS = [
   "Tell me about Teja's projects",
@@ -705,6 +706,7 @@ async function submitContact() {
       message: contactData.message || "",
       website: "",
       page: location.href,
+      visitor: getVisitorId(),
     };
 
     const res = await fetch(formEndpoint, {
@@ -852,10 +854,22 @@ function logQuestion(question) {
   if (!formEndpoint || !question.trim()) return;
   const body = new URLSearchParams({
     type: "chat_question",
+    visitor: getVisitorId(),
     userName: userName || "Anonymous",
     question: question.trim(),
     page: location.pathname,
     timestamp: new Date().toISOString(),
+  });
+  fetch(formEndpoint, { method: "POST", body, mode: "no-cors", keepalive: true }).catch(() => {});
+}
+
+function logChatUser(name) {
+  if (!formEndpoint || !name.trim()) return;
+  const body = new URLSearchParams({
+    type: "identify",
+    visitor: getVisitorId(),
+    userName: name.trim(),
+    source: "chat",
   });
   fetch(formEndpoint, { method: "POST", body, mode: "no-cors", keepalive: true }).catch(() => {});
 }
@@ -872,6 +886,7 @@ function handleSend() {
     if (!text) return;
     userName = text.trim();
     addUserMsg(text);
+    logChatUser(userName);
     mode = "ai";
     showAiSuggestions();
   } else if (mode === "ai") {
