@@ -471,6 +471,32 @@ function showError(msg) {
   scrollToBottom();
 }
 
+function showRateLimitMsg() {
+  const wrap = el("div", { class: "chat-limit" });
+  wrap.innerHTML = renderMarkdown(
+    "**Pandu is taking a short break!** 😴\n\n" +
+    "Too many people are chatting right now. Please try again in a minute, " +
+    "or send Teja a message directly."
+  );
+  const actions = el("div", { class: "chat-limit__actions" });
+  const retryBtn = el("button", { class: "chat-confirm-btn chat-confirm-btn--cancel", type: "button" }, "Try again");
+  const contactBtn = el("button", { class: "chat-confirm-btn chat-confirm-btn--send", type: "button" }, "Message Teja");
+  retryBtn.addEventListener("click", () => {
+    wrap.remove();
+    if (history.length && history[history.length - 1].role === "user") {
+      sendMessage(history[history.length - 1].content, true);
+    }
+  });
+  contactBtn.addEventListener("click", () => {
+    panelEl.classList.remove("is-open");
+    document.querySelector("[data-open-contact]")?.click();
+  });
+  actions.append(retryBtn, contactBtn);
+  wrap.append(actions);
+  msgsEl.append(wrap);
+  scrollToBottom();
+}
+
 function updateHeader(name, status) {
   if (headerNameEl) headerNameEl.textContent = name;
   if (headerStatusEl) headerStatusEl.textContent = status;
@@ -955,7 +981,7 @@ async function sendMessage(text, isRetry) {
       let detail = "";
       try { detail = JSON.parse(errBody)?.error?.message || errBody.slice(0, 200); } catch { detail = errBody.slice(0, 200); }
       if (res.status === 403) throw new Error("Invalid API key. Check the Gemini key in your GitHub secret.");
-      if (res.status === 429) throw new Error("Free tier limit reached. Please wait a minute.");
+      if (res.status === 429) throw Object.assign(new Error("rate_limit"), { rateLimit: true });
       throw new Error(detail || `API error (${res.status})`);
     }
 
@@ -963,7 +989,11 @@ async function sendMessage(text, isRetry) {
     await handleStream(res);
   } catch (err) {
     hideTyping();
-    showError(err.message);
+    if (err.rateLimit) {
+      showRateLimitMsg();
+    } else {
+      showError(err.message);
+    }
   } finally {
     streaming = false;
     sendBtn.disabled = false;
