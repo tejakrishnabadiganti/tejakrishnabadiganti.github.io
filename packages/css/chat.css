@@ -32,16 +32,21 @@
 .chat-launcher .icon {
   width: 26px;
   height: 26px;
+  transition: transform 0.25s, opacity 0.2s;
+}
+
+.chat-launcher .icon--chat {
+  fill: currentColor;
+  stroke: none;
+}
+
+.chat-launcher .icon--close {
+  position: absolute;
   fill: none;
   stroke: currentColor;
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
-  transition: transform 0.25s, opacity 0.2s;
-}
-
-.chat-launcher .icon--close {
-  position: absolute;
   transform: rotate(90deg) scale(0);
   opacity: 0;
 }
@@ -54,6 +59,83 @@
 .chat-launcher.is-open .icon--close {
   transform: rotate(0deg) scale(1);
   opacity: 1;
+}
+
+/*---------- Greeting bubble ----------*/
+
+.chat-greeting-bubble {
+  position: fixed;
+  bottom: 90px;
+  right: 24px;
+  z-index: 901;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.14), 0 0 0 1px var(--line);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  max-width: 280px;
+  transform: translateY(12px) scale(0.95);
+  opacity: 0;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.chat-greeting-bubble.is-visible {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.chat-greeting-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  right: 22px;
+  width: 12px;
+  height: 12px;
+  background: var(--surface);
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  transform: rotate(45deg);
+}
+
+.chat-greeting-bubble:hover {
+  background: var(--tag-bg);
+}
+
+.chat-greeting-bubble__text {
+  flex: 1;
+  line-height: 1.4;
+}
+
+.chat-greeting-bubble__close {
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+  padding: 0;
+}
+
+.chat-greeting-bubble__close:hover {
+  background: var(--line);
+  color: var(--ink);
 }
 
 /*---------- Panel ----------*/
@@ -891,6 +973,12 @@
   .chat-launcher {
     bottom: 16px;
     right: 16px;
+  }
+
+  .chat-greeting-bubble {
+    bottom: 82px;
+    right: 16px;
+    max-width: calc(100vw - 32px);
   }
 
   .chat-panel {

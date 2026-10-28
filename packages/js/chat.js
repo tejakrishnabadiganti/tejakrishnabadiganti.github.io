@@ -451,7 +451,8 @@ function showWelcome() {
   contactStep = -1;
   contactData = {};
   msgsEl.innerHTML = "";
-  inputWrap.hidden = true;
+  inputWrap.hidden = false;
+  inputEl.placeholder = "Or just type what you need…";
   updateHeader("Ask Teja", "AI-powered assistant");
   showBackBtn(false);
 
@@ -832,19 +833,22 @@ function autoResize() {
 function togglePanel() {
   const open = panelEl.classList.toggle("is-open");
   launcherEl.classList.toggle("is-open", open);
-  launcherEl.setAttribute("aria-label", open ? "Close chat" : "Open chat");
-  if (open && mode === "ai") inputEl.focus();
+  launcherEl.setAttribute("aria-label", open ? "Close chat" : "Ask Teja — AI Assistant");
+  if (open) dismissGreetingBubble();
+  if (open && mode !== "welcome") inputEl.focus();
 }
 
 // ─── Build UI ───
 
 function buildLauncher() {
-  const chatSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  chatSvg.setAttribute("class", "icon icon--chat");
-  chatSvg.setAttribute("viewBox", "0 0 24 24");
-  chatSvg.setAttribute("aria-hidden", "true");
-  chatSvg.innerHTML =
-    '<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>';
+  const aiSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  aiSvg.setAttribute("class", "icon icon--chat");
+  aiSvg.setAttribute("viewBox", "0 0 24 24");
+  aiSvg.setAttribute("aria-hidden", "true");
+  aiSvg.innerHTML =
+    '<path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5Z" fill="currentColor"/>' +
+    '<path d="M19 14l.75 2.25L22 17l-2.25.75L19 20l-.75-2.25L16 17l2.25-.75Z" fill="currentColor"/>' +
+    '<path d="M5 16l.5 1.5L7 18l-1.5.5L5 20l-.5-1.5L3 18l1.5-.5Z" fill="currentColor"/>';
 
   const closeSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   closeSvg.setAttribute("class", "icon icon--close");
@@ -855,11 +859,52 @@ function buildLauncher() {
   const btn = el("button", {
     class: "chat-launcher",
     type: "button",
-    "aria-label": "Open chat",
+    "aria-label": "Ask Teja — AI Assistant",
   });
-  btn.append(chatSvg, closeSvg);
-  btn.addEventListener("click", togglePanel);
+  btn.append(aiSvg, closeSvg);
+  btn.addEventListener("click", () => {
+    dismissGreetingBubble();
+    togglePanel();
+  });
   return btn;
+}
+
+function showGreetingBubble() {
+  const bubble = el("div", { class: "chat-greeting-bubble", id: "chat-greeting-bubble" });
+  const h = new Date().getHours();
+  let greeting;
+  if (h < 12) greeting = "Good morning!";
+  else if (h < 17) greeting = "Good afternoon!";
+  else greeting = "Good evening!";
+
+  const text = el("span", { class: "chat-greeting-bubble__text" }, `${greeting} Need help? Ask me anything`);
+  const closeBtn = el("button", { class: "chat-greeting-bubble__close", type: "button", "aria-label": "Dismiss" });
+  closeBtn.innerHTML = "&times;";
+  closeBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    dismissGreetingBubble();
+  });
+
+  bubble.append(text, closeBtn);
+  bubble.addEventListener("click", () => {
+    dismissGreetingBubble();
+    if (!panelEl.classList.contains("is-open")) togglePanel();
+  });
+
+  document.body.append(bubble);
+  requestAnimationFrame(() => bubble.classList.add("is-visible"));
+
+  greetingTimer = setTimeout(dismissGreetingBubble, 10000);
+}
+
+let greetingTimer = null;
+function dismissGreetingBubble() {
+  if (greetingTimer) { clearTimeout(greetingTimer); greetingTimer = null; }
+  const b = document.getElementById("chat-greeting-bubble");
+  if (b) {
+    b.classList.remove("is-visible");
+    setTimeout(() => b.remove(), 300);
+  }
 }
 
 function buildPanel(photoUrl) {
@@ -975,4 +1020,6 @@ export function initChat(config = {}) {
   document.body.append(panelEl, launcherEl);
 
   showWelcome();
+
+  setTimeout(showGreetingBubble, 2000);
 }
