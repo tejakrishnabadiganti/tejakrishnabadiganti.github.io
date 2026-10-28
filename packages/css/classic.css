@@ -734,8 +734,8 @@ h3 {
 .to-top {
   position: fixed;
   right: 1.25rem;
-  bottom: 90px;
-  z-index: 40;
+  bottom: 100px;
+  z-index: 899;
   display: grid;
   place-items: center;
   width: 44px;
