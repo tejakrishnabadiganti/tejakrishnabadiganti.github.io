@@ -6,6 +6,9 @@ const PHONE_PATTERN = /^\+?[0-9][0-9\s().-]{5,18}[0-9]$/;
 const MIN_SECONDS_BETWEEN_SENDS = 30;
 const LAST_SENT_KEY = "contact-form-last-sent";
 const OTHER_REASON = "other";
+const RESUME_REASONS = /referral|looking for|job seeker/i;
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const ALLOWED_TYPES = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
 
 const $ = (id) => document.getElementById(id);
 
@@ -22,6 +25,8 @@ export function initContactForm() {
   const otherWrap = $("cf-other-wrap");
   const other = $("cf-other");
   const phone = $("cf-phone");
+  const resumeWrap = $("cf-resume-wrap");
+  const resumeInput = $("cf-resume");
 
   const setStatus = (text, kind = "") => {
     status.textContent = text;
@@ -46,6 +51,7 @@ export function initContactForm() {
     form.classList.remove("was-validated");
     otherWrap.hidden = true;
     other.required = false;
+    resumeWrap.hidden = true;
     setStatus("");
     submit.disabled = false;
     form.hidden = false;
@@ -57,10 +63,12 @@ export function initContactForm() {
   const close = () => dialog.close();
 
   reason.addEventListener("change", () => {
-    const isOther = reason.value.trim().toLowerCase() === OTHER_REASON;
+    const val = reason.value.trim();
+    const isOther = val.toLowerCase() === OTHER_REASON;
     otherWrap.hidden = !isOther;
     other.required = isOther;
     if (isOther) other.focus();
+    resumeWrap.hidden = !RESUME_REASONS.test(val);
   });
 
   document.addEventListener("click", (event) => {
@@ -124,6 +132,18 @@ export function initContactForm() {
       return;
     }
 
+    const file = resumeInput.files[0];
+    if (file) {
+      if (!ALLOWED_TYPES.includes(file.type)) {
+        setStatus("Please upload a PDF or Word document.", "error");
+        return;
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        setStatus("File is too large. Maximum size is 5 MB.", "error");
+        return;
+      }
+    }
+
     const { contact } = getContent();
     const fields = Object.fromEntries([...data].map(([key, value]) => [key, String(value).trim()]));
     const endpoint = endpointOf(contact);
@@ -139,9 +159,19 @@ export function initContactForm() {
     setStatus("Sending… this can take a few seconds.");
     showSendingOverlay(true);
     try {
+      const payload = { ...fields, page: location.href, visitor: getVisitorId() };
+      if (file) {
+        const buf = await file.arrayBuffer();
+        const bytes = new Uint8Array(buf);
+        let binary = "";
+        for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+        payload.resumeData = btoa(binary);
+        payload.resumeName = file.name;
+        payload.resumeType = file.type;
+      }
       const response = await fetch(endpoint, {
         method: "POST",
-        body: new URLSearchParams({ ...fields, page: location.href, visitor: getVisitorId() }),
+        body: new URLSearchParams(payload),
       });
       const result = await response.json();
       if (!result.ok) {

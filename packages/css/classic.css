@@ -1016,6 +1016,11 @@ h3 {
   resize: vertical;
 }
 
+.cf-field input[type="file"] {
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
 .cf-field input:focus-visible,
 .cf-field select:focus-visible,
 .cf-field textarea:focus-visible {

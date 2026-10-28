@@ -62,7 +62,8 @@ function doPost(e) {
     enforceRateLimit(data.email);
     const visitorId = clean(params.visitor, 40);
     saveRow(data, clean(params.page, 300), visitorId);
-    notifyOwner(data);
+    var resume = buildResume(params);
+    notifyOwner(data, resume);
     sendConfirmationOnce(data);
     if (visitorId) {
       upsertKnownVisitor(visitorId, data.firstName + " " + data.lastName, data.email, data.phone, "contact");
@@ -133,7 +134,29 @@ function escapeHtml(text) {
 
 const ownerEmail = () => CONFIG.notifyEmail || Session.getEffectiveUser().getEmail();
 
-function notifyOwner(data) {
+var ALLOWED_RESUME_TYPES = {
+  "application/pdf": true,
+  "application/msword": true,
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": true,
+};
+var MAX_RESUME_BYTES = 5 * 1024 * 1024;
+
+function buildResume(params) {
+  var data = params.resumeData;
+  var name = clean(params.resumeName, 120);
+  var type = clean(params.resumeType, 120);
+  if (!data || !name || !ALLOWED_RESUME_TYPES[type]) return null;
+  try {
+    var decoded = Utilities.base64Decode(data);
+    if (decoded.length > MAX_RESUME_BYTES) return null;
+    return Utilities.newBlob(decoded, type, name);
+  } catch (err) {
+    console.error("Resume decode failed: " + err.message);
+    return null;
+  }
+}
+
+function notifyOwner(data, resume) {
   const to = ownerEmail();
   const rows = [
     ["Name", data.firstName + " " + data.lastName],
@@ -142,7 +165,8 @@ function notifyOwner(data) {
     ["Reason", data.reasonText],
     ["Message", data.message || "(none)"],
   ];
-  MailApp.sendEmail({
+  if (resume) rows.push(["Resume", "Attached"]);
+  var emailOpts = {
     to: to,
     replyTo: data.email,
     subject: "New website enquiry: " + data.reasonText + " - " + data.firstName + " " + data.lastName,
@@ -151,7 +175,9 @@ function notifyOwner(data) {
       "<h3>New enquiry from your portfolio website</h3><table cellpadding='6'>" +
       rows.map((row) => "<tr><td><b>" + row[0] + "</b></td><td>" + escapeHtml(row[1]).replace(/\n/g, "<br>") + "</td></tr>").join("") +
       "</table><p>Reply to this email to answer " + escapeHtml(data.firstName) + " directly.</p>",
-  });
+  };
+  if (resume) emailOpts.attachments = [resume];
+  MailApp.sendEmail(emailOpts);
 }
 
 /* ---------- Confirmation email to the visitor ---------- */
@@ -164,7 +190,7 @@ function reasonReply(reason) {
   if (key.indexOf("referral") >= 0 || key.indexOf("looking for") >= 0) {
     return {
       line: "I see you're looking for a job opportunity or a referral at my current company. Thank you for reaching out! I'll go through your details, and if there's a way I can help, I'll let you know.",
-      nextStep: "To help me look into it faster, please reply to this email with your updated resume and the role (or job ID) you're interested in.",
+      nextStep: "If you haven't already attached your resume, please reply to this email with it along with the role (or job ID) you're interested in.",
     };
   }
   if (key.indexOf("job") >= 0 || key.indexOf("hiring") >= 0) {
