@@ -178,6 +178,8 @@
   transform: none !important;
   opacity: 1 !important;
   visibility: visible !important;
+  right: auto !important;
+  bottom: auto !important;
 }
 
 .chat-header {
@@ -191,10 +193,28 @@
   cursor: grab;
   user-select: none;
   -webkit-user-select: none;
+  touch-action: none;
 }
 
 .chat-header.is-dragging {
   cursor: grabbing;
+}
+
+.chat-header__drag {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px 2px;
+  opacity: 0.35;
+  flex-shrink: 0;
+}
+
+.chat-header__drag span {
+  display: block;
+  width: 14px;
+  height: 2px;
+  background: var(--muted);
+  border-radius: 1px;
 }
 
 .chat-header__back {

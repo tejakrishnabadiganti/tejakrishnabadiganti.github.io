@@ -924,8 +924,8 @@ function onDragStart(e) {
   if (e.target.closest("button")) return;
   if (window.innerWidth <= 640) return;
 
+  e.preventDefault();
   const isTouch = e.type === "touchstart";
-  if (isTouch) e.preventDefault();
   const clientX = isTouch ? e.touches[0].clientX : e.clientX;
   const clientY = isTouch ? e.touches[0].clientY : e.clientY;
 
@@ -1091,7 +1091,12 @@ function buildPanel(photoUrl) {
   headerNameEl = el("div", { class: "chat-header__name" }, "Pandu");
   headerStatusEl = el("div", { class: "chat-header__status" }, "AI-powered assistant");
 
+  const dragHandle = el("div", { class: "chat-header__drag", "aria-hidden": "true" },
+    el("span"), el("span"), el("span")
+  );
+
   const header = el("div", { class: "chat-header" },
+    dragHandle,
     backBtn,
     headerImg,
     el("div", { class: "chat-header__info" }, headerNameEl, headerStatusEl),
