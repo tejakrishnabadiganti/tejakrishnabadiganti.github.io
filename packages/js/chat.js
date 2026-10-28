@@ -850,28 +850,35 @@ async function handleStream(res) {
 
 // ─── Input handling ───
 
+function chatBeacon(params) {
+  if (!formEndpoint) return;
+  const body = new URLSearchParams(params);
+  if (navigator.sendBeacon) {
+    navigator.sendBeacon(formEndpoint, body);
+  } else {
+    fetch(formEndpoint, { method: "POST", body, mode: "no-cors", keepalive: true }).catch(() => {});
+  }
+}
+
 function logQuestion(question) {
-  if (!formEndpoint || !question.trim()) return;
-  const body = new URLSearchParams({
+  if (!question.trim()) return;
+  chatBeacon({
     type: "chat_question",
     visitor: getVisitorId(),
     userName: userName || "Anonymous",
     question: question.trim(),
     page: location.pathname,
-    timestamp: new Date().toISOString(),
   });
-  fetch(formEndpoint, { method: "POST", body, mode: "no-cors", keepalive: true }).catch(() => {});
 }
 
 function logChatUser(name) {
-  if (!formEndpoint || !name.trim()) return;
-  const body = new URLSearchParams({
+  if (!name.trim()) return;
+  chatBeacon({
     type: "identify",
     visitor: getVisitorId(),
     userName: name.trim(),
     source: "chat",
   });
-  fetch(formEndpoint, { method: "POST", body, mode: "no-cors", keepalive: true }).catch(() => {});
 }
 
 function handleSend() {

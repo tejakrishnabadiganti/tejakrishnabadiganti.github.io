@@ -324,6 +324,9 @@ function getVisitsSheet() {
     sheet.appendRow(VISIT_HEADERS);
     sheet.setFrozenRows(1);
     createSummarySheet(spreadsheet);
+    getChatQuestionsSheet();
+    getKnownVisitorsSheet();
+    getEventsSheet();
   }
   return sheet;
 }
@@ -478,7 +481,7 @@ function getChatQuestionsSheet() {
     sheet = spreadsheet.insertSheet(CONFIG.chatQuestionsSheetName);
     sheet.appendRow(CHAT_HEADERS);
     sheet.setFrozenRows(1);
-    sheet.setColumnWidth(3, 500);
+    sheet.setColumnWidth(4, 500);
   }
   return sheet;
 }
