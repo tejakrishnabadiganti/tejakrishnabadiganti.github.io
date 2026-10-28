@@ -11,12 +11,19 @@
   border-radius: 50%;
   background: var(--accent);
   color: var(--accent-contrast);
-  cursor: pointer;
+  cursor: grab;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
   transition: transform 0.2s, box-shadow 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.chat-launcher:active {
+  cursor: grabbing;
 }
 
 .chat-launcher:hover {

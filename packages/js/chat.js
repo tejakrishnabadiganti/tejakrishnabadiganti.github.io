@@ -1280,6 +1280,81 @@ function resetPanelPosition() {
 
 // ─── Build UI ───
 
+const LAUNCHER_POS_KEY = "pandu-launcher-pos";
+
+function makeDraggable(btn) {
+  let dragging = false;
+  let moved = false;
+  let startX, startY, origX, origY;
+
+  function restorePosition() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(LAUNCHER_POS_KEY));
+      if (saved) {
+        const x = Math.min(Math.max(0, saved.x), window.innerWidth - 56);
+        const y = Math.min(Math.max(0, saved.y), window.innerHeight - 56);
+        btn.style.right = "auto";
+        btn.style.bottom = "auto";
+        btn.style.left = x + "px";
+        btn.style.top = y + "px";
+      }
+    } catch {}
+  }
+
+  function savePosition() {
+    try {
+      localStorage.setItem(LAUNCHER_POS_KEY, JSON.stringify({
+        x: parseInt(btn.style.left),
+        y: parseInt(btn.style.top),
+      }));
+    } catch {}
+  }
+
+  function onStart(clientX, clientY) {
+    dragging = true;
+    moved = false;
+    startX = clientX;
+    startY = clientY;
+    const rect = btn.getBoundingClientRect();
+    origX = rect.left;
+    origY = rect.top;
+    btn.style.transition = "none";
+  }
+
+  function onMove(clientX, clientY) {
+    if (!dragging) return;
+    const dx = clientX - startX;
+    const dy = clientY - startY;
+    if (!moved && Math.abs(dx) < 5 && Math.abs(dy) < 5) return;
+    moved = true;
+    const x = Math.min(Math.max(0, origX + dx), window.innerWidth - 56);
+    const y = Math.min(Math.max(0, origY + dy), window.innerHeight - 56);
+    btn.style.right = "auto";
+    btn.style.bottom = "auto";
+    btn.style.left = x + "px";
+    btn.style.top = y + "px";
+  }
+
+  function onEnd() {
+    dragging = false;
+    btn.style.transition = "";
+    if (moved) savePosition();
+  }
+
+  btn.addEventListener("mousedown", (e) => { onStart(e.clientX, e.clientY); });
+  window.addEventListener("mousemove", (e) => { if (dragging) { e.preventDefault(); onMove(e.clientX, e.clientY); } });
+  window.addEventListener("mouseup", () => { if (dragging) onEnd(); });
+
+  btn.addEventListener("touchstart", (e) => { onStart(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+  window.addEventListener("touchmove", (e) => { if (dragging) onMove(e.touches[0].clientX, e.touches[0].clientY); }, { passive: false });
+  window.addEventListener("touchend", () => { if (dragging) onEnd(); });
+
+  btn.addEventListener("click", (e) => { if (moved) { e.stopImmediatePropagation(); moved = false; } }, true);
+
+  restorePosition();
+  window.addEventListener("resize", restorePosition);
+}
+
 function buildLauncher() {
   const aiSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   aiSvg.setAttribute("class", "icon icon--chat");
@@ -1332,6 +1407,9 @@ function showGreetingBubble() {
   });
 
   document.body.append(bubble);
+  const rect = launcherEl.getBoundingClientRect();
+  bubble.style.bottom = (window.innerHeight - rect.top + 10) + "px";
+  bubble.style.right = (window.innerWidth - rect.right) + "px";
   requestAnimationFrame(() => bubble.classList.add("is-visible"));
 
   greetingTimer = setTimeout(dismissGreetingBubble, 10000);
@@ -1496,6 +1574,7 @@ export function initChat(config = {}) {
   launcherEl = buildLauncher();
   panelEl = buildPanel(photoUrl);
   document.body.append(panelEl, launcherEl);
+  makeDraggable(launcherEl);
 
   showWelcome();
 
