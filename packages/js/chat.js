@@ -12,7 +12,11 @@ const SUGGESTIONS = [
 const MAX_INPUT = 2000;
 const MAX_HISTORY = 14;
 const MAX_QUESTIONS = 20;
+const FOLLOWUP_EVERY = 5;
 const QUESTIONS_KEY = "pandu-q-count";
+const CHAT_STORAGE_KEY = "pandu-chat";
+const NAME_KEY = "pandu-name";
+const SESSION_KEY = "pandu-session";
 const GEMINI_MODEL = "gemini-3.5-flash-lite";
 const GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta/models";
 const ENDPOINT_PREFIX = "https://script.google.com/macros/s/";
@@ -44,6 +48,7 @@ let formReasons = [];
 let contactEmail = "";
 let userName = "";
 let questionCount = 0;
+let sessionId = "";
 
 const CONTACT_STEPS = [
   { key: "firstName", prompt: "What's your first name?", validate: (v) => v.trim().length > 0, error: "Please enter your first name." },
@@ -477,6 +482,10 @@ function showBackBtn(visible) {
 
 // ─── Welcome mode ───
 
+function newSessionId() {
+  return Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
+}
+
 function getQuestionCount() {
   try { return Number(sessionStorage.getItem(QUESTIONS_KEY) || 0); } catch { return 0; }
 }
@@ -484,6 +493,72 @@ function getQuestionCount() {
 function bumpQuestionCount() {
   questionCount++;
   try { sessionStorage.setItem(QUESTIONS_KEY, String(questionCount)); } catch {}
+}
+
+function getSavedName() {
+  try { return localStorage.getItem(NAME_KEY) || ""; } catch { return ""; }
+}
+
+function saveName(name) {
+  try { if (name) localStorage.setItem(NAME_KEY, name); } catch {}
+}
+
+function saveChatHistory() {
+  try {
+    localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify({
+      messages: history.map(m => ({ role: m.role, content: m.content })),
+      userName,
+      ts: Date.now(),
+    }));
+  } catch {}
+}
+
+function loadChatHistory() {
+  try {
+    const d = JSON.parse(localStorage.getItem(CHAT_STORAGE_KEY));
+    if (!d?.messages?.length) return null;
+    if (Date.now() - d.ts > 86400000) {
+      localStorage.removeItem(CHAT_STORAGE_KEY);
+      return null;
+    }
+    return d;
+  } catch { return null; }
+}
+
+function clearChatHistory() {
+  try {
+    localStorage.removeItem(CHAT_STORAGE_KEY);
+    sessionStorage.removeItem(QUESTIONS_KEY);
+  } catch {}
+}
+
+function restoreChat() {
+  const saved = loadChatHistory();
+  if (!saved) return;
+  mode = "ai";
+  userName = saved.userName || getSavedName();
+  history = saved.messages;
+  questionCount = getQuestionCount();
+  sessionId = sessionStorage.getItem(SESSION_KEY) || newSessionId();
+  sessionStorage.setItem(SESSION_KEY, sessionId);
+
+  msgsEl.innerHTML = "";
+  updateHeader("Pandu", "AI Assistant");
+  showBackBtn(true);
+  inputWrap.hidden = false;
+
+  history.forEach(m => {
+    if (m.role === "user") addUserMsg(m.content);
+    else addBotMsg(renderMarkdown(m.content));
+  });
+
+  const remaining = MAX_QUESTIONS - questionCount;
+  if (remaining > 0 && remaining <= 5) {
+    addBotMsg(`<p class="chat-tip">${remaining} question${remaining === 1 ? "" : "s"} remaining in this session.</p>`);
+  }
+
+  inputEl.placeholder = "Type a message…";
+  inputEl.focus();
 }
 
 function showLimitReached() {
@@ -510,18 +585,49 @@ function showLimitReached() {
   scrollToBottom();
 }
 
+function resetChat() {
+  clearChatHistory();
+  userName = "";
+  questionCount = 0;
+  history = [];
+  showWelcome();
+}
+
 function showWelcome() {
   mode = "welcome";
   history = [];
   contactStep = -1;
   contactData = {};
-  userName = "";
   questionCount = getQuestionCount();
   msgsEl.innerHTML = "";
   inputWrap.hidden = false;
   inputEl.placeholder = "Or just type what you need…";
   updateHeader("Pandu", "AI-powered assistant");
   showBackBtn(false);
+
+  const saved = loadChatHistory();
+  if (saved && saved.messages.length > 0) {
+    const savedName = saved.userName || getSavedName();
+    const preview = saved.messages.filter(m => m.role === "user").slice(-2).map(m => m.content).join(", ");
+    const resumeBox = el("div", { class: "chat-resume" },
+      el("p", { class: "chat-resume__title" }, savedName ? `Welcome back, ${esc(savedName)}!` : "You have a previous conversation"),
+      el("p", { class: "chat-resume__preview" }, preview ? `"${esc(preview.slice(0, 80))}${preview.length > 80 ? "…" : ""}"` : ""),
+      el("div", { class: "chat-resume__actions" },
+        (() => {
+          const btn = el("button", { class: "chat-confirm-btn chat-confirm-btn--send", type: "button" }, "Continue chat");
+          btn.addEventListener("click", restoreChat);
+          return btn;
+        })(),
+        (() => {
+          const btn = el("button", { class: "chat-confirm-btn chat-confirm-btn--cancel", type: "button" }, "Start fresh");
+          btn.addEventListener("click", resetChat);
+          return btn;
+        })()
+      )
+    );
+    msgsEl.append(resumeBox);
+    return;
+  }
 
   const options = el("div", { class: "chat-options" });
 
@@ -558,6 +664,9 @@ function showWelcome() {
 
 function startAiMode() {
   questionCount = getQuestionCount();
+  sessionId = newSessionId();
+  try { sessionStorage.setItem(SESSION_KEY, sessionId); } catch {}
+
   if (questionCount >= MAX_QUESTIONS) {
     msgsEl.innerHTML = "";
     updateHeader("Pandu", "AI Assistant");
@@ -565,19 +674,28 @@ function startAiMode() {
     showLimitReached();
     return;
   }
-  mode = "ai-name";
+
   msgsEl.innerHTML = "";
   inputWrap.hidden = false;
   updateHeader("Pandu", "AI Assistant");
   showBackBtn(true);
 
-  addBotMsg("<p>Before we start, may I know your name?</p>");
-  inputEl.placeholder = "Enter your name…";
-  inputEl.focus();
+  const savedName = getSavedName();
+  if (savedName) {
+    userName = savedName;
+    mode = "ai";
+    logChatUser(userName);
+    showAiSuggestions(`Welcome back, ${esc(userName)}! `);
+  } else {
+    mode = "ai-name";
+    addBotMsg("<p>Before we start, may I know your name?</p>");
+    inputEl.placeholder = "Enter your name…";
+    inputEl.focus();
+  }
 }
 
-function showAiSuggestions() {
-  const greeting = userName ? `Hi ${esc(userName)}! ` : "";
+function showAiSuggestions(customGreeting) {
+  const greeting = customGreeting || (userName ? `Hi ${esc(userName)}! ` : "");
   const suggestions = el("div", { class: "chat-suggestions" });
   SUGGESTIONS.forEach((text) => {
     const btn = el("button", { class: "chat-suggestion", type: "button" }, text);
@@ -891,7 +1009,24 @@ async function handleStream(res) {
   }
 
   if (!bodyEl && fullText) bodyEl = addBotMsg(renderMarkdown(fullText));
-  if (fullText) history.push({ role: "assistant", content: fullText });
+  if (fullText) {
+    history.push({ role: "assistant", content: fullText });
+    saveChatHistory();
+
+    if (questionCount > 0 && questionCount % FOLLOWUP_EVERY === 0 && questionCount < MAX_QUESTIONS) {
+      const remaining = MAX_QUESTIONS - questionCount;
+      const tip = el("div", { class: "chat-followup" },
+        el("span", {}, `${remaining} questions left. `),
+        (() => {
+          const link = el("button", { class: "chat-followup__link", type: "button" }, "Want to connect with Teja directly?");
+          link.addEventListener("click", startContactMode);
+          return link;
+        })()
+      );
+      msgsEl.append(tip);
+      scrollToBottom();
+    }
+  }
 }
 
 // ─── Input handling ───
@@ -914,6 +1049,7 @@ function logQuestion(question) {
     userName: userName || "Anonymous",
     question: question.trim(),
     page: location.pathname,
+    sessionId: sessionId,
   });
 }
 
@@ -938,6 +1074,7 @@ function handleSend() {
   } else if (mode === "ai-name") {
     if (!text) return;
     userName = text.trim();
+    saveName(userName);
     addUserMsg(text);
     logChatUser(userName);
     mode = "ai";
@@ -951,6 +1088,7 @@ function handleSend() {
     }
     bumpQuestionCount();
     logQuestion(text);
+    saveChatHistory();
     sendMessage(text);
   } else if (mode === "limit") {
     addUserMsg(text);
@@ -1205,11 +1343,27 @@ function buildPanel(photoUrl) {
     el("span"), el("span"), el("span")
   );
 
+  const restartSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  restartSvg.setAttribute("class", "icon");
+  restartSvg.setAttribute("viewBox", "0 0 24 24");
+  restartSvg.setAttribute("aria-hidden", "true");
+  restartSvg.innerHTML = '<path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>';
+
+  const restartBtn = el("button", {
+    class: "chat-header__restart",
+    type: "button",
+    "aria-label": "Restart chat",
+    title: "Restart chat",
+  });
+  restartBtn.append(restartSvg);
+  restartBtn.addEventListener("click", resetChat);
+
   const header = el("div", { class: "chat-header" },
     dragHandle,
     backBtn,
     headerImg,
     el("div", { class: "chat-header__info" }, headerNameEl, headerStatusEl),
+    restartBtn,
     (() => {
       const btn = el("button", {
         class: "chat-header__close",

@@ -8,6 +8,8 @@ const TILES = [
   ["today", "Today"],
   ["last7Days", "Last 7 days"],
   ["messages", "Contact messages"],
+  ["chatQuestions", "Chat questions"],
+  ["knownVisitors", "Known visitors"],
 ];
 
 const tile = ([key, label], stats) =>
@@ -45,8 +47,18 @@ function renderStats(stats) {
     el("div", { class: "admin-stats" }, TILES.map((definition) => tile(definition, stats))),
     el("h3", { class: "admin-rank__title" }, "Visits per day (last 14 days)"),
     dailyChart(stats.daily),
-    ranking("Where visitors came from", stats.referrers, "No referring websites yet. Direct visits are not listed."),
-    ranking("Devices", stats.devices, "No data yet."),
+    el("div", { class: "admin-ranks" },
+      ranking("Top countries", stats.countries || [], "No location data yet."),
+      ranking("Top browsers", stats.browsers || [], "No data yet."),
+    ),
+    el("div", { class: "admin-ranks" },
+      ranking("Where visitors came from", stats.referrers, "No referring websites yet."),
+      ranking("Devices", stats.devices, "No data yet."),
+    ),
+    el("div", { class: "admin-ranks" },
+      ranking("Operating systems", stats.oses || [], "No data yet."),
+      ranking("Top cities", stats.cities || [], "No city data yet."),
+    ),
   ];
 }
 
@@ -79,7 +91,7 @@ export function visitorsView(endpoint) {
   return el(
     "div",
     { class: "admin-section" },
-    el("p", { class: "admin-hint" }, "Anonymous totals only. Names and emails of people who wrote to you are in the Contact requests sheet."),
+    el("p", { class: "admin-hint" }, "Website analytics dashboard. Visitor names and emails are in the Google Sheet (Contact requests, Known Visitors)."),
     refresh,
     output
   );

@@ -137,7 +137,7 @@ function mountEditor() {
     "select",
     { class: "admin-select", "aria-label": "Section to edit" },
     SECTIONS.map((section) => el("option", { value: section.id }, section.label)),
-    el("option", { value: "visitors" }, "Visitors"),
+    el("option", { value: "visitors" }, "Analytics"),
     el("option", { value: "publish" }, "Publish & settings")
   );
   ui.picker.addEventListener("change", () => renderTab(ui.picker.value));

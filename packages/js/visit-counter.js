@@ -262,4 +262,47 @@ export async function initVisitCounter() {
   initScrollTracking();
   initClickTracking();
   initSectionTracking();
+  initWebVitals();
+}
+
+// ─── Core Web Vitals ───
+
+function initWebVitals() {
+  if (!window.PerformanceObserver) return;
+
+  try {
+    new PerformanceObserver((list) => {
+      const entries = list.getEntries();
+      const lcp = entries[entries.length - 1];
+      if (lcp) trackEvent("web_vital_lcp", Math.round(lcp.startTime) + "ms");
+    }).observe({ type: "largest-contentful-paint", buffered: true });
+  } catch {}
+
+  try {
+    let cls = 0;
+    new PerformanceObserver((list) => {
+      for (const entry of list.getEntries()) {
+        if (!entry.hadRecentInput) cls += entry.value;
+      }
+    }).observe({ type: "layout-shift", buffered: true });
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden" && cls > 0) {
+        trackEvent("web_vital_cls", cls.toFixed(3));
+      }
+    }, { once: true });
+  } catch {}
+
+  try {
+    let worst = 0;
+    new PerformanceObserver((list) => {
+      for (const entry of list.getEntries()) {
+        if (entry.duration > worst) worst = entry.duration;
+      }
+    }).observe({ type: "event", buffered: true });
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden" && worst > 0) {
+        trackEvent("web_vital_inp", Math.round(worst) + "ms");
+      }
+    }, { once: true });
+  } catch {}
 }

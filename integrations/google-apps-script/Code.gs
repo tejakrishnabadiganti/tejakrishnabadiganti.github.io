@@ -455,7 +455,7 @@ function readStats() {
 
 /* ---------- Chat question logger ---------- */
 
-const CHAT_HEADERS = ["Time", "Visitor ID", "User Name", "Question", "Page"];
+const CHAT_HEADERS = ["Time", "Visitor ID", "User Name", "Question", "Page", "Session ID"];
 
 function recordChatQuestion(params) {
   const cache = CacheService.getScriptCache();
@@ -469,6 +469,7 @@ function recordChatQuestion(params) {
     clean(params.userName, 100),
     clean(params.question, 2000),
     clean(params.page, 200),
+    clean(params.sessionId, 40),
   ];
   getChatQuestionsSheet().appendRow(row.map((cell) => (typeof cell === "string" ? safeCell(cell) : cell)));
   return reply({ ok: true });
@@ -567,6 +568,57 @@ function getEventsSheet() {
     sheet.setColumnWidth(4, 300);
   }
   return sheet;
+}
+
+/* ---------- Weekly email digest (set up a time trigger for this) ---------- */
+
+function weeklyDigest() {
+  var stats = readStats();
+  var to = ownerEmail();
+  var subject = "Weekly portfolio digest — " + Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "MMM d, yyyy");
+
+  var lines = [];
+  lines.push("<h2>Your Portfolio This Week</h2>");
+  lines.push("<table cellpadding='6' style='border-collapse:collapse;font-family:sans-serif'>");
+  lines.push("<tr><td><b>Total visits</b></td><td>" + stats.total + "</td></tr>");
+  lines.push("<tr><td><b>Last 7 days</b></td><td>" + stats.last7Days + "</td></tr>");
+  lines.push("<tr><td><b>Unique visitors</b></td><td>" + stats.unique + "</td></tr>");
+  lines.push("<tr><td><b>Returning</b></td><td>" + stats.returning + "</td></tr>");
+  lines.push("<tr><td><b>Contact messages</b></td><td>" + stats.messages + "</td></tr>");
+  lines.push("<tr><td><b>Chat questions</b></td><td>" + stats.chatQuestions + "</td></tr>");
+  lines.push("<tr><td><b>Known visitors</b></td><td>" + stats.knownVisitors + "</td></tr>");
+  lines.push("</table>");
+
+  if (stats.countries.length) {
+    lines.push("<h3>Top Countries</h3><ol>");
+    stats.countries.forEach(function (c) { lines.push("<li>" + c.name + " — " + c.visits + "</li>"); });
+    lines.push("</ol>");
+  }
+
+  if (stats.referrers.length) {
+    lines.push("<h3>Top Referrers</h3><ol>");
+    stats.referrers.forEach(function (r) { lines.push("<li>" + r.name + " — " + r.visits + "</li>"); });
+    lines.push("</ol>");
+  }
+
+  var chatSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CONFIG.chatQuestionsSheetName);
+  if (chatSheet && chatSheet.getLastRow() > 1) {
+    var recent = chatSheet.getRange(Math.max(2, chatSheet.getLastRow() - 9), 1, Math.min(10, chatSheet.getLastRow() - 1), 4).getValues();
+    lines.push("<h3>Recent Chat Questions</h3><ul>");
+    recent.reverse().forEach(function (row) {
+      lines.push("<li><b>" + (row[2] || "Anonymous") + ":</b> " + escapeHtml(row[3]) + "</li>");
+    });
+    lines.push("</ul>");
+  }
+
+  lines.push("<p style='color:#777;font-size:12px'>Auto-generated from your portfolio analytics.</p>");
+
+  MailApp.sendEmail({
+    to: to,
+    subject: subject,
+    htmlBody: lines.join(""),
+    body: "Weekly digest: " + stats.last7Days + " visits, " + stats.chatQuestions + " chat questions, " + stats.messages + " contacts.",
+  });
 }
 
 function reply(payload) {
