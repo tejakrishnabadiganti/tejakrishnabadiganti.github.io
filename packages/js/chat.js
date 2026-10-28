@@ -56,7 +56,7 @@ function buildSystemPrompt(data) {
   const p = data.profile || {};
   const lines = [];
 
-  lines.push("You are the AI assistant on Tejakrishna Badiganti's portfolio website.");
+  lines.push("You are Pandu, the AI assistant on Tejakrishna Badiganti's portfolio website.");
   lines.push("");
   lines.push("## Your role");
   lines.push("You serve exactly TWO purposes:");
@@ -477,7 +477,7 @@ function showWelcome() {
   msgsEl.innerHTML = "";
   inputWrap.hidden = false;
   inputEl.placeholder = "Or just type what you need…";
-  updateHeader("Ask Teja", "AI-powered assistant");
+  updateHeader("Pandu", "AI-powered assistant");
   showBackBtn(false);
 
   const options = el("div", { class: "chat-options" });
@@ -505,7 +505,7 @@ function showWelcome() {
   const welcome = el("div", { class: "chat-welcome" },
     el("div", { class: "chat-welcome__icon" }, sparkleIcon()),
     el("h3", { class: "chat-welcome__title" }, getGreeting()),
-    el("p", { class: "chat-welcome__text" }, "I'm Teja's AI assistant. How can I help you today?"),
+    el("p", { class: "chat-welcome__text" }, "I'm Pandu, Teja's AI assistant. How can I help you today?"),
     options
   );
   msgsEl.append(welcome);
@@ -517,7 +517,7 @@ function startAiMode() {
   mode = "ai";
   msgsEl.innerHTML = "";
   inputWrap.hidden = false;
-  updateHeader("Ask Teja", "AI Assistant");
+  updateHeader("Pandu", "AI Assistant");
   showBackBtn(true);
 
   const suggestions = el("div", { class: "chat-suggestions" });
@@ -555,7 +555,7 @@ function startContactMode() {
   contactData = {};
   msgsEl.innerHTML = "";
   inputWrap.hidden = false;
-  updateHeader("Ask Teja", "Send a message");
+  updateHeader("Pandu", "Send a message");
   showBackBtn(true);
 
   addBotMsg("<p>I'll help you send a message to Teja! Let's get a few details.</p>");
@@ -903,7 +903,7 @@ function toggleVoice() {
 function togglePanel() {
   const open = panelEl.classList.toggle("is-open");
   launcherEl.classList.toggle("is-open", open);
-  launcherEl.setAttribute("aria-label", open ? "Close chat" : "Ask Teja — AI Assistant");
+  launcherEl.setAttribute("aria-label", open ? "Close chat" : "Pandu — AI Assistant");
   if (open) dismissGreetingBubble();
   if (!open) resetPanelPosition();
   if (open && mode !== "welcome") inputEl.focus();
@@ -1013,7 +1013,7 @@ function buildLauncher() {
   const btn = el("button", {
     class: "chat-launcher",
     type: "button",
-    "aria-label": "Ask Teja — AI Assistant",
+    "aria-label": "Pandu — AI Assistant",
   });
   btn.append(aiSvg, closeSvg);
   btn.addEventListener("click", () => {
@@ -1031,7 +1031,7 @@ function showGreetingBubble() {
   else if (h < 17) greeting = "Good afternoon!";
   else greeting = "Good evening!";
 
-  const text = el("span", { class: "chat-greeting-bubble__text" }, `${greeting} Need help? Ask me anything`);
+  const text = el("span", { class: "chat-greeting-bubble__text" }, `${greeting} I'm Pandu! Ask me anything`);
   const closeBtn = el("button", { class: "chat-greeting-bubble__close", type: "button", "aria-label": "Dismiss" });
   closeBtn.innerHTML = "&times;";
   closeBtn.addEventListener("click", (e) => {
@@ -1080,7 +1080,7 @@ function buildPanel(photoUrl) {
     ? el("img", { class: "chat-header__avatar", src: photoUrl, alt: "" })
     : null;
 
-  headerNameEl = el("div", { class: "chat-header__name" }, "Ask Teja");
+  headerNameEl = el("div", { class: "chat-header__name" }, "Pandu");
   headerStatusEl = el("div", { class: "chat-header__status" }, "AI-powered assistant");
 
   const header = el("div", { class: "chat-header" },
@@ -1154,7 +1154,7 @@ function buildPanel(photoUrl) {
   const panel = el("div", {
     class: "chat-panel",
     role: "dialog",
-    "aria-label": "Ask Teja",
+    "aria-label": "Pandu",
   }, header, msgsEl, inputWrap, footer);
 
   panel.addEventListener("keydown", (e) => {
