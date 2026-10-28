@@ -31,8 +31,7 @@
     "ctaPrimary": "Get in touch",
     "ctaSecondary": "Download resume",
     "availability": "Open to new opportunities",
-    "otherRoles": "Cloud & Backend Engineer\nAI Agent Builder\nMicroservices Tinkerer\nProfessional Bug Hunter",
-    "heroChips": "Java & Spring Boot\nAI Agents\nAWS & Azure"
+    "otherRoles": "Cloud & Backend Engineer\nAI Agent Builder\nMicroservices Tinkerer\nProfessional Bug Hunter"
   },
   "contact": {
     "formEndpoint": "https://script.google.com/macros/s/AKfycbydjRWFg3W6Q8OFsnaOMYgHasGPbwPULzjn5GGlN6QdlnHly2b0saXKZEUpb8okk8TnYg/exec",

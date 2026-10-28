@@ -667,62 +667,6 @@ html[data-theme="light"] .hero::after {
   opacity: 0.3;
 }
 
-.float-chip {
-  position: absolute;
-  z-index: 2;
-  padding: 0.5rem 0.95rem;
-  border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--surface) 72%, transparent);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: var(--shadow);
-  color: var(--ink);
-  font-size: 0.82rem;
-  font-weight: 600;
-  white-space: nowrap;
-  transform: translateZ(70px);
-}
-
-.float-chip::before {
-  content: "";
-  display: inline-block;
-  width: 0.5rem;
-  height: 0.5rem;
-  margin-right: 0.5rem;
-  border-radius: 50%;
-  background: var(--m-grad);
-}
-
-.float-chip--0 {
-  top: 9%;
-  left: -15%;
-}
-
-.float-chip--1 {
-  top: 44%;
-  right: -13%;
-}
-
-.float-chip--2 {
-  bottom: 8%;
-  left: -9%;
-}
-
-@media (max-width: 700px) {
-  .float-chip--0 {
-    left: 4%;
-  }
-
-  .float-chip--1 {
-    right: 4%;
-  }
-
-  .float-chip--2 {
-    left: 4%;
-  }
-}
-
 @media (prefers-reduced-motion: no-preference) {
   .hero::before {
     animation: orb-drift 16s ease-in-out infinite alternate;
@@ -739,18 +683,6 @@ html[data-theme="light"] .hero::after {
   .hero__stage::before,
   .hero__figure::before {
     animation: ring-spin 7s linear infinite;
-  }
-
-  .float-chip {
-    animation: chip-float 6s ease-in-out infinite;
-  }
-
-  .float-chip--1 {
-    animation-delay: -2s;
-  }
-
-  .float-chip--2 {
-    animation-delay: -4s;
   }
 
   html[data-theme] #contact .contact__inner {
@@ -778,16 +710,6 @@ html[data-theme="light"] .hero::after {
 @keyframes ring-spin {
   to {
     --spin: 360deg;
-  }
-}
-
-@keyframes chip-float {
-  0%,
-  100% {
-    translate: 0 0;
-  }
-  50% {
-    translate: 0 -10px;
   }
 }
 

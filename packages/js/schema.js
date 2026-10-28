@@ -77,11 +77,6 @@ export const SECTIONS = [
         type: "textarea",
       },
       { key: "ctaPrimary", label: "Main button text", type: "text" },
-      {
-        key: "heroChips",
-        label: "Floating labels around the photo (up to 3, one per line, leave empty to hide)",
-        type: "textarea",
-      },
       { key: "ctaSecondary", label: "Resume button text", type: "text" },
       {
         key: "photo",

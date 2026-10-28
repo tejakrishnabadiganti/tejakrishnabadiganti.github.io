@@ -109,14 +109,6 @@ function renderHero({ profile, contact }) {
   const photo = $("hero-photo");
   photo.setAttribute("src", asset(profile.photo));
   photo.setAttribute("alt", profile.photoAlt);
-
-  const stage = $("hero-stage");
-  stage.querySelectorAll(".float-chip").forEach((chip) => chip.remove());
-  stage.append(
-    ...splitLines(profile.heroChips)
-      .slice(0, 3)
-      .map((text, index) => el("span", { class: `float-chip float-chip--${index}`, "aria-hidden": "true" }, text))
-  );
 }
 
 function renderStats(content) {
