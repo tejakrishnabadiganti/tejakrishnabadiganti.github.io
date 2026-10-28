@@ -2,12 +2,14 @@
   "site": {
     "title": "Tejakrishna Badiganti | Full Stack Software Engineer",
     "description": "Tejakrishna Badiganti - Full Stack Software Engineer specializing in Java, Spring Boot, microservices, Angular, AWS, Azure and AI agent engineering.",
-    "repo": "tejakrishnabadiganti/tejakrishnabadiganti.github.io",
+    "repo": "tejakrishnabadiganti/teja.github.io",
     "branch": "main"
   },
   "theme": {
     "preset": "",
-    "appearance": "system"
+    "appearance": "system",
+    "fontHeading": "",
+    "fontBody": ""
   },
   "profile": {
     "name": "Tejakrishna Badiganti",
@@ -1389,5 +1391,36 @@
         "Agile Manifesto | https://agilemanifesto.org/"
       ]
     }
-  ]
+  ],
+  "labels": {
+    "backToTop": "Back to top",
+    "footerNote": "Visits are counted anonymously. No names, emails or IP addresses are collected.",
+    "bookCall": "Book a call",
+    "linkedinLabel": "LinkedIn",
+    "githubLabel": "GitHub",
+    "viewProject": "View project →",
+    "roleLabel": "My role",
+    "impactLabel": "Impact",
+    "certDownload": "Download",
+    "certVerify": "Verify",
+    "close": "Close",
+    "momentPrev": "Prev",
+    "momentNext": "Next",
+    "skillTitle": "Skill explained",
+    "skillWhat": "What it is",
+    "skillAnalogy": "Think of it like this",
+    "skillMore": "Read more",
+    "cfFirst": "First name",
+    "cfLast": "Last name",
+    "cfEmail": "Email",
+    "cfPhone": "Phone number",
+    "cfReason": "Reason for connecting",
+    "selectReason": "Select a reason",
+    "cfOther": "Please tell me the reason",
+    "cfMessage": "Message (optional)",
+    "cfRequired": "Fields marked * are required.",
+    "cfCancel": "Cancel",
+    "cfSend": "Send message",
+    "cfSentTitle": "Message sent"
+  }
 }
