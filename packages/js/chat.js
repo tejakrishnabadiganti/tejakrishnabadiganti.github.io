@@ -10,7 +10,9 @@ const SUGGESTIONS = [
 ];
 
 const MAX_INPUT = 2000;
-const MAX_HISTORY = 20;
+const MAX_HISTORY = 14;
+const MAX_QUESTIONS = 20;
+const QUESTIONS_KEY = "pandu-q-count";
 const GEMINI_MODEL = "gemini-3.5-flash-lite";
 const GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta/models";
 const ENDPOINT_PREFIX = "https://script.google.com/macros/s/";
@@ -41,6 +43,7 @@ let formEndpoint = "";
 let formReasons = [];
 let contactEmail = "";
 let userName = "";
+let questionCount = 0;
 
 const CONTACT_STEPS = [
   { key: "firstName", prompt: "What's your first name?", validate: (v) => v.trim().length > 0, error: "Please enter your first name." },
@@ -75,8 +78,9 @@ function buildSystemPrompt(data) {
   lines.push("- Acting as a general-purpose chatbot");
   lines.push('When refusing, say: "I can only help with questions about Teja\'s profile or technical/programming topics for learning. Try asking me about Teja\'s experience, or a tech concept you\'d like to understand!"');
   lines.push("");
-  lines.push("## Personality");
+  lines.push("## Personality & style");
   lines.push("Friendly, lightly humorous engineering-mentor style. Be engaging without forcing jokes. Use simple English without sacrificing technical accuracy.");
+  lines.push("IMPORTANT: Keep answers concise. For simple questions use 2-4 sentences. For technical topics use short paragraphs with bullet points. Only give long structured answers when the question genuinely needs depth. Never pad responses with filler.");
   lines.push("");
   lines.push("## For technical questions, structure your answer when appropriate:");
   lines.push("1. Simple definition");
@@ -473,12 +477,46 @@ function showBackBtn(visible) {
 
 // ─── Welcome mode ───
 
+function getQuestionCount() {
+  try { return Number(sessionStorage.getItem(QUESTIONS_KEY) || 0); } catch { return 0; }
+}
+
+function bumpQuestionCount() {
+  questionCount++;
+  try { sessionStorage.setItem(QUESTIONS_KEY, String(questionCount)); } catch {}
+}
+
+function showLimitReached() {
+  mode = "limit";
+  inputWrap.hidden = true;
+
+  const body = addBotMsg(
+    `<p>You've reached the <strong>${MAX_QUESTIONS}-question limit</strong> for this session.</p>` +
+    `<p>To continue the conversation or ask more, send Teja a message directly — he'd love to hear from you!</p>`
+  );
+
+  const connectBtn = el("button", { class: "chat-confirm-btn chat-confirm-btn--send", type: "button" }, "Send Teja a message");
+  connectBtn.addEventListener("click", () => {
+    startContactMode();
+  });
+
+  const closeBtn = el("button", { class: "chat-confirm-btn chat-confirm-btn--cancel", type: "button" }, "Close");
+  closeBtn.addEventListener("click", () => {
+    togglePanel();
+  });
+
+  const actions = el("div", { class: "chat-confirm-actions" }, connectBtn, closeBtn);
+  body.append(actions);
+  scrollToBottom();
+}
+
 function showWelcome() {
   mode = "welcome";
   history = [];
   contactStep = -1;
   contactData = {};
   userName = "";
+  questionCount = getQuestionCount();
   msgsEl.innerHTML = "";
   inputWrap.hidden = false;
   inputEl.placeholder = "Or just type what you need…";
@@ -519,6 +557,14 @@ function showWelcome() {
 // ─── AI chat mode ───
 
 function startAiMode() {
+  questionCount = getQuestionCount();
+  if (questionCount >= MAX_QUESTIONS) {
+    msgsEl.innerHTML = "";
+    updateHeader("Pandu", "AI Assistant");
+    showBackBtn(true);
+    showLimitReached();
+    return;
+  }
   mode = "ai-name";
   msgsEl.innerHTML = "";
   inputWrap.hidden = false;
@@ -757,7 +803,7 @@ function buildGeminiBody() {
     system_instruction: { parts: [{ text: prompt }] },
     contents,
     generationConfig: {
-      maxOutputTokens: 2048,
+      maxOutputTokens: 1024,
       temperature: 0.7,
     },
   };
@@ -898,8 +944,18 @@ function handleSend() {
     showAiSuggestions();
   } else if (mode === "ai") {
     if (!text || streaming) return;
+    if (questionCount >= MAX_QUESTIONS) {
+      addUserMsg(text);
+      showLimitReached();
+      return;
+    }
+    bumpQuestionCount();
     logQuestion(text);
     sendMessage(text);
+  } else if (mode === "limit") {
+    addUserMsg(text);
+    showLimitReached();
+    return;
   } else if (mode === "contact") {
     handleContactInput(text);
   }
