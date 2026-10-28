@@ -10,7 +10,7 @@ const SUGGESTIONS = [
 
 const MAX_INPUT = 2000;
 const MAX_HISTORY = 20;
-const GEMINI_MODEL = "gemini-2.0-flash";
+const GEMINI_MODEL = "gemini-2.5-flash";
 const GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta/models";
 
 let apiKey = "";
