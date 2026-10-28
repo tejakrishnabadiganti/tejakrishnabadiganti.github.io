@@ -39,6 +39,7 @@ let contactData = {};
 let formEndpoint = "";
 let formReasons = [];
 let contactEmail = "";
+let userName = "";
 
 const CONTACT_STEPS = [
   { key: "firstName", prompt: "What's your first name?", validate: (v) => v.trim().length > 0, error: "Please enter your first name." },
@@ -476,6 +477,7 @@ function showWelcome() {
   history = [];
   contactStep = -1;
   contactData = {};
+  userName = "";
   msgsEl.innerHTML = "";
   inputWrap.hidden = false;
   inputEl.placeholder = "Or just type what you need…";
@@ -516,12 +518,19 @@ function showWelcome() {
 // ─── AI chat mode ───
 
 function startAiMode() {
-  mode = "ai";
+  mode = "ai-name";
   msgsEl.innerHTML = "";
   inputWrap.hidden = false;
   updateHeader("Pandu", "AI Assistant");
   showBackBtn(true);
 
+  addBotMsg("<p>Before we start, may I know your name?</p>");
+  inputEl.placeholder = "Enter your name…";
+  inputEl.focus();
+}
+
+function showAiSuggestions() {
+  const greeting = userName ? `Hi ${esc(userName)}! ` : "";
   const suggestions = el("div", { class: "chat-suggestions" });
   SUGGESTIONS.forEach((text) => {
     const btn = el("button", { class: "chat-suggestion", type: "button" }, text);
@@ -533,7 +542,7 @@ function startAiMode() {
   });
 
   const intro = addBotMsg(
-    "<p>Ask me anything about Teja's experience, skills, or projects. I can also explain technical concepts!</p>"
+    `<p>${greeting}Ask me anything about Teja's experience, skills, or projects. I can also explain technical concepts!</p>`
   );
   intro.append(suggestions);
 
@@ -737,8 +746,13 @@ function buildGeminiBody() {
     parts: [{ text: m.content }],
   }));
 
+  let prompt = systemPrompt;
+  if (userName) {
+    prompt += `\n\n## Current visitor\nThe user's name is ${userName}. Address them by name occasionally to make the conversation personal.`;
+  }
+
   return {
-    system_instruction: { parts: [{ text: systemPrompt }] },
+    system_instruction: { parts: [{ text: prompt }] },
     contents,
     generationConfig: {
       maxOutputTokens: 2048,
@@ -834,6 +848,18 @@ async function handleStream(res) {
 
 // ─── Input handling ───
 
+function logQuestion(question) {
+  if (!formEndpoint || !question.trim()) return;
+  const body = new URLSearchParams({
+    type: "chat_question",
+    userName: userName || "Anonymous",
+    question: question.trim(),
+    page: location.pathname,
+    timestamp: new Date().toISOString(),
+  });
+  fetch(formEndpoint, { method: "POST", body, mode: "no-cors", keepalive: true }).catch(() => {});
+}
+
 function handleSend() {
   const text = inputEl.value.trim();
   inputEl.value = "";
@@ -842,9 +868,15 @@ function handleSend() {
   if (mode === "welcome") {
     if (!text) return;
     startAiMode();
-    sendMessage(text);
+  } else if (mode === "ai-name") {
+    if (!text) return;
+    userName = text.trim();
+    addUserMsg(text);
+    mode = "ai";
+    showAiSuggestions();
   } else if (mode === "ai") {
     if (!text || streaming) return;
+    logQuestion(text);
     sendMessage(text);
   } else if (mode === "contact") {
     handleContactInput(text);

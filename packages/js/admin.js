@@ -404,7 +404,7 @@ function uploadControl(field, target, onChange, id) {
   const input = el("input", {
     id,
     type: "file",
-    accept: isImage ? "image/png,image/jpeg,image/webp" : "application/pdf",
+    accept: isImage ? "image/*" : "application/pdf",
   });
   const remove = field.optional
     ? el("button", { class: "button button--ghost admin-small", type: "button" }, "Remove")

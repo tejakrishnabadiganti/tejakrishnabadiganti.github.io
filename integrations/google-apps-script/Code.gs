@@ -17,6 +17,8 @@ const CONFIG = {
   visitsSheetName: "Visits",
   summarySheetName: "Visit summary",
   maxVisitsPerHour: 600,
+  chatQuestionsSheetName: "Chat Questions",
+  maxChatQuestionsPerHour: 300,
 
   // Confirmation email sent to the visitor. Set sendConfirmation to false to turn it off.
   sendConfirmation: true,
@@ -48,6 +50,7 @@ function doPost(e) {
     const params = e.parameter || {};
     if (params.website) return reply({ ok: true }); // hidden field, only bots fill it
     if (params.type === "visit") return recordVisit(params);
+    if (params.type === "chat_question") return recordChatQuestion(params);
 
     const data = readFields(params);
     validate(data);
@@ -370,11 +373,47 @@ function readStats() {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   const visits = spreadsheet.getSheetByName(CONFIG.visitsSheetName);
   const contacts = spreadsheet.getSheetByName(CONFIG.sheetName);
+  const chatSheet = spreadsheet.getSheetByName(CONFIG.chatQuestionsSheetName);
   const rowCount = visits ? visits.getLastRow() - 1 : 0;
   const rows = rowCount > 0 ? visits.getRange(2, 1, rowCount, 5).getValues() : [];
   const messages = contacts ? Math.max(0, contacts.getLastRow() - 1) : 0;
+  const chatQuestions = chatSheet ? Math.max(0, chatSheet.getLastRow() - 1) : 0;
   const zone = Session.getScriptTimeZone();
-  return summarizeVisits(rows, messages, (date) => Utilities.formatDate(date, zone, "yyyy-MM-dd"), new Date());
+  const stats = summarizeVisits(rows, messages, (date) => Utilities.formatDate(date, zone, "yyyy-MM-dd"), new Date());
+  stats.chatQuestions = chatQuestions;
+  return stats;
+}
+
+/* ---------- Chat question logger ---------- */
+
+const CHAT_HEADERS = ["Time", "User Name", "Question", "Page"];
+
+function recordChatQuestion(params) {
+  const cache = CacheService.getScriptCache();
+  const count = Number(cache.get("chat:all") || 0);
+  if (count >= CONFIG.maxChatQuestionsPerHour) return reply({ ok: true });
+  cache.put("chat:all", String(count + 1), 3600);
+
+  const row = [
+    new Date(),
+    clean(params.userName, 100),
+    clean(params.question, 2000),
+    clean(params.page, 200),
+  ];
+  getChatQuestionsSheet().appendRow(row.map((cell) => (typeof cell === "string" ? safeCell(cell) : cell)));
+  return reply({ ok: true });
+}
+
+function getChatQuestionsSheet() {
+  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = spreadsheet.getSheetByName(CONFIG.chatQuestionsSheetName);
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet(CONFIG.chatQuestionsSheetName);
+    sheet.appendRow(CHAT_HEADERS);
+    sheet.setFrozenRows(1);
+    sheet.setColumnWidth(3, 500);
+  }
+  return sheet;
 }
 
 function reply(payload) {

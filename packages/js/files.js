@@ -1,5 +1,14 @@
-const MAX_BYTES = 10 * 1024 * 1024;
-const EXTENSIONS = { "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp" };
+const EXTENSIONS = {
+  "image/png": "png",
+  "image/jpeg": "jpg",
+  "image/webp": "webp",
+  "image/gif": "gif",
+  "image/svg+xml": "svg",
+  "image/avif": "avif",
+  "image/bmp": "bmp",
+  "image/tiff": "tiff",
+  "image/x-icon": "ico",
+};
 
 const readDataUrl = (file) =>
   new Promise((resolve, reject) => {
@@ -14,9 +23,15 @@ const base64Of = (dataUrl) => dataUrl.slice(dataUrl.indexOf(",") + 1);
 // Shrinks large images so the site stays fast. PNGs stay PNG (badges need transparency).
 export async function processImage(file, { maxPx = 1600, format } = {}) {
   if (!file.type.startsWith("image/")) {
-    throw new Error("Please choose an image file (PNG, JPG or WebP).");
+    throw new Error("Please choose an image file.");
   }
-  if (file.size > MAX_BYTES) throw new Error("The image is larger than 10 MB.");
+
+  const ext = EXTENSIONS[file.type] || file.name.split(".").pop().toLowerCase();
+
+  if (file.type === "image/svg+xml" || ext === "svg") {
+    const dataUrl = await readDataUrl(file);
+    return { dataUrl, base64: base64Of(dataUrl), ext: "svg" };
+  }
 
   const bitmap = await createImageBitmap(file);
   const scale = Math.min(1, maxPx / Math.max(bitmap.width, bitmap.height));
@@ -41,14 +56,13 @@ export async function processImage(file, { maxPx = 1600, format } = {}) {
   context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
 
   const dataUrl = canvas.toDataURL(type, 0.82);
-  return { dataUrl, base64: base64Of(dataUrl), ext: EXTENSIONS[type] };
+  return { dataUrl, base64: base64Of(dataUrl), ext: EXTENSIONS[type] || ext };
 }
 
 export async function processPdf(file) {
   if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
     throw new Error("Please choose a PDF file.");
   }
-  if (file.size > MAX_BYTES) throw new Error("The PDF is larger than 10 MB.");
 
   const dataUrl = await readDataUrl(file);
   return {
