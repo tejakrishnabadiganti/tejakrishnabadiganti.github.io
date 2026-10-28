@@ -10,7 +10,7 @@ const SUGGESTIONS = [
 
 const MAX_INPUT = 2000;
 const MAX_HISTORY = 20;
-const GEMINI_MODEL = "gemini-2.5-flash";
+const GEMINI_MODEL = "gemini-2.5-flash-lite";
 const GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta/models";
 
 let apiKey = "";
@@ -424,10 +424,11 @@ async function sendMessage(text, isRetry) {
 
     if (!res.ok) {
       const errBody = await res.text().catch(() => "");
-      if (res.status === 400) throw new Error("Invalid request. Please try rephrasing.");
+      let detail = "";
+      try { detail = JSON.parse(errBody)?.error?.message || errBody.slice(0, 200); } catch { detail = errBody.slice(0, 200); }
       if (res.status === 403) throw new Error("Invalid API key. Check the Gemini key in your GitHub secret.");
       if (res.status === 429) throw new Error("Free tier limit reached. Please wait a minute.");
-      throw new Error(`API error (${res.status}). Please try again.`);
+      throw new Error(detail || `API error (${res.status})`);
     }
 
     hideTyping();
