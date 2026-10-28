@@ -1065,3 +1065,34 @@
     transform: translateY(0);
   }
 }
+
+/*---------- Reduced motion ----------*/
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-launcher,
+  .chat-panel,
+  .chat-panel.is-open,
+  .chat-greeting-bubble,
+  .chat-greeting-bubble.is-visible,
+  .chat-msg,
+  .chat-typing {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .chat-typing__dot {
+    animation: none !important;
+    opacity: 0.6;
+  }
+
+  .chat-spinner {
+    animation: none !important;
+    border-top-color: var(--accent);
+    opacity: 0.7;
+  }
+
+  .chat-input__mic.is-listening {
+    animation: none !important;
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+  }
+}

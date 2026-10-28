@@ -1,0 +1,21 @@
+{
+  "name": "Tejakrishna Badiganti — Full Stack Software Engineer",
+  "short_name": "Teja Portfolio",
+  "description": "Full Stack Software Engineer specializing in Java, Spring Boot, microservices, Angular, AWS, Azure and AI agent engineering.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "packages/images/profile/tejakrishna-badiganti-logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "packages/images/profile/tejakrishna-badiganti-profile.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

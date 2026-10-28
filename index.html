@@ -41,7 +41,8 @@
         ]
       }
     </script>
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#2563eb" />
+    <link rel="manifest" href="./manifest.json" />
 
     <link rel="preload" href="./packages/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="./packages/fonts/playfair-display-latin.woff2" as="font" type="font/woff2" crossorigin />
@@ -62,7 +63,6 @@
     <link rel="modulepreload" href="./packages/js/dom.js" />
     <link rel="modulepreload" href="./packages/js/store.js" />
     <link rel="modulepreload" href="./packages/js/ui.js" />
-    <link rel="modulepreload" href="./packages/js/chat.js" />
     <link rel="modulepreload" href="./packages/js/motion.js" />
     <script>
       // Start loading the content right away instead of waiting for the scripts to run.
@@ -492,5 +492,6 @@
     </dialog>
 
     <script type="module" src="./packages/js/main.js"></script>
+    <script>if("serviceWorker"in navigator)navigator.serviceWorker.register("/service-worker.js");</script>
   </body>
 </html>

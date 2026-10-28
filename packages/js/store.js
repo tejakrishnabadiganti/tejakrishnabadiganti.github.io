@@ -7,5 +7,18 @@ export const OWNER_KEY = "portfolio-owner";
 // Content paths may carry a "?v=" cache-busting suffix.
 export const stripVersion = (path) => String(path ?? "").split("?")[0];
 
+const supportsWebp = (() => {
+  try {
+    const c = document.createElement("canvas");
+    return c.toDataURL("image/webp").startsWith("data:image/webp");
+  } catch { return false; }
+})();
+
+function toWebp(url) {
+  if (!supportsWebp) return url;
+  if (typeof url !== "string") return url;
+  return url.replace(/\.(jpe?g|png)(?=$|\?)/i, ".webp");
+}
+
 export const assetUrl = (path) =>
-  pendingFiles.get(stripVersion(path))?.dataUrl ?? path;
+  toWebp(pendingFiles.get(stripVersion(path))?.dataUrl ?? path);

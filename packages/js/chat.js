@@ -1085,7 +1085,7 @@ function buildPanel(photoUrl) {
   backBtn.addEventListener("click", showWelcome);
 
   const headerImg = photoUrl
-    ? el("img", { class: "chat-header__avatar", src: photoUrl, alt: "" })
+    ? el("img", { class: "chat-header__avatar", src: photoUrl, alt: "Pandu — Teja's AI assistant" })
     : null;
 
   headerNameEl = el("div", { class: "chat-header__name" }, "Pandu");

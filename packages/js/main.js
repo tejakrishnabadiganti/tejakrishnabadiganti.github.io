@@ -4,7 +4,6 @@ import { initUi } from "./ui.js";
 import { initMotion } from "./motion.js";
 import { initContactForm } from "./contact-form.js";
 import { initVisitCounter } from "./visit-counter.js";
-import { initChat } from "./chat.js";
 import { isPreview } from "./theme-preview.js";
 
 document.documentElement.classList.add("js");
@@ -30,10 +29,12 @@ if (!isPreview()) initVisitCounter();
 
 const chatKey = document.documentElement.dataset.chatKey || "";
 if (chatKey && !isPreview()) {
-  const content = getContent();
-  initChat({
-    apiKey: chatKey,
-    content,
-    photoUrl: content?.profile?.logoImage || content?.profile?.photo || "",
+  import("./chat.js").then(({ initChat }) => {
+    const content = getContent();
+    initChat({
+      apiKey: chatKey,
+      content,
+      photoUrl: content?.profile?.logoImage || content?.profile?.photo || "",
+    });
   });
 }
