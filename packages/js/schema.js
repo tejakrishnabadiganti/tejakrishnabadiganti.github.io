@@ -20,12 +20,32 @@ const certificateFileName = (item) => mergedSlug(item.issuer, item.name) || "cer
 
 const unique = (values) => [...new Set(values.filter(Boolean))];
 
+const hiddenMark = (item) => (item.visible === false ? " (hidden from visitors)" : "");
+const visibleField = (what) => ({
+  key: "visible",
+  label: `Show this ${what} on the public site`,
+  type: "checkbox",
+  help: "Turn off to hide it from visitors. You can turn it back on any time.",
+});
+
 // The highlights strip and badge strip have no heading or menu entry; the Home hero has a menu entry but no heading.
 const hasMenuEntry = (item) => item.id !== "highlights" && item.id !== "badges";
 const hasHeading = (item) => hasMenuEntry(item) && item.id !== "top";
 
+function withVisibility(section) {
+  const switchable = section.kind === "list" && !section.fixed && !section.fields.some((field) => field.key === "visible");
+  if (!switchable) return section;
+  const { itemLabel, blank, fields, itemName } = section;
+  return {
+    ...section,
+    itemLabel: (item) => `${itemLabel(item)}${hiddenMark(item)}`,
+    blank: () => ({ ...blank(), visible: true }),
+    fields: [visibleField(itemName), ...fields],
+  };
+}
+
 // Each section describes what the editor shows. `kind: "list"` sections edit an array.
-export const SECTIONS = [
+const BASE_SECTIONS = [
   {
     id: "site",
     label: "Page title & description",
@@ -217,9 +237,10 @@ export const SECTIONS = [
     kind: "list",
     path: "work",
     itemName: "project",
-    itemLabel: (item) => item.title,
-    blank: () => ({ tag: "", title: "", text: "", result: "", role: "", stack: [], link: "" }),
+    itemLabel: (item) => `${item.title}${hiddenMark(item)}`,
+    blank: () => ({ tag: "", title: "", text: "", result: "", role: "", stack: [], link: "", visible: true }),
     fields: [
+      visibleField("project"),
       { key: "tag", label: "Category", type: "text" },
       { key: "title", label: "Title", type: "text" },
       { key: "text", label: "Description", type: "textarea" },
@@ -236,9 +257,10 @@ export const SECTIONS = [
     kind: "list",
     path: "skills",
     itemName: "skill group",
-    itemLabel: (item) => item.title,
-    blank: () => ({ title: "", items: [] }),
+    itemLabel: (item) => `${item.title}${hiddenMark(item)}`,
+    blank: () => ({ title: "", items: [], visible: true }),
     fields: [
+      visibleField("skill group"),
       { key: "title", label: "Group name", type: "text" },
       { key: "items", label: "Skills", type: "lines", rows: 8, help: "One skill per line." },
     ],
@@ -353,7 +375,7 @@ export const SECTIONS = [
       { key: "note", label: "Text before the Credly link", type: "text" },
       { key: "credlyLabel", label: "Credly link text", type: "text" },
     ],
-    itemLabel: (item) => `${item.name}${item.visible === false ? " (hidden from visitors)" : ""}`,
+    itemLabel: (item) => `${item.name}${hiddenMark(item)}`,
     blank: () => ({ name: "", issuer: "", group: "Cloud & Infrastructure", visible: true }),
     fields: [
       {
@@ -423,3 +445,5 @@ export const SECTIONS = [
     kind: "themes",
   },
 ];
+
+export const SECTIONS = BASE_SECTIONS.map(withVisibility);

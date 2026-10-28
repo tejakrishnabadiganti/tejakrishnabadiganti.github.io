@@ -55,6 +55,8 @@ The editor is hidden from visitors and is not even downloaded for them.
    - profile, photo, header logo photo (shown instead of the initials), resume, and the two top buttons' text
    - contact details and social links
    - highlights, about, experience, projects, skills, awards, certifications (including the Credly note), education
+   - **Show / hide everywhere**: every section has a "Show on the public site" switch, and every item inside a list (each highlight, principle, job, project, skill group, skill explanation, award, photo, recommendation, certification and education entry) has its own switch. Hidden items are marked "(hidden from visitors)" in the editor and can be turned back on any time.
+   - **Projects** and **Skills** can be switched on or off as a whole section, and each single project and each skill group has its own "Show on the public site" switch.
    - **Certifications** can be switched on or off as a whole section, the scrolling badge strip can be switched on or off, and each single certificate has its own "Show this certificate" switch. A switched-off certificate disappears from the list, from the badge strip and from the certificate count, and can be turned back on any time.
    - **Interface text**: the small fixed texts (footer note, "Back to top", popup buttons and titles, contact form labels, project labels, LinkedIn and GitHub link text)
    - **Themes & colors**: see [Themes](#themes) below

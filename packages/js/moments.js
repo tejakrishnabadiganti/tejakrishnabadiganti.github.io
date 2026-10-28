@@ -75,7 +75,7 @@ function bindViewer() {
 }
 
 export function renderMoments({ moments }) {
-  const photos = moments.filter((item) => item.photo);
+  const photos = moments.filter((item) => item.photo && item.visible !== false);
   $("moments").hidden ||= photos.length === 0;
   bindViewer();
 

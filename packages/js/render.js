@@ -130,10 +130,10 @@ function renderHero({ profile, contact }) {
 }
 
 function renderStats(content) {
-  const counts = { certifications: shown(content.certifications.items).length, awards: content.awards.length };
+  const counts = { certifications: shown(content.certifications.items).length, awards: shown(content.awards).length };
   const resolve = (value) => String(value).replace(/\{(certifications|awards)\}/g, (_, key) => counts[key]);
   $("stats").replaceChildren(
-    ...content.stats.map((stat) =>
+    ...shown(content.stats).map((stat) =>
       el(
         "div",
         { class: "stat" },
@@ -164,7 +164,7 @@ function renderAbout({ about }) {
 
 function renderValues({ values }) {
   $("values-list").replaceChildren(
-    ...values.map((item) =>
+    ...shown(values).map((item) =>
       el(
         "article",
         { class: "value" },
@@ -173,12 +173,12 @@ function renderValues({ values }) {
       )
     )
   );
-  $("values").hidden ||= values.length === 0;
+  $("values").hidden ||= shown(values).length === 0;
 }
 
 function renderExperience({ experience }) {
   $("timeline").replaceChildren(
-    ...experience.map((job) =>
+    ...shown(experience).map((job) =>
       el(
         "li",
         { class: "timeline__item" },
@@ -207,7 +207,7 @@ function renderExperience({ experience }) {
 
 function renderWork({ work, labels }) {
   $("work-cards").replaceChildren(
-    ...work.map((card) =>
+    ...shown(work).map((card) =>
       el(
         "article",
         { class: "card" },
@@ -225,14 +225,14 @@ function renderWork({ work, labels }) {
 }
 
 function renderSkills({ skills, skillInfo }) {
-  const explained = new Set(skillInfo.map((info) => info.name));
+  const explained = new Set(shown(skillInfo).map((info) => info.name));
   const tag = (item) =>
     explained.has(item)
       ? el("li", {}, el("button", { class: "tag-button", type: "button", "data-skill": item, "aria-haspopup": "dialog" }, item))
       : el("li", {}, item);
 
   $("skills-grid").replaceChildren(
-    ...skills.map((group) =>
+    ...shown(skills).map((group) =>
       el(
         "section",
         { class: "skills__group" },
@@ -245,7 +245,7 @@ function renderSkills({ skills, skillInfo }) {
 
 function renderAwards({ awards }) {
   $("awards-list").replaceChildren(
-    ...awards.map((award) =>
+    ...shown(awards).map((award) =>
       el(
         "li",
         { class: "award" },
@@ -258,7 +258,7 @@ function renderAwards({ awards }) {
 
 function renderTestimonials({ testimonials }) {
   $("testimonials-list").replaceChildren(
-    ...testimonials.map((item) =>
+    ...shown(testimonials).map((item) =>
       el(
         "figure",
         { class: "quote" },
@@ -267,7 +267,7 @@ function renderTestimonials({ testimonials }) {
       )
     )
   );
-  $("testimonials").hidden ||= testimonials.length === 0;
+  $("testimonials").hidden ||= shown(testimonials).length === 0;
 }
 
 function certificateCard(item) {
@@ -320,7 +320,7 @@ function renderCertifications({ certifications }) {
 
 function renderEducation({ education }) {
   $("education-list").replaceChildren(
-    ...education.map((entry) =>
+    ...shown(education).map((entry) =>
       el(
         "li",
         { class: "education__item" },
