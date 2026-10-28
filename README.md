@@ -14,7 +14,7 @@ There is a hidden admin editor (see [Editing the site](#editing-the-site)) that 
 
 | Section | Content |
 | --- | --- |
-| Hero | Headline, summary, resume download, social links, profile photo |
+| Hero | Headline, summary, resume download, social links, profile photo with up to three floating labels |
 | Highlights | Years of experience, enterprise clients, certifications |
 | About | Professional summary |
 | How I work | Short principles about how you approach engineering, each with an example |

@@ -3,7 +3,7 @@
 const TILT_MAX_DEGREES = 6;
 const HERO_MAX_DEGREES = 9;
 const LIFT_PX = 14;
-const TILT_TARGETS = ".card, .award, .cert, .skills__group";
+const TILT_TARGETS = ".card, .award, .cert, .skills__group, .stat, .value";
 const SHOW_TO_TOP_AFTER_PX = 700;
 
 const canHover = () =>
