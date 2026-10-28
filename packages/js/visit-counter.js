@@ -8,6 +8,11 @@ const LOCAL_HOSTS = ["localhost", "127.0.0.1"];
 const BOT_PATTERN = /bot|crawl|spider|headless|preview/i;
 const GEO_API = "https://ipapi.co/json/";
 
+let endpoint = "";
+let sessionStart = Date.now();
+let scrollMilestones = new Set();
+let active = false;
+
 export function getVisitorId() {
   return localStorage.getItem(VISITOR_KEY) || "";
 }
@@ -54,6 +59,22 @@ function utmParams() {
   };
 }
 
+function referrerSource() {
+  if (!document.referrer) return { host: "", channel: "Direct" };
+  const host = new URL(document.referrer).hostname;
+  if (/google\./i.test(host)) return { host, channel: "Google Search" };
+  if (/bing\./i.test(host)) return { host, channel: "Bing Search" };
+  if (/linkedin/i.test(host)) return { host, channel: "LinkedIn" };
+  if (/facebook|fb\./i.test(host)) return { host, channel: "Facebook" };
+  if (/instagram/i.test(host)) return { host, channel: "Instagram" };
+  if (/twitter|x\.com/i.test(host)) return { host, channel: "Twitter/X" };
+  if (/github/i.test(host)) return { host, channel: "GitHub" };
+  if (/t\.co/i.test(host)) return { host, channel: "Twitter/X" };
+  if (/whatsapp/i.test(host)) return { host, channel: "WhatsApp" };
+  if (/telegram/i.test(host)) return { host, channel: "Telegram" };
+  return { host, channel: "Other" };
+}
+
 async function fetchLocation() {
   try {
     const ctrl = new AbortController();
@@ -78,20 +99,145 @@ function shouldCount() {
   );
 }
 
+function sendBeacon(params) {
+  if (!endpoint) return;
+  const body = new URLSearchParams(params);
+  if (navigator.sendBeacon) {
+    navigator.sendBeacon(endpoint, body);
+  } else {
+    fetch(endpoint, { method: "POST", body, mode: "no-cors", keepalive: true }).catch(() => {});
+  }
+}
+
+// ─── Public: track any interaction ───
+
+export function trackEvent(action, label) {
+  if (!active) return;
+  sendBeacon({
+    type: "event",
+    visitor: getVisitorId(),
+    action,
+    label: label || "",
+    page: location.pathname,
+  });
+}
+
+// ─── Session duration: fire on page hide/unload ───
+
+function trackSessionEnd() {
+  const seconds = Math.round((Date.now() - sessionStart) / 1000);
+  if (seconds < 2) return;
+  sendBeacon({
+    type: "event",
+    visitor: getVisitorId(),
+    action: "session_end",
+    label: seconds + "s",
+    page: location.pathname,
+  });
+}
+
+// ─── Scroll depth: fires once at each 25% milestone ───
+
+function initScrollTracking() {
+  let ticking = false;
+  window.addEventListener("scroll", () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const depth = Math.round(
+        ((window.scrollY + window.innerHeight) / document.documentElement.scrollHeight) * 100
+      );
+      [25, 50, 75, 100].forEach((m) => {
+        if (depth >= m && !scrollMilestones.has(m)) {
+          scrollMilestones.add(m);
+          trackEvent("scroll_depth", m + "%");
+        }
+      });
+      ticking = false;
+    });
+  }, { passive: true });
+}
+
+// ─── Auto-track clicks on key elements ───
+
+function initClickTracking() {
+  document.addEventListener("click", (e) => {
+    const link = e.target.closest("a[href], button");
+    if (!link) return;
+
+    if (link.hasAttribute("download") || link.closest("[data-download]")) {
+      trackEvent("resume_download", link.getAttribute("download") || "resume");
+      return;
+    }
+    if (link.closest("[data-open-contact]") || link.id === "contact-form-open") {
+      trackEvent("contact_form_open", "");
+      return;
+    }
+    if (link.classList.contains("chat-launcher")) {
+      trackEvent("chat_open", "");
+      return;
+    }
+    if (link.classList.contains("card__link")) {
+      trackEvent("project_click", link.textContent.trim());
+      return;
+    }
+    if (link.classList.contains("cert__link")) {
+      trackEvent("certificate_click", link.querySelector(".cert__name")?.textContent || "");
+      return;
+    }
+    const href = link.getAttribute("href") || "";
+    if (href.startsWith("mailto:")) {
+      trackEvent("email_click", "");
+    } else if (href.startsWith("tel:")) {
+      trackEvent("phone_click", "");
+    } else if (href.includes("linkedin.com")) {
+      trackEvent("linkedin_click", "");
+    } else if (href.includes("github.com")) {
+      trackEvent("github_click", "");
+    }
+  });
+}
+
+// ─── Section visibility tracking ───
+
+function initSectionTracking() {
+  const sections = document.querySelectorAll("section[id]");
+  if (!sections.length || !window.IntersectionObserver) return;
+  const seen = new Set();
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && !seen.has(entry.target.id)) {
+          seen.add(entry.target.id);
+          trackEvent("section_view", entry.target.id);
+        }
+      });
+    },
+    { threshold: 0.3 }
+  );
+  sections.forEach((s) => observer.observe(s));
+}
+
+// ─── Init ───
+
 export async function initVisitCounter() {
-  const endpoint = getContent()?.contact?.formEndpoint ?? "";
+  const content = getContent();
+  endpoint = content?.contact?.formEndpoint ?? "";
   if (!endpoint.startsWith(ENDPOINT_PREFIX) || !shouldCount()) return;
 
+  active = true;
   sessionStorage.setItem(COUNTED_KEY, "1");
   const { id, returning } = visitor();
   const geo = await fetchLocation();
   const utm = utmParams();
+  const ref = referrerSource();
 
   const body = new URLSearchParams({
     type: "visit",
     visitor: id,
     returning: returning ? "yes" : "no",
-    referrer: document.referrer ? new URL(document.referrer).hostname : "",
+    referrer: ref.host,
+    channel: ref.channel,
     device: deviceType(),
     browser: browserName(),
     os: osName(),
@@ -107,4 +253,13 @@ export async function initVisitCounter() {
     utmCampaign: utm.campaign,
   });
   fetch(endpoint, { method: "POST", body, mode: "no-cors", keepalive: true }).catch(() => {});
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") trackSessionEnd();
+  });
+  window.addEventListener("pagehide", trackSessionEnd);
+
+  initScrollTracking();
+  initClickTracking();
+  initSectionTracking();
 }

@@ -20,6 +20,8 @@ const CONFIG = {
   chatQuestionsSheetName: "Chat Questions",
   maxChatQuestionsPerHour: 300,
   knownVisitorsSheetName: "Known Visitors",
+  eventsSheetName: "Events",
+  maxEventsPerHour: 2000,
 
   // Confirmation email sent to the visitor. Set sendConfirmation to false to turn it off.
   sendConfirmation: true,
@@ -53,6 +55,7 @@ function doPost(e) {
     if (params.type === "visit") return recordVisit(params);
     if (params.type === "chat_question") return recordChatQuestion(params);
     if (params.type === "identify") return identifyVisitor(params);
+    if (params.type === "event") return recordEvent(params);
 
     const data = readFields(params);
     validate(data);
@@ -527,6 +530,40 @@ function upsertKnownVisitor(visitorId, name, email, phone, source) {
   }
 
   sheet.appendRow([now, now, visitorId, safeCell(name), safeCell(email), safeCell(phone), safeCell(source)]);
+}
+
+/* ---------- Engagement event tracking ---------- */
+
+const EVENT_HEADERS = ["Time", "Visitor ID", "Action", "Label", "Page"];
+
+function recordEvent(params) {
+  var cache = CacheService.getScriptCache();
+  var count = Number(cache.get("events:all") || 0);
+  if (count >= CONFIG.maxEventsPerHour) return reply({ ok: true });
+  cache.put("events:all", String(count + 1), 3600);
+
+  var row = [
+    new Date(),
+    clean(params.visitor, 40),
+    clean(params.action, 60),
+    clean(params.label, 200),
+    clean(params.page, 200),
+  ];
+  getEventsSheet().appendRow(row.map(function (cell) { return typeof cell === "string" ? safeCell(cell) : cell; }));
+  return reply({ ok: true });
+}
+
+function getEventsSheet() {
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = spreadsheet.getSheetByName(CONFIG.eventsSheetName);
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet(CONFIG.eventsSheetName);
+    sheet.appendRow(EVENT_HEADERS);
+    sheet.setFrozenRows(1);
+    sheet.setColumnWidth(3, 200);
+    sheet.setColumnWidth(4, 300);
+  }
+  return sheet;
 }
 
 function reply(payload) {
