@@ -27,8 +27,11 @@ let launcherEl = null;
 let headerNameEl = null;
 let headerStatusEl = null;
 let backBtn = null;
+let micBtn = null;
 let history = [];
 let streaming = false;
+let recognition = null;
+let isListening = false;
 
 let mode = "welcome";
 let contactStep = -1;
@@ -56,7 +59,19 @@ function buildSystemPrompt(data) {
   lines.push("You are the AI assistant on Tejakrishna Badiganti's portfolio website.");
   lines.push("");
   lines.push("## Your role");
-  lines.push("Help visitors learn about Teja's professional background, skills, projects and certifications. Also explain general technical concepts clearly.");
+  lines.push("You serve exactly TWO purposes:");
+  lines.push("1. **Portfolio assistant** — Answer questions about Teja's professional background, skills, projects, certifications, experience, and anything on this portfolio page.");
+  lines.push("2. **Technical learning mentor** — Help users learn programming concepts, software engineering, system design, cloud computing, DevOps, databases, algorithms, data structures, and any technology/CS topic. This is an educational tool.");
+  lines.push("");
+  lines.push("## STRICTLY NOT ALLOWED");
+  lines.push("You must REFUSE any question that is NOT about Teja's portfolio OR technical/programming learning. This includes:");
+  lines.push("- Politics, news, current events, opinions");
+  lines.push("- Personal advice, relationship advice, health advice");
+  lines.push("- Creative writing, stories, jokes, poems (unless about code)");
+  lines.push("- General knowledge trivia unrelated to tech");
+  lines.push("- Anything harmful, illegal, or inappropriate");
+  lines.push("- Acting as a general-purpose chatbot");
+  lines.push('When refusing, say: "I can only help with questions about Teja\'s profile or technical/programming topics for learning. Try asking me about Teja\'s experience, or a tech concept you\'d like to understand!"');
   lines.push("");
   lines.push("## Personality");
   lines.push("Friendly, lightly humorous engineering-mentor style. Be engaging without forcing jokes. Use simple English without sacrificing technical accuracy.");
@@ -348,6 +363,15 @@ function mailIcon() {
   svg.setAttribute("viewBox", "0 0 24 24");
   svg.setAttribute("aria-hidden", "true");
   svg.innerHTML = '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4L12 13L2 4"/>';
+  return svg;
+}
+
+function micIcon() {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("class", "icon");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("aria-hidden", "true");
+  svg.innerHTML = '<path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>';
   return svg;
 }
 
@@ -830,6 +854,52 @@ function autoResize() {
   inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + "px";
 }
 
+// ─── Voice input ───
+
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+function initVoice() {
+  if (!SpeechRecognition) return;
+
+  recognition = new SpeechRecognition();
+  recognition.lang = "en-US";
+  recognition.interimResults = true;
+  recognition.continuous = false;
+
+  recognition.addEventListener("result", (e) => {
+    let transcript = "";
+    for (const result of e.results) {
+      transcript += result[0].transcript;
+    }
+    inputEl.value = transcript;
+    autoResize();
+  });
+
+  recognition.addEventListener("end", () => {
+    isListening = false;
+    if (micBtn) micBtn.classList.remove("is-listening");
+  });
+
+  recognition.addEventListener("error", () => {
+    isListening = false;
+    if (micBtn) micBtn.classList.remove("is-listening");
+  });
+}
+
+function toggleVoice() {
+  if (!recognition) return;
+  if (isListening) {
+    recognition.stop();
+    isListening = false;
+    if (micBtn) micBtn.classList.remove("is-listening");
+  } else {
+    inputEl.value = "";
+    recognition.start();
+    isListening = true;
+    if (micBtn) micBtn.classList.add("is-listening");
+  }
+}
+
 function togglePanel() {
   const open = panelEl.classList.toggle("is-open");
   launcherEl.classList.toggle("is-open", open);
@@ -1065,7 +1135,20 @@ function buildPanel(photoUrl) {
   sendBtn.append(sendSvg);
   sendBtn.addEventListener("click", handleSend);
 
-  inputWrap = el("div", { class: "chat-input" }, inputEl, sendBtn);
+  if (SpeechRecognition) {
+    micBtn = el("button", {
+      class: "chat-input__mic",
+      type: "button",
+      "aria-label": "Voice input",
+    });
+    micBtn.append(micIcon());
+    micBtn.addEventListener("click", toggleVoice);
+  }
+
+  const inputChildren = [inputEl];
+  if (micBtn) inputChildren.push(micBtn);
+  inputChildren.push(sendBtn);
+  inputWrap = el("div", { class: "chat-input" }, ...inputChildren);
   const footer = el("div", { class: "chat-footer" }, "Powered by Gemini · Responses may not be perfect");
 
   const panel = el("div", {
@@ -1100,6 +1183,8 @@ export function initChat(config = {}) {
   formEndpoint = ep.startsWith(ENDPOINT_PREFIX) ? ep : "";
   formReasons = contact.formReasons || [];
   contactEmail = contact.email || "";
+
+  initVoice();
 
   launcherEl = buildLauncher();
   panelEl = buildPanel(photoUrl);
