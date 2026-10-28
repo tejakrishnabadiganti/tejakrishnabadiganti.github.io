@@ -309,16 +309,20 @@ function getVisitsSheet() {
 // Live numbers for the owner: formulas read the Visits sheet, so they update by themselves.
 function createSummarySheet(spreadsheet) {
   const visits = "'" + CONFIG.visitsSheetName + "'";
+  const contacts = "'" + CONFIG.sheetName + "'";
   const summary = spreadsheet.getSheetByName(CONFIG.summarySheetName) || spreadsheet.insertSheet(CONFIG.summarySheetName);
   summary.clear();
-  summary.getRange("A1:B6").setFormulas([
-    ["Total visits", "=MAX(0,COUNTA(" + visits + "!A:A)-1)"],
-    ["Unique visitors", "=IFERROR(COUNTUNIQUE(" + visits + "!B2:B),0)"],
-    ["Returning visits", "=COUNTIF(" + visits + "!C2:C,\"Yes\")"],
-    ["Visits today", "=COUNTIF(" + visits + "!A2:A,\">=\"&TODAY())"],
-    ["Visits in the last 7 days", "=COUNTIF(" + visits + "!A2:A,\">=\"&(TODAY()-6))"],
-    ["Contact form messages", "=MAX(0,COUNTA('" + CONFIG.sheetName + "'!A:A)-1)"],
-  ]);
+
+  var labels = [["Total visits"], ["Unique visitors"], ["Returning visits"], ["Visits today"], ["Visits in the last 7 days"], ["Contact form messages"]];
+  summary.getRange("A1:A6").setValues(labels);
+
+  summary.getRange("B1").setFormula("=MAX(0,COUNTA(" + visits + "!A:A)-1)");
+  summary.getRange("B2").setFormula("=IFERROR(COUNTUNIQUE(" + visits + "!B2:B),0)");
+  summary.getRange("B3").setFormula("=COUNTIF(" + visits + "!C2:C,\"Yes\")");
+  summary.getRange("B4").setFormula("=COUNTIF(" + visits + "!A2:A,\">=\"&TODAY())");
+  summary.getRange("B5").setFormula("=COUNTIF(" + visits + "!A2:A,\">=\"&(TODAY()-6))");
+  summary.getRange("B6").setFormula("=MAX(0,COUNTA(" + contacts + "!A:A)-1)");
+
   summary.getRange("A8").setValue("Top places visitors came from");
   summary.getRange("A9").setFormula(
     "=IFERROR(QUERY(" + visits + "!D2:D,\"select D, count(D) where D <> '' group by D order by count(D) desc limit 8 label D 'Website', count(D) 'Visits'\",0),\"No data yet\")"
