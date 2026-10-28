@@ -216,25 +216,21 @@ async function renderTab(id) {
 function sectionView(section) {
   const content = getContent();
   const wrap = el("div", { class: "admin-section" });
-  const pageSection = content.sections.find((entry) => entry.id === section.sectionId);
-  if (pageSection) {
+  const switches = section.sectionId
+    ? [
+        {
+          id: section.sectionId,
+          label: "Show this section on the public site",
+          help: "Turn off to hide it from visitors. You still see it here, marked as hidden, and can turn it back on any time.",
+        },
+        ...(section.extraSwitches ?? []),
+      ]
+    : [];
+  for (const { id, label, help } of switches) {
+    const pageSection = content.sections.find((entry) => entry.id === id);
+    if (!pageSection) continue;
     wrap.append(
-      el(
-        "div",
-        { class: "admin-visibility" },
-        fieldGroup(
-          [
-            {
-              key: "visible",
-              label: "Show this section on the public site",
-              type: "checkbox",
-              help: "Turn off to hide it from visitors. You still see it here, marked as hidden, and can turn it back on any time.",
-            },
-          ],
-          pageSection,
-          changed
-        )
-      )
+      el("div", { class: "admin-visibility" }, fieldGroup([{ key: "visible", label, type: "checkbox", help }], pageSection, changed))
     );
   }
   if (section.hint) wrap.append(el("p", { class: "admin-hint" }, section.hint));

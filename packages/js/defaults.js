@@ -1,4 +1,5 @@
 import { normalizeTheme } from "./themes.js";
+import { defaultLabels } from "./labels.js";
 
 // Fills in anything missing, so data saved by an older editor session never breaks the page.
 const DEFAULT_SECTIONS = [
@@ -39,6 +40,7 @@ const DEFAULT_CONTACT_FORM = {
 
 export function withDefaults(content) {
   content.theme = normalizeTheme(content.theme);
+  content.labels = { ...defaultLabels(), ...content.labels };
   content.contact = { ...DEFAULT_CONTACT_FORM, ...content.contact };
   content.sections ??= structuredClone(DEFAULT_SECTIONS);
   for (const [index, section] of DEFAULT_SECTIONS.entries()) {

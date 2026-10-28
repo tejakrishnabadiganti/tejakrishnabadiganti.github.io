@@ -1,3 +1,5 @@
+import { LABELS } from "./labels.js";
+
 export const slug = (text) =>
   String(text)
     .toLowerCase()
@@ -85,6 +87,17 @@ export const SECTIONS = [
         fileName: (_item, content) => `${slug(content.profile.name)}-profile`,
       },
       { key: "photoAlt", label: "Photo description (for screen readers)", type: "text" },
+      {
+        key: "logoImage",
+        label: "Header logo photo (optional, replaces the initials)",
+        type: "image",
+        dir: "packages/images/profile",
+        maxPx: 256,
+        format: "jpeg",
+        optional: true,
+        fileName: (_item, content) => `${slug(content.profile.name)}-logo`,
+        help: "A square, close-up photo of your face works best. It is shown in a circle next to your name.",
+      },
       {
         key: "resume",
         label: "Resume (PDF)",
@@ -328,14 +341,27 @@ export const SECTIONS = [
     path: "certifications.items",
     itemName: "certification",
     headerPath: "certifications",
+    extraSwitches: [
+      {
+        id: "badges",
+        label: "Show the scrolling badge strip under the highlights",
+        help: "The strip shows the badge of every certificate that is switched on below.",
+      },
+    ],
     headerFields: [
       { key: "credly", label: "Credly profile link", type: "url" },
       { key: "note", label: "Text before the Credly link", type: "text" },
       { key: "credlyLabel", label: "Credly link text", type: "text" },
     ],
-    itemLabel: (item) => item.name,
-    blank: () => ({ name: "", issuer: "", group: "Cloud & Infrastructure" }),
+    itemLabel: (item) => `${item.name}${item.visible === false ? " (hidden from visitors)" : ""}`,
+    blank: () => ({ name: "", issuer: "", group: "Cloud & Infrastructure", visible: true }),
     fields: [
+      {
+        key: "visible",
+        label: "Show this certificate on the public site",
+        type: "checkbox",
+        help: "Turn off to hide it, its badge and its place in the count. You can turn it back on any time.",
+      },
       { key: "name", label: "Certification name", type: "text" },
       { key: "issuer", label: "Issuer and code (e.g. Microsoft · AZ-900)", type: "text" },
       {
@@ -382,6 +408,14 @@ export const SECTIONS = [
       { key: "period", label: "Dates", type: "text" },
       { key: "score", label: "Score / grade", type: "text" },
     ],
+  },
+  {
+    id: "labels",
+    label: "Interface text (buttons, popups, footer)",
+    kind: "object",
+    path: "labels",
+    hint: "The small fixed texts around the site: footer, buttons, popup titles and the contact form labels. Change any of them here.",
+    fields: LABELS.map(({ key, name }) => ({ key, label: name, type: "text" })),
   },
   {
     id: "theme",

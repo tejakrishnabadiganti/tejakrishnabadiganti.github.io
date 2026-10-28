@@ -13,6 +13,7 @@ const splitLines = (text) =>
     .filter(Boolean);
 const externalLink = (href, label) =>
   el("a", { href: safeUrl(href), target: "_blank", rel: "noopener noreferrer" }, label);
+const shown = (items) => items.filter((item) => item.visible !== false);
 
 export function renderPage(content) {
   document.title = content.site.title;
@@ -21,6 +22,7 @@ export function renderPage(content) {
     .setAttribute("content", content.site.description);
 
   renderChrome(content);
+  renderLabels(content);
   renderSections(content);
   renderHero(content);
   renderStats(content);
@@ -40,10 +42,22 @@ export function renderPage(content) {
 
 function renderChrome({ profile }) {
   $("brand").setAttribute("aria-label", `${profile.initials} ${profile.name}, home`);
-  $("brand-mark").textContent = profile.initials;
+  const mark = $("brand-mark");
+  mark.classList.toggle("brand__mark--photo", Boolean(profile.logoImage));
+  if (profile.logoImage) {
+    mark.replaceChildren(el("img", { src: asset(profile.logoImage), alt: "", width: "44", height: "44", decoding: "async" }));
+  } else {
+    mark.textContent = profile.initials;
+  }
   $("brand-name").textContent = profile.name;
   $("footer-name").textContent = profile.name;
   $("year").textContent = new Date().getFullYear();
+}
+
+function renderLabels({ labels }) {
+  for (const node of document.querySelectorAll("[data-label]")) {
+    node.textContent = labels[node.dataset.label] ?? node.textContent;
+  }
 }
 
 function renderSections({ sections }) {
@@ -116,7 +130,7 @@ function renderHero({ profile, contact }) {
 }
 
 function renderStats(content) {
-  const counts = { certifications: content.certifications.items.length, awards: content.awards.length };
+  const counts = { certifications: shown(content.certifications.items).length, awards: content.awards.length };
   const resolve = (value) => String(value).replace(/\{(certifications|awards)\}/g, (_, key) => counts[key]);
   $("stats").replaceChildren(
     ...content.stats.map((stat) =>
@@ -131,7 +145,7 @@ function renderStats(content) {
 }
 
 function renderBadges({ certifications }) {
-  const badged = certifications.items.filter((item) => item.badge);
+  const badged = shown(certifications.items).filter((item) => item.badge);
   const badge = (item, decorative) =>
     el("img", { loading: "lazy", decoding: "async", src: asset(item.badge), alt: decorative ? "" : item.name, height: "64" });
 
@@ -191,7 +205,7 @@ function renderExperience({ experience }) {
   );
 }
 
-function renderWork({ work }) {
+function renderWork({ work, labels }) {
   $("work-cards").replaceChildren(
     ...work.map((card) =>
       el(
@@ -200,11 +214,11 @@ function renderWork({ work }) {
         el("p", { class: "card__tag" }, card.tag),
         el("h3", { class: "card__title" }, card.title),
         el("p", { class: "card__text" }, card.text),
-        card.role && el("p", { class: "card__role" }, el("strong", {}, "My role: "), card.role),
+        card.role && el("p", { class: "card__role" }, el("strong", {}, `${labels.roleLabel}: `), card.role),
         card.stack?.length > 0 && el("ul", { class: "tags card__stack" }, card.stack.map((item) => el("li", {}, item))),
-        card.result && el("p", { class: "card__result" }, el("strong", {}, "Impact: "), card.result),
+        card.result && el("p", { class: "card__result" }, el("strong", {}, `${labels.impactLabel}: `), card.result),
         card.link &&
-          el("a", { class: "card__link", href: safeUrl(card.link), target: "_blank", rel: "noopener noreferrer" }, "View project \u2192")
+          el("a", { class: "card__link", href: safeUrl(card.link), target: "_blank", rel: "noopener noreferrer" }, labels.viewProject)
       )
     )
   );
@@ -282,7 +296,7 @@ function certificateCard(item) {
 
 function renderCertifications({ certifications }) {
   const groups = new Map();
-  for (const item of certifications.items) {
+  for (const item of shown(certifications.items)) {
     const name = item.group || "Other";
     if (!groups.has(name)) groups.set(name, []);
     groups.get(name).push(item);
@@ -322,7 +336,7 @@ function renderEducation({ education }) {
   );
 }
 
-function renderContact({ contact }) {
+function renderContact({ contact, labels }) {
   $("contact-lead").textContent = contact.lead;
   $("contact-form-open").textContent = contact.formButton;
 
@@ -340,8 +354,8 @@ function renderContact({ contact }) {
       {},
       el("a", { href: safeUrl(`tel:${contact.phone.replace(/[^+\d]/g, "")}`) }, contact.phone)
     ),
-    el("li", {}, externalLink(contact.linkedin, "LinkedIn")),
-    el("li", {}, externalLink(contact.github, "GitHub")),
+    el("li", {}, externalLink(contact.linkedin, labels.linkedinLabel)),
+    el("li", {}, externalLink(contact.github, labels.githubLabel)),
     el("li", {}, contact.location)
   );
 }

@@ -28,12 +28,12 @@ export function initContactForm() {
   };
 
   const fillFromContent = () => {
-    const { contact } = getContent();
+    const { contact, labels } = getContent();
     $("contact-dialog-title").textContent = contact.formTitle;
     $("contact-intro").textContent = contact.formIntro;
     $("contact-thanks").textContent = contact.formThanks;
     reason.replaceChildren(
-      Object.assign(document.createElement("option"), { value: "", textContent: "Select a reason", disabled: true }),
+      Object.assign(document.createElement("option"), { value: "", textContent: labels.selectReason, disabled: true }),
       ...contact.formReasons.map((text) => Object.assign(document.createElement("option"), { value: text, textContent: text }))
     );
     reason.selectedIndex = 0;

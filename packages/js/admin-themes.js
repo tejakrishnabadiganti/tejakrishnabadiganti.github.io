@@ -1,5 +1,6 @@
 import { el } from "./dom.js";
 import { applyTheme } from "./theme.js";
+import { PREVIEW_KEY } from "./theme-preview.js";
 import {
   BODY_FONTS,
   HEADING_FONTS,
@@ -321,7 +322,6 @@ function openPreview(startTheme) {
   let theme = structuredClone(startTheme);
   let device = "desktop";
   let appearance = "";
-  let ready = false;
 
   const frame = el("iframe", { class: "theme-preview__frame", title: "Site preview", src: previewUrl(), sandbox: "allow-same-origin allow-scripts" });
   const stage = el("div", { class: "theme-preview__stage", "data-device": device }, frame);
@@ -330,9 +330,9 @@ function openPreview(startTheme) {
   const deviceGroup = el("div", { class: "theme-preview__group", role: "group", "aria-label": "Device size" });
 
   const send = () => {
-    if (!ready) return;
     const payload = appearance ? { ...theme, appearance } : theme;
-    frame.contentWindow.postMessage({ type: "theme-preview", theme: payload }, location.origin);
+    sessionStorage.setItem(PREVIEW_KEY, JSON.stringify(payload));
+    frame.contentWindow?.postMessage({ type: "theme-preview", theme: payload }, location.origin);
   };
 
   const toggleButton = (text, pressed, handler) => {
@@ -396,23 +396,27 @@ function openPreview(startTheme) {
   const onMessage = (event) => {
     if (event.source !== frame.contentWindow || event.origin !== location.origin) return;
     if (event.data?.type !== "theme-preview-ready") return;
-    ready = true;
     send();
   };
   window.addEventListener("message", onMessage);
 
-  close.addEventListener("click", () => dialog.close());
+  const dismiss = () => {
+    dialog.close();
+    window.removeEventListener("message", onMessage);
+    sessionStorage.removeItem(PREVIEW_KEY);
+    dialog.remove();
+  };
+
+  close.addEventListener("click", dismiss);
   apply.addEventListener("click", () => {
     const chosen = normalizeTheme(theme);
-    dialog.close();
+    dismiss();
     applyPreset(chosen);
   });
-  dialog.addEventListener("close", () => {
-    window.removeEventListener("message", onMessage);
-    dialog.remove();
-  });
+  dialog.addEventListener("close", dismiss);
 
   renderControls();
+  send();
   document.body.append(dialog);
   dialog.showModal();
 }

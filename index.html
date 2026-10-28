@@ -299,7 +299,7 @@
           <div class="contact__actions">
             <button class="button button--primary button--large" id="contact-form-open" type="button" data-open-contact></button>
             <a class="button button--ghost button--large" id="contact-email" href="#"></a>
-            <a class="button button--ghost button--large" id="contact-book" href="#" target="_blank" rel="noopener noreferrer" hidden>Book a call</a>
+            <a class="button button--ghost button--large" id="contact-book" href="#" target="_blank" rel="noopener noreferrer" hidden data-label="bookCall">Book a call</a>
           </div>
           <ul class="contact__links" id="contact-links"></ul>
         </div>
@@ -311,10 +311,10 @@
       <div class="container site-footer__inner">
         <p>
           &copy; <span id="year"></span> <span id="footer-name"></span>
-          <span class="site-footer__note">Visits are counted anonymously. No names, emails or IP addresses are collected.</span>
+          <span class="site-footer__note" data-label="footerNote">Visits are counted anonymously. No names, emails or IP addresses are collected.</span>
         </p>
         <div class="site-footer__links">
-          <a href="#top">Back to top &uarr;</a>
+          <a href="#top"><span data-label="backToTop">Back to top</span> &uarr;</a>
           <button class="admin-link" id="admin-login" type="button" hidden>Admin login</button>
         </div>
       </div>
@@ -340,31 +340,31 @@
 
         <div class="contact-form__grid">
           <div class="cf-field">
-            <label for="cf-first">First name <span aria-hidden="true">*</span></label>
+            <label for="cf-first"><span data-label="cfFirst">First name</span> <span aria-hidden="true">*</span></label>
             <input id="cf-first" name="firstName" type="text" autocomplete="given-name" maxlength="80" required />
           </div>
           <div class="cf-field">
-            <label for="cf-last">Last name <span aria-hidden="true">*</span></label>
+            <label for="cf-last"><span data-label="cfLast">Last name</span> <span aria-hidden="true">*</span></label>
             <input id="cf-last" name="lastName" type="text" autocomplete="family-name" maxlength="80" required />
           </div>
           <div class="cf-field">
-            <label for="cf-email">Email <span aria-hidden="true">*</span></label>
+            <label for="cf-email"><span data-label="cfEmail">Email</span> <span aria-hidden="true">*</span></label>
             <input id="cf-email" name="email" type="email" autocomplete="email" maxlength="120" required />
           </div>
           <div class="cf-field">
-            <label for="cf-phone">Phone number <span aria-hidden="true">*</span></label>
+            <label for="cf-phone"><span data-label="cfPhone">Phone number</span> <span aria-hidden="true">*</span></label>
             <input id="cf-phone" name="phone" type="tel" autocomplete="tel" maxlength="30" placeholder="+91 98765 43210" required />
           </div>
           <div class="cf-field cf-field--full">
-            <label for="cf-reason">Reason for connecting <span aria-hidden="true">*</span></label>
+            <label for="cf-reason"><span data-label="cfReason">Reason for connecting</span> <span aria-hidden="true">*</span></label>
             <select id="cf-reason" name="reason" required></select>
           </div>
           <div class="cf-field cf-field--full" id="cf-other-wrap" hidden>
-            <label for="cf-other">Please tell me the reason <span aria-hidden="true">*</span></label>
+            <label for="cf-other"><span data-label="cfOther">Please tell me the reason</span> <span aria-hidden="true">*</span></label>
             <input id="cf-other" name="otherReason" type="text" maxlength="120" />
           </div>
           <div class="cf-field cf-field--full">
-            <label for="cf-message">Message (optional)</label>
+            <label for="cf-message" data-label="cfMessage">Message (optional)</label>
             <textarea id="cf-message" name="message" rows="3" maxlength="1000"></textarea>
           </div>
           <div class="cf-hp" aria-hidden="true">
@@ -373,18 +373,18 @@
           </div>
         </div>
 
-        <p class="contact-form__note">Fields marked * are required.</p>
+        <p class="contact-form__note" data-label="cfRequired">Fields marked * are required.</p>
         <p class="contact-form__status" id="contact-status" role="status" aria-live="polite"></p>
         <div class="contact-form__actions">
-          <button class="button button--ghost" id="contact-cancel" type="button">Cancel</button>
-          <button class="button button--primary" id="contact-submit" type="submit">Send message</button>
+          <button class="button button--ghost" id="contact-cancel" type="button" data-label="cfCancel">Cancel</button>
+          <button class="button button--primary" id="contact-submit" type="submit" data-label="cfSend">Send message</button>
         </div>
       </form>
 
       <div class="contact-success" id="contact-success" hidden>
-        <h3 class="contact-form__title">Message sent</h3>
+        <h3 class="contact-form__title" data-label="cfSentTitle">Message sent</h3>
         <p id="contact-thanks"></p>
-        <button class="button button--primary" id="contact-done" type="button">Close</button>
+        <button class="button button--primary" id="contact-done" type="button" data-label="close">Close</button>
       </div>
     </dialog>
 
@@ -397,7 +397,7 @@
             <p class="lightbox__issuer" id="cert-issuer"></p>
           </div>
           <div class="lightbox__actions">
-            <a class="button button--primary" id="cert-download" href="#" download>Download</a>
+            <a class="button button--primary" id="cert-download" href="#" download data-label="certDownload">Download</a>
             <a
               class="button button--ghost"
               id="cert-verify"
@@ -405,13 +405,14 @@
               target="_blank"
               rel="noopener noreferrer"
               hidden
+              data-label="certVerify"
               >Verify</a
             >
             <button class="button button--ghost" id="cert-close" type="button">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M6 6l12 12M18 6L6 18" />
               </svg>
-              Close
+              <span data-label="close">Close</span>
             </button>
           </div>
         </header>
@@ -433,10 +434,10 @@
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M15 6l-6 6 6 6" />
               </svg>
-              Prev
+              <span data-label="momentPrev">Prev</span>
             </button>
             <button class="button button--ghost" id="moment-next" type="button" aria-label="Next photo">
-              Next
+              <span data-label="momentNext">Next</span>
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M9 6l6 6-6 6" />
               </svg>
@@ -445,7 +446,7 @@
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M6 6l12 12M18 6L6 18" />
               </svg>
-              Close
+              <span data-label="close">Close</span>
             </button>
           </div>
         </header>
@@ -459,7 +460,7 @@
       <div class="lightbox__panel">
         <header class="lightbox__bar">
           <div class="lightbox__heading">
-            <p class="lightbox__issuer">Skill explained</p>
+            <p class="lightbox__issuer" data-label="skillTitle">Skill explained</p>
             <h3 class="lightbox__title" id="skill-dialog-title"></h3>
           </div>
           <div class="lightbox__actions">
@@ -467,21 +468,21 @@
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M6 6l12 12M18 6L6 18" />
               </svg>
-              Close
+              <span data-label="close">Close</span>
             </button>
           </div>
         </header>
         <div class="skill-info">
           <section>
-            <h4 class="skill-info__label">What it is</h4>
+            <h4 class="skill-info__label" data-label="skillWhat">What it is</h4>
             <p id="skill-what"></p>
           </section>
           <section id="skill-analogy-block">
-            <h4 class="skill-info__label">Think of it like this</h4>
+            <h4 class="skill-info__label" data-label="skillAnalogy">Think of it like this</h4>
             <p id="skill-analogy"></p>
           </section>
           <section id="skill-links-block">
-            <h4 class="skill-info__label">Read more</h4>
+            <h4 class="skill-info__label" data-label="skillMore">Read more</h4>
             <ul class="skill-info__links" id="skill-links"></ul>
           </section>
         </div>
