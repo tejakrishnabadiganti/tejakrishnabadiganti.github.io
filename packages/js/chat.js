@@ -10,7 +10,7 @@ const SUGGESTIONS = [
 ];
 
 const MAX_INPUT = 2000;
-const MAX_HISTORY = 14;
+const MAX_HISTORY = 10;
 const MAX_QUESTIONS = 20;
 const FOLLOWUP_EVERY = 5;
 const QUESTIONS_KEY = "pandu-q-count";
@@ -956,7 +956,7 @@ function buildGeminiBody() {
     system_instruction: { parts: [{ text: prompt }] },
     contents,
     generationConfig: {
-      maxOutputTokens: 1024,
+      maxOutputTokens: 800,
       temperature: 0.7,
     },
   };
