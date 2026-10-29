@@ -791,7 +791,11 @@ function askContactStep() {
           contactStep++;
           inputWrap.hidden = false;
           inputEl.placeholder = "Type your answer…";
-          askContactStep();
+          if (/referral|looking for|job seeker/i.test(reason)) {
+            promptResumeUpload();
+          } else {
+            askContactStep();
+          }
         }
       });
       btns.append(btn);
@@ -898,6 +902,11 @@ async function submitContact() {
       page: location.href,
       visitor: getVisitorId(),
     };
+    if (contactData._resumeData) {
+      fields.resumeData = contactData._resumeData;
+      fields.resumeName = contactData._resumeName;
+      fields.resumeType = contactData._resumeType;
+    }
 
     const res = await fetch(formEndpoint, {
       method: "POST",
@@ -1137,6 +1146,60 @@ async function handleFileUpload() {
     scrollToBottom();
   });
   fileInput.click();
+}
+
+function promptResumeUpload() {
+  const body = addBotMsg(
+    "<p>Would you like to attach your resume? It'll be sent directly to Teja with your message.</p>"
+  );
+  const uploadBtn = el("button", { class: "chat-confirm-btn chat-confirm-btn--send", type: "button" }, "Upload resume");
+  const skipBtn = el("button", { class: "chat-confirm-btn chat-confirm-btn--cancel", type: "button" }, "Skip");
+
+  uploadBtn.addEventListener("click", () => {
+    actions.remove();
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = ".pdf,.doc,.docx";
+    fileInput.addEventListener("change", async () => {
+      const file = fileInput.files[0];
+      if (!file) { askContactStep(); return; }
+      if (!RESUME_TYPES.includes(file.type)) {
+        addBotMsg("<p>Please upload a <strong>PDF</strong> or <strong>Word document</strong>.</p>");
+        promptResumeUpload();
+        return;
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        addBotMsg("<p>That file is too large (max 5 MB). Please try a smaller file.</p>");
+        promptResumeUpload();
+        return;
+      }
+      addUserMsg("\u{1F4CE} " + esc(file.name));
+      try {
+        const buf = await file.arrayBuffer();
+        const bytes = new Uint8Array(buf);
+        let binary = "";
+        for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+        contactData._resumeData = btoa(binary);
+        contactData._resumeName = file.name;
+        contactData._resumeType = file.type;
+        addBotMsg("<p>Resume attached! I'll include it when we send your message.</p>");
+      } catch {
+        addBotMsg("<p>Couldn't read that file. You can still send your message without it.</p>");
+      }
+      askContactStep();
+    });
+    fileInput.click();
+  });
+
+  skipBtn.addEventListener("click", () => {
+    actions.remove();
+    addUserMsg("(skipped)");
+    askContactStep();
+  });
+
+  const actions = el("div", { class: "chat-confirm-actions" }, uploadBtn, skipBtn);
+  body.append(actions);
+  scrollToBottom();
 }
 
 function logChatUser(name) {
@@ -1646,6 +1709,19 @@ export function initChat(config = {}) {
   panelEl = buildPanel(photoUrl);
   document.body.append(panelEl, launcherEl);
   makeDraggable(launcherEl);
+
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", () => {
+      if (!panelEl.classList.contains("is-open")) return;
+      const vh = window.visualViewport.height;
+      panelEl.style.height = vh + "px";
+      scrollToBottom();
+    });
+    window.visualViewport.addEventListener("scroll", () => {
+      if (!panelEl.classList.contains("is-open")) return;
+      panelEl.style.top = window.visualViewport.offsetTop + "px";
+    });
+  }
 
   showWelcome();
 
